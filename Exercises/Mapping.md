@@ -181,34 +181,39 @@ Important output files to look at:
 ls -l $bn1.*
 ```
 ```
-TOG_KCCS_FRC_1.discarded.gz
-TOG_KCCS_FRC_1.settings
-TOG_KCCS_FRC_1.truncated.gz
+PW13_E2_L1.discarded.gz
+PW13_E2_L1.settings
+PW13_E2_L1.truncated.gz
 ```
-The `TOG_KCCS_FRC_1.truncated.gz` and `TOG_KCCS_FRC_1.discarded.gz` files contain the trimmed and discarded reads, respectively. The `TOG_KCCS_FRC_1.settings` file has some useful information about the number of sequences where the adapter was found, number of remaining reads, etc. 
-```{bash, eval = FALSE}
+The `PW13_E2_L1.truncated.gz` and `PW13_E2_L1.discarded.gz` files contain the trimmed and discarded reads, respectively. The `PW13_E2_L1.settings` file has useful information about the number of sequences where the adapter was found, number of remaining reads, etc.
 
+
+```{bash, eval = FALSE}
 grep -A 10 'Trimming statistics' $bn1.settings
 ```
 ```
 [Trimming statistics]
-Total number of reads: 1000000
-Number of unaligned reads: 582493
-Number of well aligned reads: 417507
-Number of discarded mate 1 reads: 6962
-Number of singleton mate 1 reads: 993038
-Number of reads with adapters[1]: 417507
-Number of retained reads: 993038
-Number of retained nucleotides: 73178562
-Average length of retained reads: 73.6916
+Total number of reads: 4000000
+Number of unaligned reads: 134233
+Number of well aligned reads: 3865767
+Number of discarded mate 1 reads: 1598722
+Number of singleton mate 1 reads: 2401278
+Number of reads with adapters[1]: 3865767
+Number of retained reads: 2401278
+Number of retained nucleotides: 99392433
+Average length of retained reads: 41.3915
 ```
+Notice how the adapter sequence was found in the majority of the reads (3865767/4000000 reads), with ancient DNA data this is good indication that the data was trimmed correctly (and you had the correct adapter sequence).   
 
-<span style="color: purple;"> **Q:** </span>  What could this information be helpful for? 
-
-Now that we removed the adapter, we could re-run $fastqc$ to check how the sequences look like:
+<details>
+<summary> <b>Optional</b> </summary>
+    
+Now that we removed the adapter, we could re-run `fastqc` to check how the sequences look like:
 
 ```{bash, eval = FALSE}
+# Create a new directory:
 mkdir TrimQual
+# run fastqc in the trimmed data:
 fastqc --outdir TrimQual -f fastq ${bn1}.truncated.gz
 fastqc --outdir TrimQual -f fastq ${bn2}.truncated.gz
 fastqc --outdir TrimQual -f fastq ${bn3}.truncated.gz
@@ -216,7 +221,7 @@ fastqc --outdir TrimQual -f fastq ${bn3}.truncated.gz
 
 Download the new HTML files and compare the results from before and after trimming the adapters. 
 
-<p>&nbsp;</p>
+</details>
 ---------------------------------
 
 #### Step-by-step mapping
