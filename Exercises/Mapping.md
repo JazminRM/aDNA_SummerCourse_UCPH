@@ -1,7 +1,8 @@
-### Basic steps for mapping ancient DNA sequencing data
+## Basic steps for mapping ancient DNA sequencing data
 
 Outline: 
 
+* Requesting an interactive node
 * FASTQ files
 * Data quality check with $fastqc$
 * Adapter trimming
@@ -14,27 +15,60 @@ Outline:
 * Mapping statistics
 
 
-#### Setting up your working directory and paths to data
+### Interactive node
 
-Create a directory for today's exercises (make sure to change "write_your_username" for your own directory name):
+We will use an interactive node in mjolnir to run the exercises throughout the course, so you always start by opening an interactive session in the server. Follow the steps below.
 
 ```{bash, eval = FALSE}
-username="write_your_username"
+# First log in to the server (remember to change ku_username for your username)
+ssh ku_username@mjolnirgate.unicph.domain
 
-directoryDP="/home/$username/mapping/"
+# first request one CPU using salloc like this:
+salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --account=teaching --reservation=aDNA_PHD_course
 
-mkdir -p $directoryDP
-
-cd $directoryDP
+# once the job has been allocated, you can login to the node with srun like this:
+srun --pty -n 1 -c 1 bash -i
 ```
+
+Now you are in a node of the server, where you can run the exercises. Each of you has a directory assigned where you can store and process data: 
+
+```{bash, eval = FALSE}
+# remember to change ku_username for your username:
+cd /projects/course_1/people/ku_username/
+```
+
+Create a directory for today's exercises:
+
+```{bash, eval = FALSE}
+# remember to change ku_username for your username:
+mkdir -p /projects/course_1/people/ku_username/mapping/
+
+# and go to your working directory:
+cd /projects/course_1/people/ku_username/mapping/
+```
+
+**NOTE 1**: When you are done working, remember to logout and close the interactive session, you can do that by typing exit twice. It will look something like this: 
+
+```
+clx746@mjolnircomp04fl fst]$ exit
+exit
+clx746@mjolnirgate01fl fst]$ exit
+exit
+salloc: Relinquishing job allocation 31797328
+```
+**NOTE 2**: If you loose internet connection or disconnect from the server (for example during the coffee break or lunch), you'll need to start a new interactive session, or login again to the one you had. 
+
+-----------------------------------
+
+
+#### Setting up your working directory and paths to data
 
 Define some paths and file names. We will processes FASTQ files that correspond to sequencing data from three sequencing libraries from the same ancient wolf specimen. 
 
 ```{bash, eval = FALSE}
-
-FASTQ1="/home/ec2-user/Data/fastqs/TOG_KCCS_FRC_1.fastq.gz"
-FASTQ2="/home/ec2-user/Data/fastqs/TOG_KCCS_FRC_2.fastq.gz"
-FASTQ3="/home/ec2-user/Data/fastqs/TOG_KCCS_L.fastq.gz"
+FASTQ1="/projects/course_1/people/clx746/Data/PW13_E2_L1.fastq.gz"
+FASTQ2="/projects/course_1/people/clx746/Data/PW13_E1_L1.fastq.gz"
+FASTQ3="/projects/course_1/people/clx746/Data/PW13_E2_L2.fastq.gz"
 ```
 
 <p>&nbsp;</p>
