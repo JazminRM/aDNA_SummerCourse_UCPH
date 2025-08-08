@@ -340,12 +340,11 @@ samtools view -H ${bn1}.bam
 @PG     ID:bwa  PN:bwa  VN:0.7.15-r1140 CL:bwa samse -r @RG\tID:FRC_1\tLB:FRC\tPL:ILLUMINA\tSM:Tumat /projects/course_1/people/clx746/Data/Genome/hs.build37.1.fa PW13_E2_L1.sai PW13_E2_L1.truncated.gz
 ```
 
-We can also use $samtools$ to get some basic statistics about the number of reads mapped and unmapped:
+We can also use `samtools` to get some basic statistics about the number of reads mapped and unmapped:
 
 ```{bash, eval = FALSE}
 samtools flagstat ${bn1}.bam
 ```
-
 ```
 993038 + 0 in total (QC-passed reads + QC-failed reads)
 993038 + 0 primary
@@ -364,18 +363,20 @@ samtools flagstat ${bn1}.bam
 0 + 0 with mate mapped to a different chr
 0 + 0 with mate mapped to a different chr (mapQ>=5)
 ```
-<span style="color: purple;"> **Question:** </span>  How many reads mapped to the reference genome? Is is the same percentage for the other two BAM files?  
+<span style="color:purple"> **Question:** </span>  How many reads mapped to the reference genome? Is the percentage of mapped reads the same for the thre libraries?
 
 <details>
 <summary> <b>Show answer</b> </summary>
+
 Check the stats on the other two files and compare the number mapped reads. 
 ```{bash, eval = FALSE}
 samtools flagstat ${bn2}.bam
-```
-
-```{bash, eval = FALSE}
 samtools flagstat ${bn3}.bam
 ```
+Percentage of library PW13_E2_L1: 3.20%
+Percentage of library PW13_E1_L1: 5.60%
+Percentage of library PW13_E2_L2: 27.02%%
+
 </details>
 
 **NOTE:** If you want to know more about what is coded in each of the BAM fields you can take a look at the the SAM/BAM format specification: https://samtools.github.io/hts-specs/SAMv1.pdf
