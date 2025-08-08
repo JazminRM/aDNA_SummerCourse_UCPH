@@ -315,34 +315,29 @@ For example:
 samtools view ${bn1}.bam |head -n 5
 ```
 ```
-ERR4805985.1    4       *       0       0       *       *       0       0       TGAGTGTGGGCGATATTGCCGTGCTGCATGTGGGCAGGCTCGCTCTCGAGAAAAATCTGGGCCTGCTTAAAACCAGCTTCG       AB<ABGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGEGGG1<FGGGGGGGGGGGGGGGGGGGGGGGGGG      RG:Z:FRC_1
-ERR4805985.2    4       *       0       0       *       *       0       0       ATCCTGTACTGACCGGACTCCACCAGCAGCGGTGACACCAGAATCGCATA      BBABBGGGGGGCEGGGFGGGGG1=FE>GGEGGGGFGGGGGGGGGGFEGGG    RG:Z:FRC_1
-ERR4805985.3    16      scaffold_789    258736  37      81M     *       0       0       ACAGTATGCTGGTATGGGATTTCCTATTAGGAGGCATTAGATGTCAGTCTCAGTGTGAACAAGGCTCTAAGCAGTATGCTA       GGGGGGGGGGGGGGGGGGGEGFGGGGGGGGGGGGFGGGGGGGGGGGGFGGGGGGGGGGGGGGGGGGGGGGGGGGGGCCCCC      RG:Z:FRC_1      XT:A:U  NM:i:0  X0:i:1  X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:81
-ERR4805985.4    0       scaffold_17     4612766 37      81M     *       0       0       TCAGAAGATTTGATCTCCCATCGTTTACAAGGCACTTTAGAGATGAGATGCCGCATGCTTTCGTGCCCGAAAAGCACAAGG       =AAAA@@1EFGFDFDG@1E@FGBGGGFFGC>=FDGDGE1@BFCFEFGEGEEGGGGGEFGGGGGFFFGBEGGGGFGG>0EEE      RG:Z:FRC_1      XT:A:U  NM:i:0  X0:i:1  X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:81
-ERR4805985.5    4       *       0       0       *       *       0       0       CTACATCCTTGCCGCGTACCGTGATGCCGTCTGCCCCGTTCAGGCAAGGCGCAGTGGAGTGGTCGCAGCGCTCCACGTGGC       CCCCBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGEGGGGGGGCFGGGGGGGGGGGGGGGGGGGGGGGGGGGG      RG:Z:FRC_1
+HISEQ:151:C8L9GANXX:1:1101:1486:2132    0       22      50581434        37      37M     *       0       0       TTTGCATCTAACTGAAACTTTCTTCACTTTGAATACA   BBCC0@CCFGCGFGGGGGGGGFGGGGGGGGGFGGGGG   RG:Z:FRC_1   XT:A:U   NM:i:0  X0:i:1  X1:i:0  XM:i:0  XO:i:0  XG:i:0  MD:Z:37
+HISEQ:151:C8L9GANXX:1:1101:1434:2178    16      8       111192000       37      41M     *       0       0       TGAGGATTCCCTTTCTTCCACATACTTGCCAGCATTTGTTA       >GF1GGGGGGGGGGFEGGGGGF1GGE1<@GGGGFFB=?3BA    RG:Z:FRC_1       XT:A:U  NM:i:1  X0:i:1  X1:i:0  XM:i:1  XO:i:0  XG:i:0  MD:Z:0C40
+HISEQ:151:C8L9GANXX:1:1101:1392:2236    4       *       0       0       *       *       0       0       GAACTCCAGTCACCTATCAATCTCGTATGCCGTCTTCTGCTTGAAAAAAAAAAAATCATTTTTCTG      3330AG;1EGGG1DGGGGF1=;==EFCGGCFGGGGB:@F>FFE:BFDBG///<//0?0=0:=:B@C    RG:Z:FRC_1
+HISEQ:151:C8L9GANXX:1:1101:1539:2153    16      8       81727741        37      50M     *       0       0       ATAATGCTTAACTGTTGAATTATTTTAAAGGCTGGACAATAAGTAATAAT      GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGB@BB@    RG:Z:FRC_1      XT:A:U  NM:i:2  X0:i:1  X1:i:0  XM:i:2  XO:i:0  XG:i:0  MD:Z:1C25G22
+HISEQ:151:C8L9GANXX:1:1101:1683:2171    4       *       0       0       *       *       0       0       CGTACAAGGGCAAGGGAATCCGGTACGCGGGCGA      ABBBACDFGGCDGGGGGGG==<EGB==EGGGCEG      RG:Z:FRC_1
 ```
 
 Or if you want to also look at the header:
 ```{bash, eval = FALSE}
 samtools view -H ${bn1}.bam 
 ```
-
 ```
-@HD	VN:1.5	SO:unsorted	GO:query
-@SQ	SN:scaffold_0	LN:12722267
-@SQ	SN:scaffold_1	LN:9740034
-@SQ	SN:scaffold_2	LN:9473522
-@SQ	SN:scaffold_3	LN:8748680
-@SQ	SN:scaffold_4	LN:8687223
-@SQ	SN:scaffold_5	LN:8654949
+@SQ     SN:1    LN:249250621
+@SQ     SN:2    LN:243199373
+@SQ     SN:3    LN:198022430
 ...
-@SQ	SN:scaffold_99	LN:3356987
-@SQ	SN:NC_008092.1	LN:16729
-@RG	ID:FRC_1	LB:FRC	PL:ILLUMINA	SM:Tumat
-@PG	ID:bwa	PN:bwa	VN:0.7.17-r1198-dirty	CL:bwa samse -r @RG\tID:FRC_1\tLB:FRC\tPL:ILLUMINA\tSM:Tumat /home/ec2-user/Data/wolfGenome/Wolf.fasta TOG_KCCS_FRC_1.sai TOG_KCCS_FRC_1.truncated.gz
-@PG	ID:samtools	PN:samtools	PP:bwa	VN:1.19	CL:samtools view -Sbho TOG_KCCS_FRC_1.bam
-@PG	ID:samtools.1	PN:samtools	PP:samtools	VN:1.19	CL:samtools view -H TOG_KCCS_FRC_1.bam
-
+@SQ     SN:21   LN:48129895
+@SQ     SN:22   LN:51304566
+@SQ     SN:X    LN:155270560
+@SQ     SN:Y    LN:59373566
+@SQ     SN:MT   LN:16569
+@RG     ID:FRC_1        LB:FRC  PL:ILLUMINA     SM:Tumat
+@PG     ID:bwa  PN:bwa  VN:0.7.15-r1140 CL:bwa samse -r @RG\tID:FRC_1\tLB:FRC\tPL:ILLUMINA\tSM:Tumat /projects/course_1/people/clx746/Data/Genome/hs.build37.1.fa PW13_E2_L1.sai PW13_E2_L1.truncated.gz
 ```
 
 We can also use $samtools$ to get some basic statistics about the number of reads mapped and unmapped:
@@ -369,11 +364,11 @@ samtools flagstat ${bn1}.bam
 0 + 0 with mate mapped to a different chr
 0 + 0 with mate mapped to a different chr (mapQ>=5)
 ```
-<span style="color: purple;"> **Q:** </span>  How many reads mapped to the reference genome? Is is the same percentage for the other two BAM files?  
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName2"> Show/hide solution </button>  
-<div id="BlockName2" class="collapse">  
+<span style="color: purple;"> **Question:** </span>  How many reads mapped to the reference genome? Is is the same percentage for the other two BAM files?  
 
-Check the stats on the other two files and compare the *mapped* reads. 
+<details>
+<summary> <b>Show answer</b> </summary>
+Check the stats on the other two files and compare the number mapped reads. 
 ```{bash, eval = FALSE}
 samtools flagstat ${bn2}.bam
 ```
@@ -381,9 +376,7 @@ samtools flagstat ${bn2}.bam
 ```{bash, eval = FALSE}
 samtools flagstat ${bn3}.bam
 ```
-</div>
-
-<p>&nbsp;</p>
+</details>
 
 **NOTE:** If you want to know more about what is coded in each of the BAM fields you can take a look at the the SAM/BAM format specification: https://samtools.github.io/hts-specs/SAMv1.pdf
 
