@@ -88,7 +88,7 @@ TTTGCATCTAACTGAAACTTTCTTCACTTTGAATACAAGATCGGAAGAGCACACGTCTGAACTCCAGTCACGTGTATATC
 BBCC0@CCFGCGFGGGGGGGGFGGGGGGGGGFGGGGGGGGG@CFEBGBGGGGGGEGGGGGGGGGEGGGGGGGGGGGGFF@F
 ```
 
-{\color{nameColor}Question} Do you remember what each line represents? How many reads are there in each FASTQ file? 
+<span stype="color:red"> Question </span> Do you remember what each line represents? How many reads are there in each FASTQ file? 
 <details>
 <summary> <b>Show answer</b> </summary>
 Each read in the FASTQ file is represented by four lines: 
