@@ -302,7 +302,6 @@ bwa samse -r '@RG\tID:PW13_E2_L1\tLB:PW13_E2_L1\tPL:ILLUMINA\tSM:S6' $REF_GENOME
 bwa samse -r '@RG\tID:PW13_E1_L1\tLB:PW13_E1_L1\tPL:ILLUMINA\tSM:S6' $REF_GENOME ${bn2}.sai ${bn2}.truncated.gz | samtools view -Sbho ${bn2}.bam
 
 bwa samse -r '@RG\tID:PW13_E2_L2\tLB:PW13_E2_L2\tPL:ILLUMINA\tSM:S6' $REF_GENOME ${bn3}.sai ${bn3}.truncated.gz | samtools view -Sbho ${bn3}.bam
-
 ```
 
 #### BAM files refresher
@@ -346,14 +345,11 @@ We can also use `samtools` to get some basic statistics about the number of read
 samtools flagstat ${bn1}.bam
 ```
 ```
-993038 + 0 in total (QC-passed reads + QC-failed reads)
-993038 + 0 primary
+2401278 + 0 in total (QC-passed reads + QC-failed reads)
 0 + 0 secondary
 0 + 0 supplementary
 0 + 0 duplicates
-0 + 0 primary duplicates
-31739 + 0 mapped (3.20% : N/A)
-31739 + 0 primary mapped (3.20% : N/A)
+578716 + 0 mapped (24.10% : N/A)
 0 + 0 paired in sequencing
 0 + 0 read1
 0 + 0 read2
@@ -373,19 +369,20 @@ Check the stats on the other two files and compare the number mapped reads.
 samtools flagstat ${bn2}.bam
 samtools flagstat ${bn3}.bam
 ```
-Percentage of library PW13_E2_L1: 3.20% <>
-Percentage of library PW13_E1_L1: 5.60%
-Percentage of library PW13_E2_L2: 27.02%%
+Percentage of library PW13_E2_L1: 24.10% <br>
+Percentage of library PW13_E1_L1: 5.60% <br>
+Percentage of library PW13_E2_L2: 27.02% <br>
 
 </details>
 
-**NOTE:** If you want to know more about what is coded in each of the BAM fields you can take a look at the the SAM/BAM format specification: https://samtools.github.io/hts-specs/SAMv1.pdf
+**NOTE:** If you want to know more about the BAMs you can take a look at the the SAM/BAM format specification: https://samtools.github.io/hts-specs/SAMv1.pdf
 
-##### Post-mapping filters
+#### Post-mapping filters
 
-Next step is to remove the unmapped reads and filter by mapping quality using ```samtools```:
+Next step is to remove the unmapped reads and filter by mapping quality using `samtools`:
 
 ```{bash, eval = FALSE}
+# Run samtools for each of the BAM files:
 samtools view -bh -o ${bn1}.mapped.bam -F4 -q 30 ${bn1}.bam
 
 samtools view -bh -o ${bn2}.mapped.bam -F4 -q 30 ${bn2}.bam
@@ -393,17 +390,17 @@ samtools view -bh -o ${bn2}.mapped.bam -F4 -q 30 ${bn2}.bam
 samtools view -bh -o ${bn3}.mapped.bam -F4 -q 30 ${bn3}.bam
 ```
 
-Important parameters:
+Parameters we are using:
 ```
--F4        filter reads unmapped (with flag 4)
+-F4        filter unmapped reads (with flag 4)
 -q 30      filter reads with mapping quality lower than 30. 
-
 ```
-You can check what different flags indicate here: https://broadinstitute.github.io/picard/explain-flags.html
+You can check what different flags here: https://broadinstitute.github.io/picard/explain-flags.html
 
-Next, we need to sort the reads within the BAM files (```picard```, which we will use next, needs sorted BAM files). 
+Next, we need to sort the reads within the BAM files (`picard`, which we will use next requires that the reads are sorted). 
 
 ```{bash, eval = FALSE}
+# again, run it for each BAM file:
 samtools sort -o ${bn1}.mapped.sorted.bam ${bn1}.mapped.bam 
 
 samtools sort -o ${bn2}.mapped.sorted.bam ${bn2}.mapped.bam
@@ -411,84 +408,90 @@ samtools sort -o ${bn2}.mapped.sorted.bam ${bn2}.mapped.bam
 samtools sort -o ${bn3}.mapped.sorted.bam ${bn3}.mapped.bam
 ```
 
-##### Merge files by sample
+#### Merge files by sample
 
-Now that we have our mapped reads sorted we can merge all the BAMS that correspond to the same sample into a single BAM using ```picard MergeSamFiles```<sup>6</sup>: 
-
-```{bash, eval = FALSE}
-# Create a sample name for the merged BAM file: 
-samplen="AncientWolf"
-java -jar /home/ec2-user/Software/picard/picard.jar MergeSamFiles VALIDATION_STRINGENCY=LENIENT I=${bn1}.mapped.sorted.bam I=${bn2}.mapped.sorted.bam I=${bn3}.mapped.sorted.bam  O=${samplen}.merged.bam
-```
-
-Since we added a different read group ID to our BAM files before merging, we can always use this information to split the reads if needed.
-
-##### PCR duplicates removal
-
-The next step is to remove the PCR duplicates using $picard MarkDuplicates$:
+Now that we have our mapped reads sorted we can merge the three libraries BAMS that come from the same invididual (S6) into a single BAM using `picard MergeSamFiles`<sup>6</sup>: 
 
 ```{bash, eval = FALSE}
-java -jar /home/ec2-user/Software/picard/picard.jar MarkDuplicates I=${samplen}.merged.bam O=${samplen}.merged.dedup.bam METRICS_FILE=${samplen}.metrics.txt REMOVE_DUPLICATES=true ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT
+# load picard-tools module:
+module unload openjdk/20.0.0 
+module unload jdk/1.8.0_291 
+module unload picard/3.4.0
+module load picard/3.4.0
+
+# assign a name for the merged BAM file: 
+sname="S6"
+
+# run picard-tools:
+picard MergeSamFiles VALIDATION_STRINGENCY=LENIENT I=${bn1}.mapped.sorted.bam I=${bn2}.mapped.sorted.bam I=${bn3}.mapped.sorted.bam  O=${sname}.merged.bam
 ```
 
-$picard MarkDuplicates$ will create a metrics file with the number of reads tha were PCR duplicates:
+Since we assigned a different read group ID to our BAM files before merging, we can always use this information to split the reads if needed.
+
+#### PCR duplicates removal
+
+The next step is to remove the PCR duplicates using `picard MarkDuplicates`:
 
 ```{bash, eval = FALSE}
-cat ${samplen}.metrics.txt |grep -v "#" |column -t
+picard MarkDuplicates I=${sname}.merged.bam O=${sname}.merged.dedup.bam METRICS_FILE=${sname}.metrics.txt REMOVE_DUPLICATES=true ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT
 ```
-```
-LIBRARY	UNPAIRED_READS_EXAMINED	READ_PAIRS_EXAMINED	SECONDARY_OR_SUPPLEMENTARY_RDS	UNMAPPED_READS	UNPAIRED_READ_DUPLICATES	READ_PAIR_DUPLICATES	READ_PAIR_OPTICAL_DUPLICATES	PERCENT_DUPLICATION	ESTIMATED_LIBRARY_SIZE
-FRC	60113	0	0	0	430	0	0	0.007153	
-Liver	18689	0	0	0	2265	0	0	0.121194	
-```
-<span style="color: purple;"> **Q:** </span> Do the libraries had the same proportion of pcr-duplicates? Which one is better? 
 
-##### Index our BAM
+<span style="color:purple"> **Question:** </span>  Could we remove the PCR duplicates before merging the BAM files?
 
-Finaly, we will index our BAM file:
+`picard MarkDuplicates` will create a metrics file with the number of reads tha were PCR duplicates:
 ```{bash, eval = FALSE}
-samtools index ${samplen}.merged.dedup.bam
+cat ${sname}.metrics.txt |grep -v "#" |column -t
+```
+```
+LIBRARY     UNPAIRED_READS_EXAMINED  READ_PAIRS_EXAMINED  SECONDARY_OR_SUPPLEMENTARY_RDS  UNMAPPED_READS  UNPAIRED_READ_DUPLICATES  READ_PAIR_DUPLICATES  READ_PAIR_OPTICAL_DUPLICATES  PERCENT_DUPLICATION  ESTIMATED_LIBRARY_SIZE
+PW13_E1_L1  112404                   0                    0                               0               45                        0                     0                             0.0004               
+PW13_E2_L1  358736                   0                    0                               0               961                       0                     0                             0.002679             
+PW13_E2_L2  171762                   0                    0                               0               220                       0                     0                             0.001281             
+```
+<span style="color:purple"> **Question:** </span> Do the libraries have the same proportion of pcr-duplicates? Which one is better? 
+
+#### Index our BAM
+
+Index your BAM file:
+```{bash, eval = FALSE}
+samtools index ${sname}.merged.dedup.bam
 ```
 
 Finally, we are ready to check how many reads remain after filtering: 
-
 ```{bash, eval = FALSE}
-samtools view -c ${samplen}.merged.dedup.bam
+samtools view -c ${sname}.merged.dedup.bam
 ```
 ```
-76107
+641676
 ```
-<span style="color: purple;"> **Q:** </span> How many useful reads remain? Try estimating the % of endogenous DNA/reads for each of the libraries. Hint: check which filtering options you can give to ```samtools``` by typing ```samtools view```
+<span style="color: purple"> **Question:** </span> How many useful reads remain? Estimate the % of endogenous DNA/reads for each of the libraries. Hint: check which filtering options you can give to `samtools` by typing `samtools view`
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName4"> Show/hide solution </button>  
-<div id="BlockName4" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
 You can use samtools to count the number of reads in each library
 ```{bash, eval = FALSE}
-samtools view -l FRC -c  ${samplen}.merged.dedup.bam
+samtools view -l PW13_E2_L1 -c  ${sname}.merged.dedup.bam
+# 357775
+
+samtools view -l PW13_E1_L1 -c  ${sname}.merged.dedup.bam
+# 112359
+
+samtools view -l PW13_E2_L2 -c  ${sname}.merged.dedup.bam
+# 171542
 ```
-```
-59683
-```
-```{bash, eval = FALSE}
-samtools view -l Liver -c  ${samplen}.merged.dedup.bam
-```
-```
-16424
-```
-And you can get the number of initial reads from the *.settings* file from AdapterRemoval:
+And you can get the number of initial reads from the `.settings` file from AdapterRemoval:
 ```{bash, eval = FALSE}
 grep "Total" *settings
 ```
 ```
-TOG_KCCS_FRC_1.settings:Total number of reads: 1000000
-TOG_KCCS_FRC_2.settings:Total number of reads: 1549421
-TOG_KCCS_L.settings:Total number of reads: 5827604
+PW13_E1_L1.settings:Total number of reads: 4000000
+PW13_E2_L1.settings:Total number of reads: 4000000
+PW13_E2_L2.settings:Total number of reads: 2000000
 ```
 Use those numbers to estimate the endogenous content of each library. 
-</div>
 
-<p>&nbsp;</p>
+</details>
 
 ---------------------------------
 
