@@ -1,77 +1,87 @@
-# Connecting to the server
+## VPN
 
-We will be working on an Amazon Web Server (AWS) that has all the software and data necessary for the course. 
+For the practical exercises we will be using our local computing cluster (**mjolnir**). To access **mjolnir**, you'll need to first login into the University of Copenhagen's VPN. 
 
-The server consists of 64 CPUs (~2 per person) and 128Gb of RAM.
+If you don't have the VPN installed, you can download it and find the instructions on how to set it up for different OS here:
 
-#### Participants usernames
+https://kunet.ku.dk/employee-guide/Pages/IT/Remote-access.aspx
 
-We have created an account for each participant, your user name is your KU-ID and your password is your KU password.
+## Connecting to mjolnir
 
-## Mac, Linux, Ubuntu
+Below you'll find the instruction on how to login to mjolnir for different OS. 
 
-1. Download the 'Key' file (```apgc-2021-key.pem.txt```) from the Dropbox link above, and save it in a local directory in your computer. We recommend having a dedicated directory where you can work during the course, since we will be uploading and downloading files from the server. 
+### Mac, Linux, Ubuntu
 
-2. Open the Terminal application (in a Mac computer you can find this on **Applications**, **Other**, **Terminal**)
+1. Login to the VPN (remember you'll need to accept the MFA request in your phone). 
 
-3. Go to the directory where you have the Key file using ```cd```: 
+2. Open the Terminal application (in a Mac computer you can find this on ```/Applications/Other/Terminal```).
 
-```{bash, eval = FALSE}
-cd /path/to/dir/with/key/file/
-```
-
-4. Change the permissions on the 'Key' file: 
+3. Login to mjolnir by typing the following in your terminal (make sure to change ```ku_username``` for your own KU ID):
 
 ```{bash, eval = FALSE}
-chmod 400 apgc-2021-key.pem.txt
+ssh ku_username@mjolnirgate.unicph.domain
+# you'll get a prompt asking for your password, type it and hit <enter>
 ```
+Don't forget to exit by typing ```exit``` once you are done running the exercises. 
 
-5. Login to the server by typing the following on your terminal (remember to change ```your_user_name``` for the username that was assigned to you):
+#### Transfering files between mjolnir and your local computer
 
+If you need to download/upload files from/to **mjolnir** you can do it through your terminal.
+
+Download a file called "testFile.txt" to your current directory in your local computer:
 ```{bash, eval = FALSE}
-ssh -i apgc-2021-key.pem.txt your_user_name@3.249.84.19
+# First let's check how the looks like: 
+cat /projects/course_1/people/clx746/Data/testFile.txt 
 ```
 
-6. Finally, we will be downloading files from the server during the course, so check if you can download a test file from the server to your local computer with  ```scp ``` (remember to change ```your_user_name``` for the username that was assigned to you): 
-
+Open a new terminal window and go into the directory where you want to download the file (in the example, I am downloading it in my Desktop): 
 ```{bash, eval = FALSE}
-scp -i apgc-2021-key.pem.txt your_user_name@3.249.84.19:/home/ec2-user/Data/testFile.txt .
+# go to the local directory: 
+cd /Users/Jazmin/Desktop
+
+# Then use scp to download the file (remember to change ku_username for your username/ku ID).  
+scp ku_username@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Data/testFile.txt .
 ```
 
-And try uploading it to your home directory (this time there are two places where you should change ```your_user_name``` for your own username): 
+Open the file in your local computer with, for example, textedit and edit the file and save it. 
 
+Now you can upload it back to the server like this:
 ```{bash, eval = FALSE}
-scp -i apgc-2021-key.pem.txt testFile.txt your_user_name@3.249.84.19:/home/your_user_name/
+# Remember to change ku_username for your username (ku ID).  
+scp testFile.txt ku_username@mjolnirgate.unicph.domain:/projects/course_1/people/ku_username/
 ```
 
-Don't forget to exit by typing ```exit``` once you are done. 
-
-Try login in and out a few times to make sure everything is ready for the course. 
-
-## Windows
-
-Windows users should download **PuTTY** to connect to their virtual server, and **WinSCP** to transfer files between their local computer and the server. 
-
-1. Download the 'Key' file (```apgc-2021-key.pem.txt```) from the Dropbox link above, and save it in a local directory in your computer. We recommend having a dedicated directory where you can work during the course, since we will be uploading and downloading files from the server. 
-
-2. Download and install PuTTY: https://www.chiark.greenend.org.uk/~sgtatham/putty/
-
-3. Follow the instructions in sections **Convert your private key using PuTTYgen**, **Connect to your Linux instance** and **Transfer files to your Linux instance using WinSCP** of this AWS manual: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html 
-
-In step 2 of section 3 (Connect to your Linux instance) use the following information:
-
-**my-instance-user-name**: the ```your_user_name``` that was assigned to you
-
-**my-instance-public-dns-name**: 3.249.84.19
-
-4. Finally, we will be downloading files from the server during the course, so once you installed and configured **WinSCP**, check if you can download this file to your computer:
-
-```
-/home/ec2-user/Data/testFile.txt 
+Finally, check if the file you uploaded changed: 
+```{bash, eval = FALSE}
+# Remember to change ku_username for your username (ku ID).  
+cat /projects/course_1/people/ku_username/testFile.txt 
 ```
 
-And try uploading it again to your home directory:
+<p>&nbsp;</p>
+
+### Windows
+
+Windows users need to download **MobaXterm** (https://mobaxterm.mobatek.net/) to connect to the server, and **WinSCP** (https://winscp.net/eng/download.php) to transfer files between their local computer and the server. Download these two programs and follow the instructions for setting it up. 
+
+Once you have WinSCP installed you'll be able to see and navigate within your local computer directories as well as the directories in mjolnir. Using WinSCP visual interface, go to the following directory and download the "testFile.txt". 
 
 ```
-/home/your_user_name
+/projects/course_1/people/clx746/Data/testFile.txt 
 ```
+
+Open the file in your local computer with, for example, WordPad or notePad and edit the file and save it. 
+
+Using WinSCP visual interface again, try uploading the "testFile.txt" to your local directory: 
+
+```
+/projects/course_1/people/ku_username/
+```
+
+Try login in and out a few times to make sure everything works 
+
+
+
+
+
+
+
