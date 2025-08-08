@@ -1,8 +1,8 @@
 # Decoding the past: An introduction to ancient genomics
 
-PhD Course, 11-15 August 2025
-Globe Institute
-Øster Farimagsgade 5A 1353 Copenhagen Denmark
+PhD Course, 11-15 August 2025 <br>
+Globe Institute <br>
+Øster Farimagsgade 5A 1353 Copenhagen Denmark <br>
 
 ### Course coordinators
 Jazmín Ramos Madrigal, Assistant Professor, Globe Institute, jazmin.madrigal@sund.ku.dk
