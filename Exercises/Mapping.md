@@ -88,7 +88,8 @@ TTTGCATCTAACTGAAACTTTCTTCACTTTGAATACAAGATCGGAAGAGCACACGTCTGAACTCCAGTCACGTGTATATC
 BBCC0@CCFGCGFGGGGGGGGFGGGGGGGGGFGGGGGGGGG@CFEBGBGGGGGGEGGGGGGGGGEGGGGGGGGGGGGFF@F
 ```
 
-<span stype="color:red"> Question </span> Do you remember what each line represents? How many reads are there in each FASTQ file? 
+<span stype="color:red"> **Question** </span> Do you remember what each line represents? How many reads are there in each FASTQ file? 
+
 <details>
 <summary> <b>Show answer</b> </summary>
 Each read in the FASTQ file is represented by four lines: 
@@ -108,9 +109,9 @@ Total number of reads: 16000000/4=4000000
 </details>
 
 
-#### Data quality check with fastqc
+### Data quality check with fastqc
 
-One common step before pre-procesing sequencing data is to check its quality using $fastqc$<sup>1</sup>, which estimates some basic quality statistics. 
+A common step before trimming and mapping sequencing data is to check its quality using `fastqc`<sup>1</sup>, which estimates some basic quality statistics. 
 
 We will run $fastqc$ for each of our FASTQ files
 ```{bash, eval = FALSE}
