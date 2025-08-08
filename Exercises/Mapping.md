@@ -373,7 +373,7 @@ Check the stats on the other two files and compare the number mapped reads.
 samtools flagstat ${bn2}.bam
 samtools flagstat ${bn3}.bam
 ```
-Percentage of library PW13_E2_L1: 3.20%
+Percentage of library PW13_E2_L1: 3.20% <>
 Percentage of library PW13_E1_L1: 5.60%
 Percentage of library PW13_E2_L2: 27.02%%
 
