@@ -11,11 +11,11 @@ Jazmín Ramos Madrigal, Assistant Professor, Globe Institute, jazmin.madrigal@su
 Hannes Schroeder, Associate Professor, Globe Institute, hschroeder@sund.ku.dk <br>
 
 ### Teachers
-Jazmín Ramos Madrigal, Assistant Professor, Globe Institute, jazmin.madrigal@sund.ku.dk <br>
-Hannes Schroeder, Associate Professor, Globe Institute, hschroeder@sund.ku.dk <br>
-José Victor Moreno-Mayar, Assistant Professor, Globe Institute, morenomayar@sund.ku.dk <br>
-Katia Bougiouri, Postdoctoral researcher, Globe Institute, katia.bougiouri@sund.ku.dk <br>
-Martin Petr, Assistant Professor, Globe Institute, martin.petr@sund.ku.dk <br>
+Jazmín Ramos Madrigal, Assistant Professor, Globe Institute <br>
+Hannes Schroeder, Associate Professor, Globe Institute <br>
+José Victor Moreno-Mayar, Assistant Professor, Globe Institute <br>
+Katia Bougiouri, Postdoctoral researcher, Globe Institute <br>
+Martin Petr, Assistant Professor, Globe Institute <br>
 
 ### Guest lecturers
 Will Barrie, Postdoctoral researcher, University of Cambridge <br>
