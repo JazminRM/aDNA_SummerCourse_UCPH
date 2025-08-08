@@ -493,60 +493,66 @@ Use those numbers to estimate the endogenous content of each library.
 
 </details>
 
----------------------------------
 
-#### Authentication
+-----------------------------------
 
-Before start analysing the data, we would like to check whether the reads we mapped look authentic ancient DNA, so we will use $bamdamage$<sup>7</sup> to estimate substitution patterns in the reads for each of the two sequencing libraries.
 
-##### MapDamage
+### Authentication
 
-Since we want to compare how the damage looks for each of the sequencing libraries, we will first split our BAM into two:
+Before we start analysing our data, we would like to check if the reads we mapped look like authentic ancient DNA, so we will use `mapDamage`<sup>7</sup> to estimate substitution patterns in the reads for each sequencing library.
+
+#### MapDamage
+
+Since we want to compare how the damage looks for each of the sequencing libraries, we will first split our BAM:
+
 ```{bash, eval = FALSE}
-# separate the reads from the Liver library using samtools and index the BAM:
-samtools view -r Liver -b -o  ${samplen}.merged.dedup.liver.bam  ${samplen}.merged.dedup.bam 
-samtools index  ${samplen}.merged.dedup.liver.bam 
+# separate the reads from the PW13_E2_L1 library using samtools and index the BAM:
+samtools view -r PW13_E2_L1 -b -o  ${sname}.merged.dedup.PW13_E2_L1.bam  ${sname}.merged.dedup.bam 
+samtools index  ${sname}.merged.dedup.PW13_E2_L1.bam 
 
-# Now separate the cartilage reads (since we have two different read groups, we need to create a file with the IDs: 
-echo 'FRC_1
-FRC_2
-' > FRC_rg.txt
-samtools view -R FRC_rg.txt -b -o  ${samplen}.merged.dedup.frc.bam ${samplen}.merged.dedup.bam
-samtools index  ${samplen}.merged.dedup.frc.bam 
+# Do the same for the other two libraries:
+samtools view -r PW13_E1_L1 -b -o  ${sname}.merged.dedup.PW13_E1_L1.bam  ${sname}.merged.dedup.bam 
+samtools index  ${sname}.merged.dedup.PW13_E1_L1.bam 
 
+samtools view -r PW13_E2_L2 -b -o  ${sname}.merged.dedup.PW13_E2_L2.bam  ${sname}.merged.dedup.bam 
+samtools index  ${sname}.merged.dedup.PW13_E2_L2.bam 
 ```
 
-Now, let's run ```mapDamage```:
-
+Now, let's run `mapDamage`:
 ```{bash, eval = FALSE}
-mapDamage -i  ${samplen}.merged.dedup.liver.bam -r $REF_GENOME -d ${samplen}_mapDamage_liver 
-mapDamage -i  ${samplen}.merged.dedup.frc.bam -r $REF_GENOME -d ${samplen}_mapDamage_frc
+# load mapDamage module:
+module load mapdamage2/2.2.2
 
+# run mapDamage (run one at a time and wait until it is done): 
+mapDamage -i  ${sname}.merged.dedup.PW13_E2_L1.bam -r $REF_GENOME -d ${sname}_mapDamage_PW13_E2_L1 
+mapDamage -i  ${sname}.merged.dedup.PW13_E1_L1.bam -r $REF_GENOME -d ${sname}_mapDamage_PW13_E1_L1
+mapDamage -i  ${sname}.merged.dedup.PW13_E2_L2.bam -r $REF_GENOME -d ${sname}_mapDamage_PW13_E2_L2
 ```
 
 ```mapDamage``` creates several output files, including one PDF with the damage patterns and real length distribution: 
 ```{bash, eval = FALSE}
-ls *_mapDamage_frc/*ploy.pdf
+ls -l S6_mapDamage_PW13_E2_L1/*pdf
 ```
 ```
-AncientWolf_mapDamage_frc/Fragmisincorporation_plot.pdf
-AncientWolf_mapDamage_frc/Length_plot.pdf
+S6_mapDamage_PW13_E2_L1/Fragmisincorporation_plot.pdf
+S6_mapDamage_PW13_E2_L1/Length_plot.pdf
 ```
-Download both plots we just created to your local computer using **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). 
+
+Download the plots we just created to your local computer using **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). 
 
 **NOTE:** PDFs for both libraries have the same names, so download each one at a time and change the names.  
 Example of the **scp** command:
 
 ```{bash, eval = FALSE}
-scp -i apgc-2021-key.pem.txt your_user_name@3.249.84.19:/home/your_user_name/mapping/*_mapDamage_liver/*.pdf .
-scp -i apgc-2021-key.pem.txt your_user_name@3.249.84.19:/home/your_user_name/mapping/*_mapDamage_frc/*.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/S6_mapDamage_PW13_E2_L1/Fragmisincorporation_plot.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/S6_mapDamage_PW13_E2_L1/Length_plot.pdf .
 ```
 (remember to change the directory name to your own)
 
-Do they look the same? Does it look authentic?
-<p>&nbsp;</p>
+<span style="color: purple"> **Question:** </span> Do they look the same? Does it look like authentic ancient DNA data?
 
 ---------------------------------
+
 
 #### Mapping alternative using Paleomix
 
