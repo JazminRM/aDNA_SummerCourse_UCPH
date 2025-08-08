@@ -53,7 +53,7 @@ salloc: Relinquishing job allocation 31797328
 
 ### Setting up your working directory and paths to data
 
-Define some paths and file names. We will processes FASTQ files that correspond to sequencing data from three sequencing libraries from ~10,000 year-old individual from Lagoa Santa cave in Brazil [REF].
+Define some paths and file names. We will processes FASTQ files that correspond to sequencing data from three sequencing libraries from ~10,000 year-old individual from Lagoa Santa cave in Brazil <sup>0</sup>.
 
 Create a directory for today's exercises:
 
@@ -115,32 +115,47 @@ A common step before trimming and mapping sequencing data is to check its qualit
 
 We will run $fastqc$ for each of our FASTQ files
 ```{bash, eval = FALSE}
+
+# Load the necessary programs/modules:
+module load perl/5.24.4 
+module load openjdk
+module load fastqc/0.12.1 
+
+# Create a directory to save the results
 mkdir RawQual
+# run fastqc (run one line at a time):
 fastqc --outdir ./RawQual -f fastq $FASTQ1
 fastqc --outdir ./RawQual -f fastq $FASTQ2
 fastqc --outdir ./RawQual -f fastq $FASTQ3
 ```
 
-$fastqc$ will create an HTML file for each of the FASTQs, so download the files to your local computer so you can take a look. 
+`fastqc` will create an HTML file for each of the FASTQs. Download the files to your local computer so you can take a look. 
 
 You can use **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). 
 
 Example of the **scp** command:
 
 ```{bash, eval = FALSE}
-scp -i apgc-2021-key.pem.txt ec2-user@3.249.84.19:/home/your_user_name/mapping/*html .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/RawQual/PW13_E1_L1_fastqc.html .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/RawQual/PW13_E2_L1_fastqc.html .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/RawQual/PW13_E2_L2_fastqc.html .
 ```
 (remember to change the directory name to your own)
 
-#### Adapter trimming
+### Adapter trimming
 
-Before mapping the sequencing read to the reference genome, we will remove the adapter sequences and do some quality trimming using $AdapterRemoval$<sup>2</sup> 
+Before mapping the sequencing read to the reference genome, we will remove the adapter sequences and do some quality trimming using `AdapterRemoval`<sup>2</sup> 
 
-You can run adapter removal like this:
 ```{bash, eval = FALSE}
+# load AdapterRemoval module:
+module load adapterremoval/2.3.3
+ 
+# Assign a name for the output:
 bn1=`basename $FASTQ1 |sed 's/.fastq.gz//'`
+# Run adapterRemoval (it might take a few minutes, wait until it is done before running the next one): 
 AdapterRemoval --file1 $FASTQ1 --basename $bn1 --trimns --trimqualities --minquality 2 --minlength 30  --mm 3 --gzip
 
+# Run adapterRemoval for the other two files:
 bn2=`basename $FASTQ2 |sed 's/.fastq.gz//'`
 AdapterRemoval --file1 $FASTQ2 --basename $bn2 --trimns --trimqualities --minquality 2 --minlength 30  --mm 3 --gzip
 
