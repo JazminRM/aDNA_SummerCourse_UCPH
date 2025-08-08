@@ -87,25 +87,26 @@ TTTGCATCTAACTGAAACTTTCTTCACTTTGAATACAAGATCGGAAGAGCACACGTCTGAACTCCAGTCACGTGTATATC
 +
 BBCC0@CCFGCGFGGGGGGGGFGGGGGGGGGFGGGGGGGGG@CFEBGBGGGGGGEGGGGGGGGGEGGGGGGGGGGGGFF@F
 ```
-<span style="color: purple;"> **Q:** </span>  Do you remember what each line represents? How many reads are there in each FASTQ file? 
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName1"> Show/hide solution </button>  
-<div id="BlockName1" class="collapse">  
-
-Each read in the FASTQ file is represented by four lines: read ID, sequence, a + sign and the qualities. 
+<code stype="color ; Darkorange"> Question: </code> Do you remember what each line represents? How many reads are there in each FASTQ file? 
+<details>
+<summary> <b>Show answer</b> </summary>
+Each read in the FASTQ file is represented by four lines: 
+    1. read ID, 
+    2. sequence, 
+    3. a + sign and 
+    4. the qualities. 
 So you can count the number of read by dividing the number of lines in the file by 4: 
 
 ```{bash, eval = FALSE}
 zcat $FASTQ1 |wc -l 
 ```
 ```
-4000000
+16000000
 ```
-Total number of reads: 4000000/4=1000000
-</div>
+Total number of reads: 16000000/4=4000000
+</details>
 
-
-<p>&nbsp;</p>
 
 #### Data quality check with fastqc
 
