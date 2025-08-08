@@ -5,7 +5,7 @@ Globe Institute
 Øster Farimagsgade 5A 1353 Copenhagen Denmark
 
 ### Course coordinators
-Jazmín Ramos Madrigal, Assistant Professor, Globe Institute, jazmin.madrigal@sund.ku.dk 
+Jazmín Ramos Madrigal, Assistant Professor, Globe Institute, jazmin.madrigal@sund.ku.dk
 Hannes Schroeder, Associate Professor, Globe Institute, hschroeder@sund.ku.dk
 
 ### Teachers
