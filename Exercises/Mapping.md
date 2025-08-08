@@ -1,6 +1,6 @@
 ## Basic steps for mapping ancient DNA sequencing data
 
-Outline: 
+### Outline: 
 
 * Requesting an interactive node
 * FASTQ files
@@ -37,16 +37,6 @@ Now you are in a node of the server, where you can run the exercises. Each of yo
 cd /projects/course_1/people/ku_username/
 ```
 
-Create a directory for today's exercises:
-
-```{bash, eval = FALSE}
-# remember to change ku_username for your username:
-mkdir -p /projects/course_1/people/ku_username/mapping/
-
-# and go to your working directory:
-cd /projects/course_1/people/ku_username/mapping/
-```
-
 **NOTE 1**: When you are done working, remember to logout and close the interactive session, you can do that by typing exit twice. It will look something like this: 
 
 ```
@@ -61,34 +51,41 @@ salloc: Relinquishing job allocation 31797328
 -----------------------------------
 
 
-#### Setting up your working directory and paths to data
+### Setting up your working directory and paths to data
 
-Define some paths and file names. We will processes FASTQ files that correspond to sequencing data from three sequencing libraries from the same ancient wolf specimen. 
+Define some paths and file names. We will processes FASTQ files that correspond to sequencing data from three sequencing libraries from ~10,000 year-old individual from Lagoa Santa cave in Brazil [REF].
+
+Create a directory for today's exercises:
 
 ```{bash, eval = FALSE}
+# remember to change ku_username for your username:
+mkdir -p /projects/course_1/people/ku_username/mapping/
+
+# and go to your working directory:
+cd /projects/course_1/people/ku_username/mapping/
+
 FASTQ1="/projects/course_1/people/clx746/Data/PW13_E2_L1.fastq.gz"
 FASTQ2="/projects/course_1/people/clx746/Data/PW13_E1_L1.fastq.gz"
 FASTQ3="/projects/course_1/people/clx746/Data/PW13_E2_L2.fastq.gz"
 ```
 
-<p>&nbsp;</p>
-
 #### FASTQ files refresher
 
-What are the FASTQ files and how they look.
+Quick refreser on what are the FASTQ files and how they look.
 
 ```{bash, eval = FALSE}
+# You can take a look at one of the FASTQ files like this:
 zcat $FASTQ1 |head -n 8
 ```
 ```
-@ERR4805985.1 HWI-D00230L:344:C9NH3ANXX:2:1101:10001:34477
-TGAGTGTGGGCGATATTGCCGTGCTGCATGTGGGCAGGCTCGCTCTCGAGAAAAATCTGGGCCTGCTTAAAACCAGCTTCG
+@HISEQ:151:C8L9GANXX:1:1101:1419:2130 1:N:0:GTGTAT
+TTCGGCGGCGGTGTCGCGGATGTAAGATCGGAAGAGCACACGTCTGAACTCCAGTCACGTGTATATCTCGTATGCCGTCTT
 +
-AB<ABGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGEGGG1<FGGGGGGGGGGGGGGGGGGGGGGGGGG
-@ERR4805985.2 HWI-D00230L:344:C9NH3ANXX:2:1101:10001:68221
-ATCCTGTACTGACCGGACTCCACCAGCAGCGGTGACACCAGAATCGCATAAGATCGGAAGAGCACACGTCTGAACTCCAGT
+CCCCCGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
+@HISEQ:151:C8L9GANXX:1:1101:1486:2132 1:N:0:GTGTAT
+TTTGCATCTAACTGAAACTTTCTTCACTTTGAATACAAGATCGGAAGAGCACACGTCTGAACTCCAGTCACGTGTATATCT
 +
-BBABBGGGGGGCEGGGFGGGGG1=FE>GGEGGGGFGGGGGGGGGGFEGGGGGGGGGGGGGGGGGGGGGGGGGFGGGGGEGF
+BBCC0@CCFGCGFGGGGGGGGFGGGGGGGGGFGGGGGGGGG@CFEBGBGGGGGGEGGGGGGGGGEGGGGGGGGGGGGFF@F
 ```
 <span style="color: purple;"> **Q:** </span>  Do you remember what each line represents? How many reads are there in each FASTQ file? 
 
