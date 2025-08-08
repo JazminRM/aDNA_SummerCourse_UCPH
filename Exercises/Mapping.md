@@ -241,7 +241,7 @@ Things to consider about the reference genome. Most likely you'll be using the s
 For this exercise, we will be mapping our data to the Human reference genome (build37.1) <sup>3</sup>:
 
 ```{bash, eval = FALSE}
-REF_GENOME="/projects/course_1/people/clx746/Data/Genome/hs.build37.1.fa"
+REF_GENOME="/projects/course_1/people/clx746/Data/Genome/hs.build37.1.fasta"
 ```
 
 First time you use a reference genome, you need to create three indexes: a ```samtools index```, a ```picard``` dictionary and a ```bwa index```. In this case we already created them since each can take some time to run. 
@@ -250,13 +250,13 @@ But you can see here how to create them here:
 
 ```
 # bwa index:
-bwa index hs.build37.1.fa
+bwa index hs.build37.1.fasta
 
 # samtools index:
-samtools faidx hs.build37.1.fa
+samtools faidx hs.build37.1.fasta
 
 # picard dictionary/index:
-picard CreateSequenceDictionary R=hs.build37.1.fa O=hs.build37.1.dict
+picard CreateSequenceDictionary R=hs.build37.1.fasta O=hs.build37.1.dict
 ```
 
 #### Mapping
@@ -336,7 +336,7 @@ samtools view -H ${bn1}.bam
 @SQ     SN:Y    LN:59373566
 @SQ     SN:MT   LN:16569
 @RG     ID:FRC_1        LB:FRC  PL:ILLUMINA     SM:Tumat
-@PG     ID:bwa  PN:bwa  VN:0.7.15-r1140 CL:bwa samse -r @RG\tID:FRC_1\tLB:FRC\tPL:ILLUMINA\tSM:Tumat /projects/course_1/people/clx746/Data/Genome/hs.build37.1.fa PW13_E2_L1.sai PW13_E2_L1.truncated.gz
+@PG     ID:bwa  PN:bwa  VN:0.7.15-r1140 CL:bwa samse -r @RG\tID:FRC_1\tLB:FRC\tPL:ILLUMINA\tSM:Tumat /projects/course_1/people/clx746/Data/Genome/hs.build37.1.fasta PW13_E2_L1.sai PW13_E2_L1.truncated.gz
 ```
 
 We can also use `samtools` to get some basic statistics about the number of reads mapped and unmapped:
@@ -556,43 +556,43 @@ scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/S6
 
 #### Mapping alternative using Paleomix
 
-If you have many samples and FASTQ files that you want to map an alternative is to use ```paleomix```<sup>8</sup>, which run all of the steps above. 
-
-First, create a directory so that we don't overwrite our previous file:
+If you have many ancient individuals and FASTQ files and you want to map them to a reference genome, you can also use `paleomix`<sup>8</sup>, which run all of the steps above. Below is an example on how to do this.
 
 ```{bash, eval = FALSE}
-# First go into your own directory (remember to change for your own username):
+# Create a directory so that we don't overwrite our previous file:
 username="your_own_username"
-cd /home/$username/mapping/ 
-
-# Then create a new directory:
-directoryPaleomix="mapping_paleomix"
+directoryPaleomix="/projects/course_1/people/${username}/Mapping/Paleomix"
 mkdir $directoryPaleomix
+
+# go to the directory:
 cd  $directoryPaleomix
 ```
 
-In order to run $paleomix$, we need to fill in a template with the information about our FASTQs, the parameters we want to use and the samples information. 
+To run `paleomix`, we need to fill in a template with the information about our FASTQs and the parameters we want to use. 
 
-Download the following pre-filled template:
+Copy the following pre-filled template to your local directory:
 ```{bash, eval = FALSE}
-wget https://sid.erda.dk/share_redirect/CaAx7aX67g/ancCanid.yaml
+cp /projects/course_1/people/clx746/Mapping/Paleomix/template.yaml .
 ```
-
 Take a look at the template and at the different options, do you recognise some of the parameters?
+```{bash, eval = FALSE}
+# You can take a look at the file using cat:
+cat template.yaml 
+```
 
-Once you have the template ready, $paleomix$ can be run like this:
+Once you have the template ready, `paleomix` can be run like this:
 
 ```{bash, eval = FALSE}
-paleomix bam run --jre-option=-Xmx2g --jar-root /home/ec2-user/Software/picard/ ancCanid.yaml
+paleomix bam run --jre-option=-Xmx2g --jar-root /projects/symbean/people/clx746/Scripts/picard/ template.yaml 
 ```
 
-Once $paleomix$ is done running, you'll have your BAM file and two summary files:
+Once `paleomix` is done running, you'll have your BAM file and two summary files:
 ```
-AncCanid.summary
-AncCanid.wolf.coverage
+S6.summary
+S6.hg37.coverage
 ```
 
-The first one (*AncCanid.summary*) is a summary of the number of reads mapped at different steps. The first lines contain information about the reference genome used:
+The first one (*S6.summary*) is a summary of the number of reads mapped at different steps. The first lines contain information about the reference genome used:
 
 ```{bash, eval = FALSE}
  grep "^#" AncCanid.summary 
@@ -712,13 +712,14 @@ Do the number of final reads in the $paleomix$ BAM files match with our step-by-
 <p>&nbsp;</p>
 
 #### References
+0. Moreno-Mayar J.V. *et al*. (2018). **Early human dispersals within the Americas.** Science. 362, 1128.
 1. Andrews, S. (2010). **FastQC:  A Quality Control Tool for High Throughput Sequence Data.** Available online at: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 3. Schubert, M. *et al* (2016). **AdapterRemoval v2: rapid adapter trimming, identification, and read merging** BMC Research Notes. 
-2. Gopalakrishnan, S *et al.* (2017) **The wolf reference genome sequence (*Canis lupus lupus*) and its implications for Canis spp. population genomics.** BMC Genomics 18, 495
+2. Human reference genome assembly GRCh37: https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001405.13/
 4. Li, H. & Durbin, R. (2009) **Fast and accurate short read alignment with Burrows–Wheeler transform**. Bioinformatics 25, 1754–1760 .
 5. Li, H. et al. (2009) **The Sequence Alignment/Map format and SAMtools**. Bioinformatics 25, 2078–2079.
 6. picard-tools: http://picard.sourceforge.net
-7. Malaspinas, A.-S. *et al.* (2014) **bammds: a tool for assessing the ancestry of low-depth whole-genome data using multidimensional scaling (MDS).** Bioinformatics 30, 2962–2964 
+7. Jonsson H. *et al.* (2014) **mapDamage2.0: fast approximate Bayesian estimates of ancient DNA damage parameters** Bioinformatics Vol. 29, 13, 1682–1684. 
 8. Schubert M, *et al.* (2014) **Characterization of ancient and modern genomes by SNP detection and phylogenomic and metagenomic analysis using PALEOMIX**. Nat Protoc. May;9(5):1056-82.
 
 
