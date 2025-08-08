@@ -3,8 +3,8 @@
 PhD Course, 11-15 August 2025
 
 ### Location
-Globe Institute, University of Copenhagen
-Øster Farimagsgade 5A 1353 Copenhagen Denmark
+Globe Institute, University of Copenhagen <br>
+Øster Farimagsgade 5A 1353 Copenhagen Denmark <br>
 
 ### Course coordinators
 Jazmín Ramos Madrigal, Assistant Professor, Globe Institute, jazmin.madrigal@sund.ku.dk <br>
