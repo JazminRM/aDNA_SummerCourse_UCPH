@@ -108,6 +108,9 @@ zcat $FASTQ1 |wc -l
 Total number of reads: 16000000/4=4000000
 </details>
 
+-----------------------------------
+
+
 
 ### Data quality check with fastqc
 
@@ -141,6 +144,9 @@ scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/Ra
 scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/RawQual/PW13_E2_L2_fastqc.html .
 ```
 (remember to change the directory name to your own)
+
+-----------------------------------
+
 
 ### Adapter trimming
 
@@ -222,50 +228,58 @@ fastqc --outdir TrimQual -f fastq ${bn3}.truncated.gz
 Download the new HTML files and compare the results from before and after trimming the adapters. 
 
 </details>
----------------------------------
 
-#### Step-by-step mapping
+-----------------------------------
 
-##### Preparing the reference genome
 
-Things to consider about the reference genome. In many cases you'll be using the same reference genome for every analysis, so make sure you have a good reference genome. Some things to consider are: chromosome names, no weird characters in the file, is it masked?, is it complete? are you including the mtDNA/cpDNA sequences too? 
+### Step-by-step mapping
 
-Today we will be mapping our data to the Wolf reference genome<sup>3</sup>:
+#### Preparing the reference genome
+
+Things to consider about the reference genome. Most likely you'll be using the same reference genome for every analysis, so make sure you have a good reference genome. Some things to consider are: chromosome names, no weird characters in the file, are you using the correct version? is it masked?, is it complete? are you including the mtDNA/cpDNA sequences too? 
+
+For this exercise, we will be mapping our data to the Human reference genome (build37.1) <sup>3</sup>:
 
 ```{bash, eval = FALSE}
-REF_GENOME="/home/ec2-user/Data/wolfGenome/Wolf.fasta"
+REF_GENOME="/projects/course_1/people/clx746/Data/Genome/hs.build37.1.fa"
 ```
 
 First time you use a reference genome, you need to create three indexes: a ```samtools index```, a ```picard``` dictionary and a ```bwa index```. In this case we already created them since each can take some time to run. 
 
-But you can see here how to create them:
+But you can see here how to create them here:
 
 ```
 # bwa index:
-bwa index $REF_GENOME
+bwa index hs.build37.1.fa
 
 # samtools index:
-samtools faidx $REF_GENOME
+samtools faidx hs.build37.1.fa
 
 # picard dictionary/index:
-ref_bn=`echo $REF_GENOME |sed 's/.fasta//'`
-picard CreateSequenceDictionary R=$REF_GENOME O=${ref_bn}.dict
+picard CreateSequenceDictionary R=hs.build37.1.fa O=hs.build37.1.dict
 ```
 
-##### Mapping
+#### Mapping
 
-Here will do a step-by-step mapping of our sequencing data to the reference genome. After, we will use ```paleomix``` which is an "easier" way to run all these steps. 
+Here you can follow a step-by-step mapping of our ancient. As we mentioned in class, many times you'll use an automatic workflow that will do each of these steps for you, however, it is important to understand the main processing and filtering steps, so we are running each one manually here.
 
-First mapping step, run ```bwa aln```<sup>4</sup>: 
+First step, map your data to the reference genome using ```bwa aln```<sup>4</sup>: 
 
 ```{bash, eval = FALSE}
-bwa aln $REF_GENOME ${bn1}.truncated.gz >  ${bn1}.sai
+# load bwa module
+module load bwa/0.7.15
+module load samtools/1.21
 
-bwa aln $REF_GENOME ${bn2}.truncated.gz >  ${bn2}.sai
+# map each of the files separately (each will take a few minutes, wait until it is done before running the next one)
+bwa aln -l 1000 $REF_GENOME ${bn1}.truncated.gz >  ${bn1}.sai
 
-bwa aln $REF_GENOME ${bn3}.truncated.gz >  ${bn3}.sai
+bwa aln -l 1000 $REF_GENOME ${bn2}.truncated.gz >  ${bn2}.sai
+
+bwa aln -l 1000 $REF_GENOME ${bn3}.truncated.gz >  ${bn3}.sai
 
 ```
+
+One important parameter here is the `-l`. The `-l` specifies the length of the sequence that will be used as seed during the mapping (first 32bp by default), we want to use the complete read as seed, given that we expect most of the aDNA damage will located at the start of the read and only using the first bps will decrease the chances of the read mapping.
 
 Second step, run ```bwa samse``` (or ```bwa samppe``` for paired-end data). 
 
@@ -273,7 +287,7 @@ Something important in this step is to assign a read group with the information 
 
 You can define the read group like this:
 ```
-@RG\tID:FRC_1\tLB:FRC\tPL:ILLUMINA\tSM:Tumat
+@RG\tID:PW13_E2_L1\tLB:PW13_E2_L1\tPL:ILLUMINA\tSM:S6
 
 ID = read group ID
 LB = library ID
@@ -282,24 +296,24 @@ SM = sample name
 ```
 
 ```{bash, eval = FALSE}
-# in each of these commands, we are first using bwa samse to create a SAM file with the read group information, and they we are passing this information to samtools to turn the SAM file into a BAM file (the compressed version of a SAM): 
-bwa samse -r '@RG\tID:FRC_1\tLB:FRC\tPL:ILLUMINA\tSM:Tumat' $REF_GENOME ${bn1}.sai ${bn1}.truncated.gz | samtools view -Sbho ${bn1}.bam
+# in each of these lines, we are first using bwa samse to create a SAM file with the read group information, and they we are passing this information to samtools to conver the SAM file into a BAM file: 
+bwa samse -r '@RG\tID:PW13_E2_L1\tLB:PW13_E2_L1\tPL:ILLUMINA\tSM:S6' $REF_GENOME ${bn1}.sai ${bn1}.truncated.gz | samtools view -Sbho ${bn1}.bam
 
-bwa samse -r '@RG\tID:FRC_2\tLB:FRC\tPL:ILLUMINA\tSM:Tumat' $REF_GENOME ${bn2}.sai ${bn2}.truncated.gz | samtools view -Sbho ${bn2}.bam
+bwa samse -r '@RG\tID:PW13_E1_L1\tLB:PW13_E1_L1\tPL:ILLUMINA\tSM:S6' $REF_GENOME ${bn2}.sai ${bn2}.truncated.gz | samtools view -Sbho ${bn2}.bam
 
-bwa samse -r '@RG\tID:Liver\tLB:Liver\tPL:Liver:ILLUMINA\tSM:Tumat' $REF_GENOME ${bn3}.sai ${bn3}.truncated.gz | samtools view -Sbho ${bn3}.bam
+bwa samse -r '@RG\tID:PW13_E2_L2\tLB:PW13_E2_L2\tPL:ILLUMINA\tSM:S6' $REF_GENOME ${bn3}.sai ${bn3}.truncated.gz | samtools view -Sbho ${bn3}.bam
 
 ```
 
+#### BAM files refresher
 
-##### BAM files
+Let's look at how our BAM files. Given they are compressed files, we can only read them using `samtools`<sup>5</sup>. 
 
-Now let's look at how our BAM files. Given they are compressed files, we can only read them through $samtools$<sup>5</sup>. For example:
+For example:
 
 ```{bash, eval = FALSE}
 samtools view ${bn1}.bam |head -n 5
 ```
-
 ```
 ERR4805985.1    4       *       0       0       *       *       0       0       TGAGTGTGGGCGATATTGCCGTGCTGCATGTGGGCAGGCTCGCTCTCGAGAAAAATCTGGGCCTGCTTAAAACCAGCTTCG       AB<ABGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGEGGG1<FGGGGGGGGGGGGGGGGGGGGGGGGGG      RG:Z:FRC_1
 ERR4805985.2    4       *       0       0       *       *       0       0       ATCCTGTACTGACCGGACTCCACCAGCAGCGGTGACACCAGAATCGCATA      BBABBGGGGGGCEGGGFGGGGG1=FE>GGEGGGGFGGGGGGGGGGFEGGG    RG:Z:FRC_1
