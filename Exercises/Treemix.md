@@ -1,16 +1,44 @@
-### Admixture graphs
+### Admixture graphs
+
+### Outline
+
+* Admixture graphs using Treemix  <sup>1</sup
+   + Create Treemix input using `FrAnTK` <sup>2</sup>
+   + Build a ```TreeMix``` tree
+
+### Interactive node
+
+Start by getting an interactive node: 
+
+```{bash, eval = FALSE}
+# First log in to the server (remember to change ku_username for your username)
+ssh ku_username@mjolnirgate.unicph.domain
+
+# request one CPU using salloc like this:
+salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --account=teaching --reservation=aDNA_PHD_course
+
+# once the job has been allocated, you can login to the node with srun like this:
+srun --pty -n 1 -c 1 bash -i
+```
+
+Go to the ExploratoryAnalyses directory (we will use the same PLINK files we generated earlier):
+```{bash, eval = FALSE}
+# remember to change ku_username for your username:
+cd /projects/course_1/people/ku_username/ExploratoryAnalyses
+```
 
 #### TreeMix trees
 
-Now we now how our mystery sample looks like in terms of its general genetic ancestry. We know what is the population it is closest to, we also have an idea of potential admixture with other populations, so the next thing we want to do is to build a tree. 
+Now we now how our ancient sample looks like in terms of its general genetic ancestry. We know what is the population it is closest to, we also have an idea of potential admixture with other populations, so the next thing we want to do is to build a tree. 
 
-In this section we will build a tree with the reference data and our mystery samples using ```TreeMix``` <sup>1</sup> . 
+In this section we will build a tree with the reference data and our ancient samples using ```TreeMix``` <sup>1</sup> . 
 
 ```TreeMix``` takes as input a file with allele counts and since we want to discard sites with missing data we will select only some relevant and high coverage samples for the tree (two samples from each category) and we will use the golden jackal as outgroup:
 
 (Feel free to include/exclude more samples if you want!)
+
 ```{bash, eval=FALSE}
-cut -f 1 wolves_rand_ftk_pop |grep -e GoldenJackal -e Dog_GMums -e Dog_Qaanaaq -e Dog_Hebei -e Dog_TM -e Wolf_Israel -e Wolf_UlakhanSular -e Wolf_Qamanirjuaq -e Wolf_NorthBaffin -e Wolf_Portuguese -e MysterySample -e Dog_SibHusky -e Dog_Greenland -e Dog_AlaskanM -e Dog_AlaskanHusky >  pop2kep
+cut -f 1 wolves_rand_ftk_pop |grep -e GoldenJackal -e Dog_GMums -e Dog_Qaanaaq -e Dog_Hebei -e Dog_TM -e Wolf_Israel -e Wolf_UlakhanSular -e Wolf_Qamanirjuaq -e Wolf_NorthBaffin -e Wolf_Portuguese -e AncientCanid -e Dog_SibHusky -e Dog_Greenland -e Dog_AlaskanM -e Dog_AlaskanHusky >  pop2kep
 ```
 
 Our *pop2kep* file now contains a list of the populations we want to include in the tree. We will use ```FrAnTK```'s ```Freqs2Treemix``` tool to create the input for ```TreeMix```
@@ -49,7 +77,7 @@ The *wolves_rand_ftk_treemix_ALL_tm.gz* file contains the allele counts and it i
 zcat wolves_rand_ftk_treemix_ALL_tm.gz |head
 ```
 ```
-Dog_AlaskanHusky Dog_AlaskanM Dog_GMums Dog_Greenland Dog_Hebei Dog_Qaanaaq Dog_SibHusky Dog_TM GoldenJackal MysterySample Wolf_Israel Wolf_NorthBaffin Wolf_Portuguese Wolf_Qamanirjuaq Wolf_UlakhanSular
+Dog_AlaskanHusky Dog_AlaskanM Dog_GMums Dog_Greenland Dog_Hebei Dog_Qaanaaq Dog_SibHusky Dog_TM GoldenJackal AncientCanid Wolf_Israel Wolf_NorthBaffin Wolf_Portuguese Wolf_Qamanirjuaq Wolf_UlakhanSular
 0,1 0,1 0,1 0,1 0,1 0,1 0,2 0,1 2,0 1,0 0,2 0,1 0,1 0,1 0,1
 0,1 0,1 0,1 0,1 0,1 0,1 1,1 0,1 0,2 0,1 0,2 1,0 0,1 0,1 0,1
 0,1 0,1 0,1 0,1 0,1 0,1 0,2 0,1 2,0 0,1 0,2 1,0 1,0 0,1 0,1
@@ -206,10 +234,10 @@ scp -i apgc-2021-key.pem.txt ec2-user@54.216.412.93:/home/ec2-user/Day4/E1/treem
 ```
 (remember to use your own IP address)
 
-Here we can see how the result look like for mystery sample 1:
+Here we can see how the result look like for ancient sample 1:
 
 ![Treemix figure. Treemix trees obtained for mysterty sample 1](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2022/E1_2/wolves_treemix_ed.png)
-Are the results in agreement with what we learned about the mystery sample yesterday? 
+Are the results in agreement with what we learned about the ancient samples earlier? 
 
 <p>&nbsp;</p>
 
