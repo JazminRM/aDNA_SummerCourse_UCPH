@@ -238,18 +238,19 @@ scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Explorator
 
 The result should look like this:
 
-![Figure 1. Histogram showing the per site depth of coverage.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/Exercises/depth_of_cov.png)
+<img src="../Figures/depth_of_cov.png" width=50%>
 
 <span style="color:purple"> **Question:** </span> Now that you know the depth of coverage of your sample, which approach (random read sampling/GL/genotype-calling) do you think is best?
 
 -----------------------------------
 
+
 ### Pseudohaploid approach
 
 To start exploring the ancestry of our unknown canid, we will estimate a PCA using ```smartpca``` <sup>4</sup> and use the model-based clustering  approach implemented in ```ADMIXTURE``` <sup>3</sup> to estimate ancestry proportions. Both programs can be used with pseudo-haploid data and need BED/BIM/FAM files as input.  
 
-<p>&nbsp;</p>
 -----------------------------------
+
 
 #### Adding an ancient sample (BAM) to a reference SNP dataset by randomly sampling a read
 
