@@ -516,7 +516,7 @@ logLikelihood<-log(Likelihood)
 plot(Likelihood, logLikelihood)
 ```
 
-![Likelihoods.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/Exercises/loglikevslike.png)
+![Likelihoods.](https://github.com/JazminRM/aDNA_SummerCourse_UCPH/tree/main/Figures/loglikevslike.png)
 
 As you can see, as the likelihood increases the *log* likelihood gets closer to 0. 
 
