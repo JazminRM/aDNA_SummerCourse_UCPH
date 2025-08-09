@@ -1,64 +1,77 @@
-### Exploratory data analyses: unsupervised clustering methods
+## Exploratory data analyses: unsupervised clustering methods
 
-During the exercises of the following days we will be analysing data from two ancient (mystery) canids (you can choose between two mystery samples). 
+For the practical exercises on unsupervised clustering we will be analysing sequencing data from three unknown ancient canids. You get to pick one of them and throughout the day you'll characterise the ancestry of these canids and find their identity.
 
-We will start from a BAM file (like the one we created previously), that contains sequencing data mapped to the wolf reference genome <sup>1</sup>, and compare it with a reference dataset of present-day and ancient canids using two approaches: sampling a random read from the sequencing data, and estimating a genotype-likelihoods. 
+We will start with BAM files (like the one we created yesterday), that has sequencing data mapped to the wolf reference genome <sup>0</sup>, and compare it with a reference dataset of present-day and ancient canids using two approaches: a pseudohaploid approach and a genotype-likelihoods approach. 
 
-The idea is that you will determine the genetic identity of the mystery samples with the analyses that we will run today and tomorrow. 
-
-Outline of the exercises: 
+### Outline 
 
 * Familiarise with the data and file formats
-* Random read approach
-    + Add a new sample from a BAM file to a SNP dataset by randomly sampling a read per site using ```ANGSD``` <sup>2</sup>
-    + Use ADMIXTURE <sup>3</sup> to estimate admixture components and proportions
+* Pseudo haploid (random read) approach
+    + Incorporate a new sample from a BAM file to a SNP dataset by randomly sampling a read per site using ```Frantk``` <sup>1</sup>
+    + Use ADMIXTURE <sup>3</sup> to estimate ancestry proportions
     + Create a PCA using ```smartpca``` <sup>4</sup> with and without projection
 * Genotype-likelihood (GL) approach 
     + Estimate GL and perform SNP calling using ```ANGSD``` <sup>2</sup>
-    + Use ```NGSadmix``` <sup>5</sup> to estimate admixture proportions using the GL
+    + Use ```NGSadmix``` <sup>5</sup> to estimate ancestry proportions
     + Create a PCA using ```pcangsd``` <sup>6</sup> and the GL
 
-Throughout the exercises I have highlighted some steps that (sometimes) are required when working with non-model organisms with fragmented reference genomes (marked with <span style="color: orchid;">†</span>). 
 
-<p>&nbsp;</p>
 -----------------------------------
 
-#### Data
+### Interactive node
 
-Create a directory for today's exercises:
-(make sure to change "write_your_username" for your own directory name):
+We will start by getting an interactive node:
+
+```{bash, eval = FALSE}
+# First log in to the server (remember to change ku_username for your username)
+ssh ku_username@mjolnirgate.unicph.domain
+
+# first request one CPU using salloc like this:
+salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --account=teaching --reservation=aDNA_PHD_course
+
+# once the job has been allocated, you can login to the node with srun like this:
+srun --pty -n 1 -c 1 bash -i
+```
+
+### Data
+
+Once you login to you interactive node, we will create a directory for today's exercises (make sure to change "username" for your own directory name):
  
 ```{bash, eval = FALSE}
-username="write_your_username"
-
-directoryExpA="/home/$username/exploratoryA/"
-
+# create directory
+directoryExpA="/home/_username_/ExploratoryAnalyses/"
 mkdir -p $directoryExpA
-
+# go into the directory
 cd $directoryExpA
 ```
 
-Define some paths and file names. Select one of the samples (sample1 or sample2). 
+Define some paths and file names. We have three unknow samples, pick only one (copy&paste only the section of the sample you selected): 
 
 ```{bash, eval = FALSE}
 # Sample 1
-BAM="/home/ec2-user/Data/BAMS/sample1.bam"
-SAMPLENAME="MysterySample"
+BAM="/projects/course_1/people/clx746/Data/sample1.bam"
+SAMPLENAME="AncientCanid"
 
 # or sample 2 
-BAM="/home/ec2-user/Data/BAMS/sample2.bam"
-SAMPLENAME="MysterySample"
+BAM="/projects/course_1/people/clx746/Data/sample2.bam"
+SAMPLENAME="AncientCanid"
 
-# Dataset with SNP data for reference wolves and dogs:
-SNPbasename="/home/ec2-user/Data/SNPs/wolves_rand"
-
+# or sample 3
+BAM="/projects/course_1/people/clx746/Data/sample3.bam"
+SAMPLENAME="AncientCanid"
 ```
 
-<p>&nbsp;</p>
+Also define the path to the SNP panel we will be using: 
 
-#### PLINK files
+```{bash, eval = FALSE}
+# Dataset with SNP data for wolves and dogs:
+SNPbasename="/projects/course_1/people/clx746/Data/wolves_rand"
+```
+ 
+### PLINK files refresher
 
-We will be working with $plink$ <sup>7</sup> files during the rest of the course, so start by checking their format and the information they contain. 
+We will be working with `plink` <sup>7</sup> files during very often during the course, so here is a quick refresher on this format. 
 
 PLINK files come in sets of 2 or 3 files and contain the genotype data, information about the SNP's genomic coordinates, and information about the samples. Some common sets are TPED/TFAM, BED/BIM/FAM and MAP/PED files, all of which are interchangeable using ```plink```. We will be working mostly with BED/BIM/FAM files, more information about the PLINK files and ```plink``` can be found [here](https://www.cog-genomics.org/plink/2.0/input).
 
@@ -1720,7 +1733,9 @@ Download the result and take a look at them.
 ### References
 <p>&nbsp;</p>
 
-1. Gopalakrishnan, S *et al.* 20147 **The wolf reference genome sequence (*Canis lupus lupus*) and its implications for Canis spp. population genomics.** BMC Genomics 18, 495
+0. Gopalakrishnan, S *et al.* 20147 **The wolf reference genome sequence (*Canis lupus lupus*) and its implications for Canis spp. population genomics.** BMC Genomics 18, 495
+
+1. FrantK
 
 2. Korneliussen, T.S *et al.* 2014. **ANGSD: Analysis of Next Generation Sequencing Data.** BMC Bioinformatics 15, 356.
 
