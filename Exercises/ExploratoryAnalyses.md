@@ -617,21 +617,21 @@ mkdir BestRep
 # select the best replicate:
 R
 options(digits=20)
-for(k in 3:4){
+for(k in 2:4){
 	logs<-read.table(pipe(paste0("grep '^Loglikelihood' */*_", k, "_out.log")), as.is=T, sep=" ")
 	ll<-paste0("cp ", unlist(lapply(strsplit(logs[which.max(logs[,2]),1], "/"), "[[", 1)), "/wolves_mergedTv_chrs.", k, ".* BestRep/")
 	system(ll)
 }
 q("no")
 ```
-And plot the results:
 
+And plot the results:
 ```{r, eval = FALSE}
 R
 
 # Read the FAM file with information about the sample names and a file that contains a category for each sample:
 fam<-read.table("wolves_mergedTv_chrs.fam", as.is=T)[,1]
-info<-read.table("/home/ec2-user/Data/SNPs/wolves_rand_tv_info.txt", as.is=T, sep="\t")
+info<-read.table("/projects/course_1/people/clx746/Data/wolves_rand_tv_info.txt", as.is=T, sep="\t")
 
 # Find the category for each of the samples in the FAM file
 category<-NULL
@@ -643,21 +643,24 @@ for(i in 1:length(fam)){
  }
 }
 
-pdf("admixture_bestLL.pdf", width=10, height=5.5)
-par(mar=c(7,4,1.5,4), mfrow=c(2,1))
+pdf("admixture_bestLL.pdf", width=10, height=7.5)
+par(mar=c(7,4,1.5,4), mfrow=c(3,1))
+a<-read.table("BestRep/wolves_mergedTv_chrs.2.Q", as.is=T)
+barplot(t(a[order(category),]), names=fam[order(category)], las=2, col=c("papayawhip", "palevioletred2"), cex.names=0.75, border=F)
+
 a<-read.table("BestRep/wolves_mergedTv_chrs.3.Q", as.is=T)
-barplot(t(a[order(category),]), names=fam[order(category)], las=2, col=c("lightsalmon1", "#F3E96B", "#6465A5"), cex.names=0.75, border=F)
+barplot(t(a[order(category),]), names=fam[order(category)], las=2, col=c("mediumpurple2", "papayawhip", "palevioletred2"), cex.names=0.75, border=F)
 
 a<-read.table("BestRep/wolves_mergedTv_chrs.4.Q", as.is=T)
-barplot(t(a[order(category),]), names=fam[order(category)], las=2, col=c("lightsalmon1", "purple4", "#6465A5", "#F3E96B"), cex.names=0.75, border=F)
+barplot(t(a[order(category),]), names=fam[order(category)], las=2, col=c("darkslateblue", "palevioletred2", "papayawhip", "mediumpurple2"), cex.names=0.75, border=F)
 dev.off()
 
 q("no")
 ```
 
-![Figure 4. Admixture results using $ADMIXTURE$ assuming 3 and 4 ancestry components showing the replicate with the best loglikelihood. Different colors indicate the inferred ancestry components and the proportion of each corresponds to the estimated admixture proportions.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2023/Figures/admixture_bestLL.png){width=80%}
+<img src="../Figures/admixture_bestLL.png" width=75%>
 
-<span style="color: purple;"> **Q:** </span> What can we say about the mystery sample? 
+<span style="color: purple;"> **Question:** </span> What can we say about the mystery sample? 
 
 ---------------------------------------------------
 
