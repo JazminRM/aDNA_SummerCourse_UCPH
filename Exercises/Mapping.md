@@ -556,7 +556,7 @@ scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/S6
 
 #### Mapping alternative using Paleomix
 
-If you have many ancient individuals and FASTQ files and you want to map them to a reference genome, you can also use `paleomix`<sup>8</sup>, which run all of the steps above. Below is an example on how to do this.
+If you have many ancient individuals and FASTQ files that you need to map to a reference genome, you might want to use an automatic workflow like the one in  `paleomix`<sup>8</sup>. `Paleomix` will run each of the steps above automatically and estimate summary statistics for your data. Below there is an simple example on how to do this. 
 
 ```{bash, eval = FALSE}
 # Create a directory so that we don't overwrite our previous file:
@@ -588,87 +588,82 @@ paleomix bam run --jre-option=-Xmx2g --jar-root /projects/symbean/people/clx746/
 
 Once `paleomix` is done running, you'll have your BAM file and two summary files:
 ```
-S6.summary
 S6.hg37.coverage
+S6.summary
+S6.hg37.depths
 ```
 
 The first one (*S6.summary*) is a summary of the number of reads mapped at different steps. The first lines contain information about the reference genome used:
 
 ```{bash, eval = FALSE}
- grep "^#" AncCanid.summary 
+ grep "^#" S6.summary 
 ```
-
 ```
 # Command:
-#     /usr/local/bin/paleomix bam run --jre-option=-Xmx2g --jar-root /home/ec2-user/Software/picard/picard/build/libs/ /home/ec2-user/Day2/Paleomix/test.yaml
+#     /opt/shared_software/shared_envmodules/conda/paleomix-1.3.10/bin/paleomix bam run --jre-option=-Xmx2g --jar-root /projects/symbean/people/clx746/Scripts/picard/ template.yaml
 #
 # Directory:
-#     /home/ec2-user/Day2/Paleomix
+#     /maps/projects/course_1/people/clx746/Mapping/Paleomix
 #
 # Genomes:
-#     Name    Contigs    Size         Prefix
-#     wolf    101        483573980    /home/ec2-user/TestData/RefGenome/Wolf.fasta
+#     Name              Contigs    Size          Prefix
+#     NAME_OF_PREFIX    25         3095693981    /projects/course_1/people/clx746/Data/Genome/hs.build37.1.fasta
 #
 # Regions Of Interest:
 #     Genome    ROI    Size    NFeatures    NIntervals    Path
+#
+#
 ```
 
 Then, you have a summary table by sample followed by a summary table for each of the libraries.
 
 This will get us the by-sample summary:
 ```{bash, eval = FALSE}
- grep -v "^#" AncCanid.summary |column -t | head -n 15
+ grep -v "^#" S6.summary |column -t | head -n 15
 ```
- 
-That looks like this:
-
- ```
-Target    Sample Library  Measure                 Value                  #  Description                                                                                                     
-AncCanid  *      *        lib_type                SE                     #  SE, PE, or * (for both)
-AncCanid  *      *        seq_reads_se            8377025                #  Total number of single-ended reads
-AncCanid  *      *        seq_trash_se            75028                  #  Total number of trashed reads
-AncCanid  *      *        seq_trash_se_frac       0.008956401586482074   #  Fraction of SE reads trashed
-AncCanid  *      *        seq_retained_reads      8301997                #  Total number of retained reads 
-
-AncCanid  *      *        seq_retained_nts        581900328              #  Total number of NTs in retained reads                                          
-AncCanid  *      *        seq_retained_length     70.09160904298086      #  Average number of NTs in retained reads                                          
-AncCanid  *      *        hits_raw(wolf)          78928                  #  Total number of hits (prior to PCR duplicate filtering)            
-AncCanid  *      *        hits_raw_frac(wolf)     0.009507110156749033   #  Total number of hits vs. total number of reads retained  
-AncCanid  *      *        hits_clonality(wolf)    0.03343553618487738    #  Fraction of hits that were PCR duplicates                                     
-AncCanid  *      *        hits_unique(wolf)       76289                  #  Total number of hits (excluding any PCR duplicates)                        
-AncCanid  *      *        hits_unique_frac(wolf)  0.009189234831089436   #  Total number of unique hits vs. total number of reads retained
-AncCanid  *      *        hits_coverage(wolf)     0.011778832682436718   #  Estimated coverage from unique hits
-AncCanid  *      *        hits_length(wolf)       74.66262501802356      #  Average number of aligned bases per unique hit                                
+```
+Target  Sample  Library     Measure                           Value                   #  Description                                                                                                     
+hg37    *       *           lib_type                          SE                      #  SE,          PE,       or    *             (for        both)                                                    
+hg37    *       *           seq_reads_se                      10000000                #  Total        number    of    single-ended  reads                                                                
+hg37    *       *           seq_trash_se                      1562043                 #  Total        number    of    trashed       reads                                                                
+hg37    *       *           seq_trash_se_frac                 0.1562043               #  Fraction     of        SE    reads         trashed                                                              
+hg37    *       *           seq_retained_reads                8437957                 #  Total        number    of    retained      reads                                                                
+hg37    *       *           seq_retained_nts                  350666607               #  Total        number    of    NTs           in          retained  reads                                          
+hg37    *       *           seq_retained_length               41.55823583836703       #  Average      number    of    NTs           in          retained  reads                                          
+hg37    *       *           hits_raw(NAME_OF_PREFIX)          770425                  #  Total        number    of    hits          (prior      to        PCR         duplicate    filtering)            
+hg37    *       *           hits_raw_frac(NAME_OF_PREFIX)     0.09130468429739569     #  Total        number    of    hits          vs.         total     number      of           reads       retained  
+hg37    *       *           hits_clonality(NAME_OF_PREFIX)    0.0019132297108738205   #  Fraction     of        hits  that          were        PCR       duplicates                                     
+hg37    *       *           hits_unique(NAME_OF_PREFIX)       768951                  #  Total        number    of    hits          (excluding  any       PCR         duplicates)                        
+hg37    *       *           hits_unique_frac(NAME_OF_PREFIX)  0.09112999746265595     #  Total        number    of    unique        hits        vs.       total       number       of          reads     retained
+hg37    *       *           hits_coverage(NAME_OF_PREFIX)     0.009915656453253284    #  Estimated    coverage  from  unique        hits                                                                 
+hg37    *       *           hits_length(NAME_OF_PREFIX)       39.91910797957217       #  Average      number    of    aligned       bases       per       unique      hit                                
  ```
  
  This will get us the by-library summary for the Liver library:
 ```{bash, eval = FALSE}
- grep -v "^#" AncCanid.summary |grep Liver |column -t
+ grep -v "^#" S6.summary |grep PW13_E2_L2 |column -t
 ```
-
 ```
-Target	  Sample	Library	Measure	              Value                # Description
-AncCanid  AncCanid  Liver   lib_type              SE                   # SE, PE, or * (for both)
-AncCanid  AncCanid  Liver   seq_reads_se          5827604              # Total number of single-ended reads
-AncCanid  AncCanid  Liver   seq_trash_se          57676                # Total number of trashed reads
-AncCanid  AncCanid  Liver   seq_trash_se_frac     0.009897034870591756 # Fraction of SE reads trashed
-AncCanid  AncCanid  Liver   seq_retained_reads    5769928              # Total number of retained reads
-AncCanid  AncCanid  Liver   seq_retained_nts      395275379            # Total number of NTs in retained reads
-AncCanid  AncCanid  Liver   seq_retained_length   68.50611983373103    # Average number of NTs in retained reads 
-AncCanid  AncCanid  Liver   hits_raw(wolf)        19369                # Total number of hits (prior to PCR duplicate filtering)
-AncCanid  AncCanid  Liver   hits_raw_frac(wolf)   0.003356887642272139 # Total number of hits vs. total number of reads retained 
-AncCanid  AncCanid  Liver   hits_clonality(wolf)  0.11905622386287362  # Fraction of hits that were PCR duplicates 
-AncCanid  AncCanid  Liver   hits_unique(wolf)     17063                # Total number of hits (excluding any PCR duplicates) 
-AncCanid  AncCanid  Liver   hits_unique_frac(wolf)0.002957229275651273 # Total number of unique hits vs. total number of reads retained
-AncCanid  AncCanid  Liver   hits_coverage(wolf)   0.002547901770893462 # Estimated coverage from unique hits 
-AncCanid  AncCanid  Liver   hits_length(wolf)     72.208814393717      # Average number of aligned bases per unique hit 
- ```
-The second one (*AncCanid.wolf.coverage*) is a summary of the depth of coverage. The first lines correspond to a header describing what each column is:
+hg37  S6  PW13_E2_L2  lib_type                          SE                     #  SE,        PE,       or    *             (for        both)                                                    
+hg37  S6  PW13_E2_L2  seq_reads_se                      2000000                #  Total      number    of    single-ended  reads                                                                
+hg37  S6  PW13_E2_L2  seq_trash_se                      462762                 #  Total      number    of    trashed       reads                                                                
+hg37  S6  PW13_E2_L2  seq_trash_se_frac                 0.231381               #  Fraction   of        SE    reads         trashed                                                              
+hg37  S6  PW13_E2_L2  seq_retained_reads                1537238                #  Total      number    of    retained      reads                                                                
+hg37  S6  PW13_E2_L2  seq_retained_nts                  54742541               #  Total      number    of    NTs           in          retained  reads                                          
+hg37  S6  PW13_E2_L2  seq_retained_length               35.61097305687213      #  Average    number    of    NTs           in          retained  reads                                          
+hg37  S6  PW13_E2_L2  hits_raw(NAME_OF_PREFIX)          215887                 #  Total      number    of    hits          (prior      to        PCR         duplicate    filtering)            
+hg37  S6  PW13_E2_L2  hits_raw_frac(NAME_OF_PREFIX)     0.14043824053269566    #  Total      number    of    hits          vs.         total     number      of           reads       retained  
+hg37  S6  PW13_E2_L2  hits_clonality(NAME_OF_PREFIX)    0.0012460222245896935  #  Fraction   of        hits  that          were        PCR       duplicates                                     
+hg37  S6  PW13_E2_L2  hits_unique(NAME_OF_PREFIX)       215618                 #  Total      number    of    hits          (excluding  any       PCR         duplicates)                        
+hg37  S6  PW13_E2_L2  hits_unique_frac(NAME_OF_PREFIX)  0.14026325136380963    #  Total      number    of    unique        hits        vs.       total       number       of          reads     retained
+hg37  S6  PW13_E2_L2  hits_coverage(NAME_OF_PREFIX)     0.002578378563575467   #  Estimated  coverage  from  unique        hits                                                                 
+hg37  S6  PW13_E2_L2  hits_length(NAME_OF_PREFIX)       37.01857451604226      #  Average    number    of    aligned       bases       per       unique      hit                                
+```
+The second one (*S6.hg37.coverage*) is a summary of the depth of coverage. The first lines correspond to a header describing what each column is:
 
 ```{bash, eval = FALSE}
-grep "^#" AncCanid.wolf.coverage 
+grep "^#" S6.hg37.coverage 
 ```
-
 ```
 # Columns:
 #   Contig:    Contig, chromosome, or feature for which a depth histogram was
@@ -694,22 +689,22 @@ grep "^#" AncCanid.wolf.coverage
 
 And the contents will look like this:
 ```{bash, eval = FALSE}
-grep -v "^#" AncCanid.wolf.coverage  |column -t
+grep -v "^#" S6.hg37.coverage  |column -t |head -n 10
 ```
-
 ```
-Name      Sample    Library  Contig    Size       Hits   SE     PE_1  PE_2  Collapsed  M        I     D     Coverage
-AncCanid  *         *        *         483573980  79054  79054  0     0     0          5888362  1058  1263  0.012176755250561661
-AncCanid  *         *        <Genome>  483573980  79054  79054  0     0     0          5888362  1058  1263  0.012176755250561661
-AncCanid  AncCanid  *        *         483573980  79054  79054  0     0     0          5888362  1058  1263  0.012176755250561661
-AncCanid  AncCanid  *        <Genome>  483573980  79054  79054  0     0     0          5888362  1058  1263  0.012176755250561661
-AncCanid  AncCanid  FRC_1    *         483573980  61991  61991  0     0     0          4656263  867   1095  0.009628853479668199
-AncCanid  AncCanid  FRC_1    <Genome>  483573980  61991  61991  0     0     0          4656263  867   1095  0.009628853479668199
-AncCanid  AncCanid  Liver    *         483573980  17063  17063  0     0     0          1232099  191   168   0.0025479017708934628
-AncCanid  AncCanid  Liver    <Genome>  483573980  17063  17063  0     0     0          1232099  191   168   0.0025479017708934628
+Name  Sample  Library     Contig  Size        Hits    SE      PE_1  PE_2  Collapsed  M         I     D     Coverage
+hg37  *       *           *       3095693981  768951  768951  0     0     0          30695838  5317  4255  0.009915656453253284
+hg37  *       *           1       249250621   62848   62848   0     0     0          2496671   464   329   0.010016709246232932
+hg37  *       *           10      135534747   36961   36961   0     0     0          1468725   256   278   0.010836520025377699
+hg37  *       *           11      135006516   37163   37163   0     0     0          1477870   258   191   0.010946656826549024
+hg37  *       *           12      133851895   36319   36319   0     0     0          1452383   212   197   0.010850671931092197
+hg37  *       *           13      115169878   27091   27091   0     0     0          1090810   144   142   0.009471313323784192
+hg37  *       *           14      107349540   24766   24766   0     0     0          987319    170   144   0.009197235498167948
+hg37  *       *           15      102531392   22127   22127   0     0     0          875031    141   123   0.008534274068960266
+hg37  *       *           16      90354753    21755   21755   0     0     0          854117    198   141   0.009452928281481773
+...
 ```
-Do the number of final reads in the $paleomix$ BAM files match with our step-by-step BAM files?
-<p>&nbsp;</p>
+Do the number of final reads in the `paleomix` BAM files match with our step-by-step BAM files?
 
 #### References
 0. Moreno-Mayar J.V. *et al*. (2018). **Early human dispersals within the Americas.** Science. 362, 1128.
