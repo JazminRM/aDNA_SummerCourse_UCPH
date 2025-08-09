@@ -376,7 +376,7 @@ out.log                 a file to print the STDOUT
 
 A peculiarity of `ADMIXTURE` is that it doesn't allow you to specify the name of the output and instead the name is created from the name of the input file. Given we would like to run several replicates for each value of K we will need to create a directory for each ```ADMIXTURE``` run. 
 
-For example, let's say we want to run 5 replicates for each K and we would like split our samples into 3 and 4 ancestry components (Ks):
+For example, let's say we want to run 5 replicates for each K and we would like split our samples into 2-4 ancestry components (Ks):
 ```{bash, eval = FALSE}
 # first load admixture's module
 module load admixture/1.3.0
@@ -389,7 +389,7 @@ do
  mkdir $rep
  cd $rep
  # the second _for_ loop will determine the K
- for k in 2 3
+ for k in 2 3 4
  do
    admixture -j1 --seed=$RANDOM ${SNPsDSchrs}.bed $k &> ${rep}_${k}_out.log
  done 
@@ -417,70 +417,54 @@ Now let's check the results.
 For each `ADMIXURE` run you will get three files, for example for replicate=1 and K=2:
 
 ```{bash, eval = FALSE}
-ls -l 1/*3*
+ls -l 1/*2*
 ```
 ```
-1/1_3_out.log
-1/wolves_mergedTv_chrs.3.P
-1/wolves_mergedTv_chrs.3.Q
+1/1_2_out.log
+1/wolves_mergedTv_chrs.2.P
+1/wolves_mergedTv_chrs.2.Q
 ```
 
-You'll have a $.P$ file that contains the estimated allele frequencies for each site and for each of the 3 populations:
+You'll have a $.P$ file that contains the estimated allele frequencies for each site and for each of the 2 populations:
 
 ```{bash, eval = FALSE}
-head 1/wolves_mergedTv_chrs.3.P
+head -n 5 1/wolves_mergedTv_chrs.2.P
 ```
 ```
-0.999990 0.741638 0.664138
-0.881174 0.999990 0.999990
-0.921161 0.686028 0.774169
-0.999990 0.788439 0.999990
-0.961652 0.999990 0.999990
-0.880434 0.999990 0.887769
-0.827978 0.825978 0.999990
-0.876971 0.539222 0.472849
-0.521588 0.999990 0.999990
-0.540362 0.999990 0.999990
-
+0.696213 0.999990
+0.999990 0.887048
+0.709935 0.917736
+0.870633 0.980417
+0.999990 0.963370
 ```
 
 a $.Q$ file that contains the estimated ancestry proportions of the 3 populations for each of the individuals:
 
 ```{bash, eval = FALSE}
-head 1/wolves_mergedTv_chrs.3.Q
+head -n 5 1/wolves_mergedTv_chrs.2.Q
 ```
 ```
-0.000010 0.548455 0.451535
-0.000010 0.343791 0.656199
-0.000010 0.999980 0.000010
-0.000010 0.999980 0.000010
-0.000010 0.000010 0.999980
-0.000010 0.000010 0.999980
-0.000010 0.999980 0.000010
-0.000010 0.999980 0.000010
-0.000010 0.999980 0.000010
-0.000015 0.999975 0.000010
-
+0.999990 0.000010
+0.999990 0.000010
+0.999990 0.000010
+0.809885 0.190115
+0.900579 0.099421
 ```
 
 Check how many lines the .Q file has, is that expected?
-
 ```{bash, eval = FALSE}
-wc -l 1/wolves_mergedTv_chrs.3.Q
+wc -l 1/wolves_mergedTv_chrs.2.Q
 ```
 
 How about the .P file?
-
 ```{bash, eval = FALSE}
 wc -l 1/wolves_mergedTv_chrs.3.P
 ```
 
 Finally, we have the log file which contains important information about the run:
-
 ```{bash, eval = FALSE}
 cat 1/1_3_out.log
 ```
-
 and at the end, there is a summary of the run:
 
 ```{bash, eval = FALSE}
@@ -488,29 +472,28 @@ tail -n 9 1/1_3_out.log
 ```
 ```
 Summary: 
-Converged in 25 iterations (32.268 sec)
-Loglikelihood: -3276680.135746
+Converged in 20 iterations (15.813 sec)
+Loglikelihood: -3286365.627536
 Fst divergences between estimated populations: 
-	Pop0	Pop1	
-Pop0	
-Pop1	0.273	
-Pop2	0.174	0.230	
+        Pop0    Pop1
+Pop0
+Pop1    0.156   
+Pop2    0.228   0.253   
 Writing output files.
 ```
+In this case it says it converged after 20 iterations and the final Loglikelihood is -3286365.627536
 
-In this case it says it converged after 27 iterations and the final Loglikelihood is -3276680.135746. 
-
-Now we need to decide which replicate is more likely to have reached a global maximum. Let's check the *log* likelihood of all replicates for K=3:
+Now we need to decide which replicate is more likely to have reached a global maximum. Let's check the *log* likelihood of all replicates for K=2:
 
 ```{bash, eval = FALSE}
-grep "^Loglikelihood" */*_3_out.log
+grep "^Loglikelihood" */*_2_out.log
 ```
 ```
-1/1_3_out.log:Loglikelihood: -3259015.293804
-2/2_3_out.log:Loglikelihood: -3282163.829765
-3/3_3_out.log:Loglikelihood: -3259037.402389
-4/4_3_out.log:Loglikelihood: -3259015.401782
-5/5_3_out.log:Loglikelihood: -3259037.160064
+1/1_2_out.log:Loglikelihood: -3470719.048495
+2/2_2_out.log:Loglikelihood: -3470719.048495
+3/3_2_out.log:Loglikelihood: -3470719.048496
+4/4_2_out.log:Loglikelihood: -3470719.048495
+5/5_2_out.log:Loglikelihood: -3470719.048501
 ```
 **How do we chose the replicate with the best likelihood? **
 
@@ -518,7 +501,7 @@ Remember that Likelihoods are the product of probabilities, therefore they becom
 
 It also means that the best model is one that has a higher likelihood (higher probabilities will produce a higher likelihood).
 
-Because programming languages (and computers) are not good at dealing with numbers with a large number of digits, people normally work with *log* likelihoods. 
+Because programming languages (and computers) are not good at dealing with numbers with a large number of digits, we normally work with *log* likelihoods. 
 
 Let's plot the likelihood value vs. its log and see how it compares:
 
@@ -530,7 +513,6 @@ logLikelihood<-log(Likelihood)
 
 # Let's visualize the numbers
 plot(Likelihood, logLikelihood)
-
 ```
 
 As you can see, as the likelihood increases the *log* likelihood gets closer to 0. 
