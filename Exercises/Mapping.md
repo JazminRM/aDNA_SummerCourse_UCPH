@@ -584,6 +584,10 @@ cat template.yaml
 Once you have the template ready, `paleomix` can be run like this:
 
 ```{bash, eval = FALSE}
+# load paleomix module
+module load paleomix/1.3.9
+
+# run paleomix 
 paleomix bam run --jre-option=-Xmx2g --jar-root /projects/symbean/people/clx746/Scripts/picard/ template.yaml 
 ```
 
