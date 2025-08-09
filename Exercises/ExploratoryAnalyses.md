@@ -1088,7 +1088,7 @@ for(i in 1:length(samps)){
 
 d<-data.frame(category=category, PC1=evec[,2], PC2=evec[,3], sampleid=samps)
 
-# Create a vector of colors (we have 8 categories + our mystery sample), we will manually assign a color to each group:
+# Create a vector of colors (we have 8 categories + our unknown canid), we will manually assign a color to each group:
 colvalues <-c("#F3E96B", "coral4", "orange", "lightsalmon1", "#F05837","#6465A5", "darkmagenta", "darkred", "black")
 names(colvalues)<-c("Grey wolf America", "Grey wolf Asia Highland", "Grey wolf Middle East", "Grey wolf Europe", "Grey wolf Asia", "Dog", "Dog Arctic", "Ancient grey wolf", "X sample")
 
@@ -1145,7 +1145,7 @@ In order to estimate GL with `ANGSD`, you'll need to have BAM files for both you
 Define some paths and file names (again you can choose to work with ancient sample 1, 2 or 3):
 
 ```{bash, eval = FALSE}
-# list with the paths to the BAMS for the reference and mystery sample (again you can chose from mystery sample1 or sample2)
+# list with the paths to the BAMS for the reference and unknown caid (again you can chose from sample1, sample2 or sample3)
 BAMLIST="/projects/course_1/people/clx746/Bams/BamList1.txt"
 # or
 BAMLIST="/projects/course_1/people/clx746/Bams/BamList2.txt"
@@ -1400,33 +1400,21 @@ Check how the replicates differ, select the one with the best likelihood.
 
 <span style="color: purple;"> **Q:** </span> Did we obtain similar results to the random read approach? 
 
-<center>
-
-![Admixture results using $NGSadmix$ assuming 3 ancestry components (K=3). The results for the mystery sample are hidden.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/Exercises/ngsadmix_K3.png){width=80%}
-
-
-![Admixture results using $NGSadmix$ assuming 4 ancestry components (K=4). The results for the mystery sample are hidden.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/Exercises/ngsadmix_K4.png){width=80%}
-
-</center>
-
-<p>&nbsp;</p>
-
 -----------------------------------
 
-##### Principal Component Analysis using PCAngsd
+
+#### Principal Component Analysis using PCAngsd
 
 Now we will estimate a PCA using our GL. ```PCAngsd``` allows us to estimate a covariance matrix from GL which we can then use to compute a PCA. 
-
-Let's declare some paths:
-
-```{bash, eval = FALSE}
-PCANGSD="/home/ec2-user/Software/pcangsd2/pcangsd/pcangsd/pcangsd.py"
-```
 
 We can directly take the same GL that we used for ```NGSadmix``` and run ```pcangsd``` like this:
 
 ```{bash, eval = FALSE}
-python3 $PCANGSD --beagle wolves_gl.beagle.gz -o wolves_gl_pcangsd
+# first load pcangsd module
+module load pcangsd/1.2
+
+# then run pcangsd
+pcangsd --beagle wolves_gl.beagle.gz -o wolves_gl_pcangsd
 ```
 
 After this we will have a covariance matrix (wolves_gl_pcangsd.cov) that we can use for the PCA. 
@@ -1450,8 +1438,8 @@ library(ggplot2)
 # read the matrix generated with PCAngsd
 covmat<-read.table("wolves_gl_pcangsd.cov", as.is=T)
 
-# read the file with the list of BAMS, the matrix will be in the same order as this list, make sure to change 1 for 2 if you are working with sample 2.  
-samps<-readLines("/home/ec2-user/Data/BAMS/BamList1.txt")
+# read the file with the list of BAMS, the matrix will be in the same order as this list, make sure to change here for the number of sample you picked:  
+samps<-readLines("/projects/course_1/people/clx746/Bams/BamList1.txt")
 samps<-gsub(".bam", "", basename(samps))
 
 # read the information about the categories
@@ -1498,30 +1486,15 @@ q("no")
 ```
 
 Download the result and take a look at them. 
-<p>&nbsp;</p>
 
-<center>
+<span style="color: purple;"> **Question:** </span> Are the results similar to the ones obtained from ```smartpca``` (besides that there are less samples)?  
 
-![PCA using $pcangsd$. Note that in this figure there is no mystery sample.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2023/Figures/PCA_gl.png){width=60%}
-</center>
-
-<p>&nbsp;</p>
-
-<span style="color: purple;"> **Q:** </span> Are the results similar to the ones obtained from ```smartpca``` (besides that there are less samples)?  
-
-<p>&nbsp;</p>
------------------------------------
-
-**Congratulations! You made it to the end of the exercise.  **
-
-<p>&nbsp;</p>
 
 ### References
-<p>&nbsp;</p>
 
-0. Gopalakrishnan, S *et al.* 20147 **The wolf reference genome sequence (*Canis lupus lupus*) and its implications for Canis spp. population genomics.** BMC Genomics 18, 495
+0. Gopalakrishnan, S *et al.* 2014 **The wolf reference genome sequence (*Canis lupus lupus*) and its implications for Canis spp. population genomics.** BMC Genomics 18, 495
 
-1. FrantK
+1. Moreno-Mayar J.V. 2021 **FrAnTK: a Frequency-based Analysis ToolKit for efficient exploration of allele sharing patterns in present-day and ancient genomic datasets** G3 Vol 12, issue 1.
 
 2. Korneliussen, T.S *et al.* 2014. **ANGSD: Analysis of Next Generation Sequencing Data.** BMC Bioinformatics 15, 356.
 
