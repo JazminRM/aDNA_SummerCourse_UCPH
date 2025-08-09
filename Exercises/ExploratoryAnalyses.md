@@ -249,8 +249,6 @@ The result should look like this:
 
 To start exploring the ancestry of our unknown canid, we will estimate a PCA using ```smartpca``` <sup>4</sup> and use the model-based clustering  approach implemented in ```ADMIXTURE``` <sup>3</sup> to estimate ancestry proportions. Both programs can be used with pseudo-haploid data and need BED/BIM/FAM files as input.  
 
------------------------------------
-
 
 #### Adding an ancient sample (BAM) to a reference SNP dataset by randomly sampling a read
 
@@ -722,9 +720,9 @@ In the example above, K=9 is the one that best fits the data.
 
 -----------------------------------
 
-##### Principal Component Analysis with $smartPCA$
+#### Principal Component Analysis with smartPCA
 
-Now we will estimate a PCA using the same BED/BIM/FAM files we used for $ADMIXTURE$
+For the next exercise we will make a PCA using `smartPCA` and the same BED/BIM/FAM files we used for `ADMIXTURE`
 
 Once again, let's start by defining some directories, paths and file names:
 
@@ -732,43 +730,37 @@ Once again, let's start by defining some directories, paths and file names:
 username="write_your_username"
 
 # files:
-SNPDS="/home/$username/exploratoryA/wolves_mergedTv"
-SNPDSnum="/home/$username/exploratoryA/wolves_mergedTv_numChrs"
+SNPDS="/projects/course_1/people/${username}/ExploratoryAnalyses/wolves_mergedTv"
+SNPDSnum="/projects/course_1/people/${username}/ExploratoryAnalyses/wolves_mergedTv_numChrs"
 ```
 
-**NOTE** ```smartpca``` takes different types of input files, it can directly take your BED/BIM/FAM files or you can transform them into EIGENSTRAT format and then use them to run ```smartpca```. However, a complication  with ```smartpca``` (given our fragmented reference genome) is that it requires that the chromosome names are numeric but only allows up to 99 chromosomes (at least up to end of last year). So in order for us to use ```smartpca``` we will edit the BIM file and change the chromosome name and positions so that:
+**NOTE** `smartpca` takes different types of input files, it can directly take your BED/BIM/FAM files or you can transform them into EIGENSTRAT format and then use them to run `smartpca`. However, a complication  with `smartpca` (given our fragmented reference genome) is that it requires that the chromosome names are numeric but only allows up to 99 chromosomes (at least up to end of last year). So in order for us to use `smartpca` we will edit the BIM file and change the chromosome name and positions so that:
 
 1. it has a numeric chromosome name, and
 2. the distance between SNPs deesn't change
 
 <span style="color: orchid;"> † </span> We will use the following ```R-script``` to do that:
-(You can just copy&paste this in your terminal, and if you get an error try to copy&paste some lines at a time.)
 ```{r, eval = FALSE}
-Rscript /home/ec2-user/Software/renameChrs.R wolves_mergedTv.bim wolves_mergedTv_numChrs.bim
+Rscript /projects/course_1/people/clx746/Data/renameChrs.R wolves_mergedTv.bim wolves_mergedTv_numChrs.bim
 ```
 
 Take a look at the old and new BIM files and check that they look as we want to:
 
 ```{bash, eval = FALSE}
 # old one:
-head wolves_mergedTv.bim
+head -n 5 wolves_mergedTv.bim
 ```
 ```
-scaffold_0	scaffold_0_9493	0	9493	A	C
-scaffold_0	scaffold_0_23098	0	23098	A	C
-scaffold_0	scaffold_0_43358	0	43358	A	C
-scaffold_0	scaffold_0_53358	0	53358	T	G
-scaffold_0	scaffold_0_56736	0	56736	A	T
-scaffold_0	scaffold_0_71165	0	71165	A	T
-scaffold_0	scaffold_0_96026	0	96026	A	C
-scaffold_0	scaffold_0_102434	0	102434	T	G
-scaffold_0	scaffold_0_111381	0	111381	T	A
-scaffold_0	scaffold_0_113242	0	113242	A	T
+scaffold_0      scaffold_0_9493 0       9493    A       C
+scaffold_0      scaffold_0_23098        0       23098   A       C
+scaffold_0      scaffold_0_43358        0       43358   A       C
+scaffold_0      scaffold_0_53358        0       53358   T       G
+scaffold_0      scaffold_0_56736        0       56736   A       T
 ```
 
 ```{bash, eval = FALSE}
 # new one:
-head wolves_mergedTv_numChrs.bim
+head -n 5 wolves_mergedTv_numChrs.bim
 ```
 ```
 1 scaffold_0_9493 0 1 A C
@@ -776,14 +768,9 @@ head wolves_mergedTv_numChrs.bim
 1 scaffold_0_43358 0 33866 A C
 1 scaffold_0_53358 0 43866 T G
 1 scaffold_0_56736 0 47244 A T
-1 scaffold_0_71165 0 61673 A T
-1 scaffold_0_96026 0 86534 A C
-1 scaffold_0_102434 0 92942 T G
-1 scaffold_0_111381 0 101889 T A
-1 scaffold_0_113242 0 103750 A T
 ```
 
-<span style="color: purple;"> **Q:** </span>Do the SNPs kept their original distance? Why do you think it is important to keep the information about the distance between SNPs?
+<span style="color: purple;"> **Question:** </span>Do the SNPs kept their original distance? Why do you think it is important to keep the information about the distance between SNPs?
 
 <span style="color: orchid;"> † </span> Then we will copy the FAM and BED file without editing them: 
 
@@ -792,8 +779,9 @@ cp $SNPDS".bed" $SNPDSnum".bed"
 cp $SNPDS".fam" $SNPDSnum".fam"
 ```
 
-We will start by changing the PLINK files into EIGENSTRAT (which is the format that $smartpca$ needs). To do so,we need to create a parameters file that contains the following:
+We will start by changing the PLINK files into EIGENSTRAT (which is the format that `smartpca` uses). 
 
+First, we need to create a parameters file that contains the following:
 ```
 genotypename:       wolves_mergedTv_numChrs.bed
 snpname:            wolves_mergedTv_numChrs.bim
@@ -830,15 +818,17 @@ familynames: YES
 pordercheck: NO" > wolves.par
 ```
 
-Do you know of other ways to create a file in a server? 
-
-Now let's used ```convertf``` to create our EIGENSTRAT files:
+Now we will use `convertf` to create our EIGENSTRAT files:
 
 ```{bash, eval = FALSE}
+# load eigensoft 
+module load eigensoft/8.0.0 
+
+# run convertf
 convertf -p wolves.par
 ```
 
-**Note**: ```convertf```, ```smartpca``` and some programs of ```admixtools``` require that the samples names are shorter than 39/2 characters, so if you ever get an error saying: *idnames too long*, just change the names in the FAM file for a shorter version
+**Note**: `convertf` and `smartpca` require that the samples names are shorter than 39/2 characters, so if you ever get an error saying: *idnames too long*, just change the names in the FAM file for a shorter version
 
 After this we will have three new files:
 ```{bash, eval = FALSE}
@@ -854,26 +844,20 @@ Check how the EIGENSTRAT format looks like. You'll have three files that contain
 
 ```{bash, eval = FALSE}
 # SNPs
-head wolvesTv.eigenstratgeno
+head -n 5 wolvesTv.eigenstratgeno
 ```
 ```
-22900900029000022009000099000090099000900009009000
-00000900000000000000000002000000000000000009200299
-00200902029000029029000900000002000002000009000090
-00000900000000220000000000900020099000000009000099
-00900000000000000000000020000000000000090000000090
-00090000000000000000222000900900000000000029000000
-00900090000000220000020000099000000220009209000009
-20002222209020002202002000900000099000000020000290
-00000000000000000000002020020202299220020209200002
-00000000000000000000000022020202200220200209020209
+02290090002900002200900099000090099000900009009000
+00000090000000000000000002000000000000000009200299
+00020090202900002902900900000002000002000009000090
+00000090000000022000000000900020099000000009000099
+00090000000000000000000020000000000000090000000090
 ```
 
 , information about the SNPs:
-
 ```{bash, eval = FALSE}
 # SNPs info
-head  wolvesTv.snp
+head -n 5 wolvesTv.snp
 ```
 ```
      scaffold_0_9493     1        0.000000               1 A C
@@ -881,36 +865,22 @@ head  wolvesTv.snp
     scaffold_0_43358     1        0.000339           33866 A C
     scaffold_0_53358     1        0.000439           43866 T G
     scaffold_0_56736     1        0.000472           47244 A T
-    scaffold_0_71165     1        0.000617           61673 A T
-    scaffold_0_96026     1        0.000865           86534 A C
-   scaffold_0_102434     1        0.000929           92942 T G
-   scaffold_0_111381     1        0.001019          101889 T A
-   scaffold_0_113242     1        0.001038          103750 A T
-
 ```
 
 and information about the individuals:
-
 ```{bash, eval = FALSE}
 # individuals
-head wolvesTv.ind 
+head -n 5 wolvesTv.ind 
 ```
 ```
+AncientCanid:AncientCanid U    Control
 Dog_AlaskanHusky:Dog_AlaskanHusky U    Control
 Dog_AlaskanM:Dog_AlaskanM U    Control
  Dog_Dingo:Dog_Dingo U    Control
  Dog_Gansu:Dog_Gansu U    Control
- Dog_GMums:Dog_GMums U    Control
-Dog_Greenland:Dog_Greenland U    Control
-       Dog_GS:Dog_GS U    Control
-Dog_Guizhou:Dog_Guizhou U    Control
- Dog_Hebei:Dog_Hebei U    Control
-       Dog_ID:Dog_ID U    Control
 ```
 
-
-Now we will use these files to run ```smartpca```. Again, we will first create a parameters file that should look like this:
-
+Now we will use these files to run `smartpca`. Again, we will first create a parameters file that should look like this:
 ```
 genotypename:   wolvesTv.eigenstratgeno
 snpname:        wolvesTv.snp
@@ -931,8 +901,6 @@ The *evaloutname* and *evaloutname* are the names for the output files.
 
 *numoutevec* indicates the number of PCs that you want printed in the output.
 
-*lsqproject* indicates whether we want to project the low coverage samples or not. For now we will not use this parameter, but we will try it later! **IMPORTANT**: It seems that in the newest version of ```smartpca``` *lsqproject: NO* will not longer be supported, so check which version you are using and its specific documentation. 
-
 Create the file like this:
 ```{bash, eval = FALSE}
 echo "genotypename: wolvesTv.eigenstratgeno
@@ -942,14 +910,13 @@ evecoutname: wolves_mergedTv.evec
 evaloutname: wolves_mergedTv.eval
 familynames: YES
 numoutevec: 4
-numthreads: 1
-pordercheck: NO
-lsqproject: NO" > wolves_pca.par
+numthreads: 1" > wolves_pca.par
 ```
 
-Once you have this file, you can run ```smartpca``` like this:
+Once you have this file, you can run `smartpca` like this:
 
 ```{bash, eval = FALSE}
+# run smartpca
 smartpca -p wolves_pca.par
 ```
 
@@ -962,7 +929,7 @@ wolves_mergedTv.evec
 wolves_mergedTv.eval
 ```
 
-The $.evec$ file contains sample names, followed by the coordinates for the samples in the first 4 PCs (or the number o PCs you indicatd in the parameters file):
+The `.evec` file contains sample names, followed by the coordinates for the samples in the first 4 PCs (or the number o PCs you indicated in the parameters file):
 
 ```{bash, eval = FALSE}
 head -n 5 wolves_mergedTv.evec |column -t
@@ -975,7 +942,7 @@ Dog_Dingo:Dog_Dingo                -0.0896  -0.0217  0.0191   -0.1123  Control
 Dog_Gansu:Dog_Gansu                -0.1242  -0.0653  0.0943   -0.1685  Control
 ```
 
-And the $.eval$ file contains the variance explained in each of the PCs: 
+And the `.eval` file contains the variance explained in each of the PCs: 
 
 ```{bash, eval = FALSE}
 head -n 5 wolves_mergedTv.eval 
@@ -988,15 +955,17 @@ head -n 5 wolves_mergedTv.eval
     1.539779
 ```
 
-Now let's plot the results, we will use the same file we used for ```ADMXITURE``` that contains the categories of the samples to assign colors:
+Now let's plot the results, we will use the same file we used for `ADMXITURE` that contains the categories of the samples to assign colors:
 
 ```{r, eval = FALSE}
 R
-
-library(ggplot2)
+if(!require(ggplot2)){
+    install.packages("ggplot2")
+    library(ggplot2)
+}
 
 evec<-read.table("wolves_mergedTv.evec", as.is=T)
-info<-read.table("/home/ec2-user/Data/SNPs/wolves_rand_tv_info.txt", as.is=T, sep="\t")
+info<-read.table("/projects/course_1/people/clx746/Data/wolves_rand_tv_info.txt", as.is=T, sep="\t")
 eval<-as.numeric(readLines("wolves_mergedTv.eval"))
 
 # Here we are taking the first part of the column 1. It looks like this: Alaska1:Alaska1, and we only want this: Alaska1
@@ -1018,8 +987,8 @@ colvalues <-c("#F3E96B", "coral4", "orange", "lightsalmon1", "#F05837","#6465A5"
 names(colvalues)<-c("Grey wolf America", "Grey wolf Asia Highland", "Grey wolf Middle East", "Grey wolf Europe", "Grey wolf Asia", "Dog", "Dog Arctic", "Ancient grey wolf", "X sample")
 
 p<-ggplot(d, aes(x=PC2, y=PC1))+
-geom_vline(xintercept=0, colour="gray", linetype = "longdash", size=0.5)+
-geom_hline(yintercept=0, colour="gray", linetype = "longdash", size=0.5)+
+geom_vline(xintercept=0, colour="gray", linetype = "longdash", linewidth=0.5)+
+geom_hline(yintercept=0, colour="gray", linetype = "longdash", linewidth=0.5)+
 geom_point(aes(colour=category), shape=16, size=2.5, alpha=0.8, show.legend = T)+
 geom_point(data=d[d$category=="X sample",],  aes(x=PC2, y=PC1), colour="black", shape=18, size=4, alpha=1, show.legend = F)+
 scale_colour_manual(values=colvalues)+
@@ -1036,19 +1005,13 @@ q("no")
 
 Download and take a look at the results (use **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). 
 
-<center>
-
-![Figure 6. PCA created using smartpca. Note that the mystery sample was not included.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2023/Figures//PCA1vsPCA2_smartpca.png){width=60%}
-</center>
-
-<p>&nbsp;</p>
+<img src="../Figures/PCA1vsPCA2_smartpca.png" width=75%>
 
 
-<span style="color: purple;"> **Q:** </span> Where do the mystery sample falls? Is this in agreement with the ADMIXTURE results? What could we infer about its ancestry so far?
+<span style="color: purple;"> **Question:** </span> Where does your ancient sample falls? Is this in agreement with the ADMIXTURE results? What could we infer about its ancestry so far?
 
-<p>&nbsp;</p>
 
-**Projecting samples ** 
+**Projecting samples** 
 
 A useful feature of ```smartpca``` is that it allows us to 'project' samples into a PCA space build with a subset of the individuals. For example, if your ancient sample is low coverage and high in aDNA error (which can potentially cause problems), you can build a PCA with the reference data and project you ancient sample on top. 
 
@@ -1107,7 +1070,7 @@ R
 library(ggplot2)
 
 evec<-read.table("wolves_mergedTv_GWprojected.evec", as.is=T)
-info<-read.table("/home/ec2-user/Data/SNPs/wolves_rand_tv_info.txt", as.is=T, sep="\t")
+info<-read.table("/projects/course_1/people/clx746/Data/wolves_rand_tv_info.txt", as.is=T, sep="\t")
 eval<-as.numeric(readLines("wolves_mergedTv_GDprojected.eval"))
 
 # Here we are taking the first part of the column 1. It looks like this: Alaska1:Alaska1, and we only want this: Alaska1
@@ -1158,42 +1121,36 @@ Download and take a look at the results (use **WinSCP** (for Windows users) or *
 
 -----------------------------------
 
-#### Genotype-likelihoods (GL)
+
+### Genotype-likelihoods (GL)
 
 An alternative to sampling a random allele from the BAM is to estimate genotype-likelihoods (GL). There are several methods that have been implemented with GL. We will try to of them today: PCA and Admixture clustering.
 
 Create a new directory to run these exercises:
 
 ```{bash, eval = FALSE}
+# create a new directory
 username="write_your_username"
-
-directoryGL="/home/$username/exploratorya_gl"
-
+directoryGL="/projects/course_1/people/${username}/exploratorya_gl"
 mkdir -p $directoryGL
 
+# go to the directory
 cd $directoryGL
 ```
 
-<p>&nbsp;</p>
+#### Estimating GL
 
------------------------------------
+In order to estimate GL with `ANGSD`, you'll need to have BAM files for both your ancient samples and the reference data. We will be using a similar dataset to the one we used for the pseudo-haploid approach but with less samples (since the GL estimation is a slow process).
 
-##### Estimating GL
-
-In order to estimate GL, you'll need to:
-
-1. have BAM files for both your ancient samples and the reference data or, 
-1. if you only have SNPs for the reference data you can create 'fake' GL for these and then incorporate you ancient sample (not always recommended and rarely used)
-
-Here we will assume we have BAM files for our reference data. We will be using a similar dataset to the one we used for the pseudo-haploid approach but with less samples (since the GL estimation is a slow process).
-
-Define some paths and file names (again you can choose to work with mystery sample 1 or 2):
+Define some paths and file names (again you can choose to work with ancient sample 1, 2 or 3):
 
 ```{bash, eval = FALSE}
 # list with the paths to the BAMS for the reference and mystery sample (again you can chose from mystery sample1 or sample2)
-BAMLIST="/home/ec2-user/Data/BAMS/BamList1.txt"
+BAMLIST="/projects/course_1/people/clx746/Bams/BamList1.txt"
 # or
-BAMLIST="/home/ec2-user/Data/BAMS/BamList2.txt"
+BAMLIST="/projects/course_1/people/clx746/Bams/BamList2.txt"
+# or
+BAMLIST="/projects/course_1/people/clx746/Bams/BamList3.txt"
 ```
 
 We are starting with list of BAM files with sequencing data from 6 dogs, 5 Eurasian wolves, 5 American wolves, and 5 ancient Siberian wolves. 
@@ -1202,40 +1159,43 @@ We are starting with list of BAM files with sequencing data from 6 dogs, 5 Euras
 cat $BAMLIST
 ```
 ```
-/home/ec2-user/Data/BAMS/Dog_Dingo.bam
-/home/ec2-user/Data/BAMS/Dog_GMums.bam
-/home/ec2-user/Data/BAMS/Dog_Ilulissat.bam
-/home/ec2-user/Data/BAMS/Dog_Shanxi.bam
-/home/ec2-user/Data/BAMS/Dog_TM.bam
-/home/ec2-user/Data/BAMS/Dog_Tasiilaq.bam
-/home/ec2-user/Data/BAMS/Wolf_Alaska.bam
-/home/ec2-user/Data/BAMS/Wolf_AtlanticCoast.bam
-/home/ec2-user/Data/BAMS/Wolf_BungeToll.bam
-/home/ec2-user/Data/BAMS/Wolf_Chinese.bam
-/home/ec2-user/Data/BAMS/Wolf_Ellesmere.bam
-/home/ec2-user/Data/BAMS/Wolf_GW.bam
-/home/ec2-user/Data/BAMS/Wolf_Iberian.bam
-/home/ec2-user/Data/BAMS/Wolf_Israeli.bam
-/home/ec2-user/Data/BAMS/Wolf_Portuguese.bam
-/home/ec2-user/Data/BAMS/Wolf_Saskatchewan.bam
-/home/ec2-user/Data/BAMS/Wolf_Taimyr.bam
-/home/ec2-user/Data/BAMS/Wolf_Tirekhtyakh.bam
-/home/ec2-user/Data/BAMS/Wolf_UlakhanSular.bam
-/home/ec2-user/Data/BAMS/Wolf_VictoriaIsland.bam
-/home/ec2-user/Data/BAMS/Wolf_Yana.bam
-/home/ec2-user/Data/BAMS/sample1.bam
+/projects/course_1/people/clx746/Bams/Dog_Dingo.bam
+/projects/course_1/people/clx746/Bams/Dog_GMums.bam
+/projects/course_1/people/clx746/Bams/Dog_Ilulissat.bam
+/projects/course_1/people/clx746/Bams/Dog_Shanxi.bam
+/projects/course_1/people/clx746/Bams/Dog_TM.bam
+/projects/course_1/people/clx746/Bams/Dog_Tasiilaq.bam
+/projects/course_1/people/clx746/Bams/Wolf_Alaska.bam
+/projects/course_1/people/clx746/Bams/Wolf_AtlanticCoast.bam
+/projects/course_1/people/clx746/Bams/Wolf_BungeToll.bam
+/projects/course_1/people/clx746/Bams/Wolf_Chinese.bam
+/projects/course_1/people/clx746/Bams/Wolf_Ellesmere.bam
+/projects/course_1/people/clx746/Bams/Wolf_GW.bam
+/projects/course_1/people/clx746/Bams/Wolf_Iberian.bam
+/projects/course_1/people/clx746/Bams/Wolf_Israeli.bam
+/projects/course_1/people/clx746/Bams/Wolf_Portuguese.bam
+/projects/course_1/people/clx746/Bams/Wolf_Saskatchewan.bam
+/projects/course_1/people/clx746/Bams/Wolf_Taimyr.bam
+/projects/course_1/people/clx746/Bams/Wolf_Tirekhtyakh.bam
+/projects/course_1/people/clx746/Bams/Wolf_UlakhanSular.bam
+/projects/course_1/people/clx746/Bams/Wolf_VictoriaIsland.bam
+/projects/course_1/people/clx746/Bams/Wolf_Yana.bam
+/projects/course_1/people/clx746/Bams/sample1.bam
 ```
 
-In contrast to the previous approach, in this case we don't have a list of sites that we know are polymorphic in our populations, so we need to do SNP calling while calculating the GL. 
+In contrast to the pseudohaploid approach, in this case we don't have a list of sites that we know are polymorphic in our populations, so we need to do SNP calling while calculating the GL. 
 
 To do so we will run the following:
 
 ```{bash, eval = FALSE}
+# first load angsd
+module load angsd/0.921 
+
+# then run it like this:
 angsd -GL 1 -out wolves_gl -doGlf 2 -doMajorMinor 1 -bam $BAMLIST -minMapQ 30 -minQ 20 -rmTrans 1  -doMaf 2 -SNP_pval 2e-6 -minMaf 0.1
 ```
 
 Take a look at the parameters:
-
 ```
 -GL 1            this specifies the model to estimate the genotype likelihoods 1 is samtools model 
 -minMapQ 30      use reads with a minimum mapping quality of 30
@@ -1249,7 +1209,6 @@ Take a look at the parameters:
 ```
 
 Some important filters are the *-minMaf* this one together with *-SNP_pval* allows us to do the SNP calling. The *-SNP_pval* allows us to keep sites that are variable, and with *-minMaf* we can chose the minimum allele frequency of the SNPs that we want to keep. What does the 0.1 (1%) means? Consider the number of samples we have in our list. 
-
 After this, we'll have three new files:
 
 ```{bash, eval = FALSE}
@@ -1272,16 +1231,16 @@ scaffold_0_9458 1       3       0.000211        0.333261        0.666528        
 scaffold_0_23166        2       0       0.666598        0.333296        0.000106        0.941178        0.058822        0.000000        0.800003        0.199997        0.000000        0.999024        0.000976  0.000000        0.800003        0.199997        0.000000        0.999512        0.000488        0.000000        0.800003        0.199997        0.000000        0.984616        0.015384        0.000000  0.333333        0.333333        0.333333        0.000000        0.001949        0.998051        0.992249        0.007751        0.000000        0.800003        0.199997        0.000000        0.992249  0.007751        0.000000        0.333333        0.333333        0.333333        0.000000        1.000000        0.000000        0.800003        0.199997        0.000000        0.333333        0.333333  0.333333        0.666580        0.333287        0.000133        0.666580        0.333287        0.000133        0.999024        0.000976        0.000000        0.800003        0.199997        0.000000
 ```
 
-<span style="color: purple;"> **Q:** </span> Check the output, do you remember what each of the columns show?
+<span style="color: purple;"> **Question:** </span> Check the output, do you remember what each of the columns show?
 
-<p>&nbsp;</p>
 
 -----------------------------------
-##### Clustering using NGSadmix and genotype-likelihoods
 
-Now we will use ```NGSadmix``` to do admixture clustering using the GL that we estimated. 
+#### Clustering using NGSadmix and genotype-likelihoods
 
-This would be an example of how to run ```NGSadmix``` (don't run it yet):
+Now we will use `NGSadmix` to do admixture clustering using the GL that we estimated. 
+
+This would be an example of how to run `NGSadmix` (don't run it yet):
 
 ```
 NGSadmix -likes wolves_gl.beagle.gz -outfiles wolves_ngsadmx_k3 -P 1 -K 3  -seed $RANDOM
@@ -1296,8 +1255,11 @@ Take a look at the parameters
 ```
 
 Similar to what we did for ```ADMIXTURE```, we want to run several replicates starting a different seeds for each K. We can do that with the following: 
-
 ```{bash, eval = FALSE}
+# load ngsadmix module
+module load ngsadmix/1.0.0
+
+# run ngsadmix
 for rep in 1 2 3 4 5
  do
  for k in 3 4
@@ -1311,7 +1273,7 @@ In this case, since we can specify the name for the output file, we don't need t
 
 It will take a few minutes to run...
 
-```NGSadmix``` will create several output files, for example for K=3 and replicate 1, we have the following:
+`NGSadmix` will create several output files, for example for K=3 and replicate 1, we have the following:
 
 ```{bash, eval = FALSE}
 ls wolves_gl_ngs_rep1_k3*
@@ -1400,7 +1362,7 @@ R
 # Remember to change the to BamList2.txt or BamList3.txt if necessary!
 fam<-readLines("/home/ec2-user/Data/BAMS/BamList1.txt")
 fam<-gsub(".bam", "", basename(fam))
-info<-read.table("/home/ec2-user/Data/SNPs/wolves_rand_tv_info.txt", as.is=T, sep="\t")
+info<-read.table("/projects/course_1/people/clx746/Data/wolves_rand_tv_info.txt", as.is=T, sep="\t")
 
 # Find the category for each of the samples in the list
 category<-NULL
@@ -1493,7 +1455,7 @@ samps<-readLines("/home/ec2-user/Data/BAMS/BamList1.txt")
 samps<-gsub(".bam", "", basename(samps))
 
 # read the information about the categories
-info<-read.table("/home/ec2-user/Data/SNPs/wolves_rand_tv_info.txt", as.is=T, sep="\t")
+info<-read.table("/projects/course_1/people/clx746/Data/wolves_rand_tv_info.txt", as.is=T, sep="\t")
 
 # Find the category for each of the samples in the list
 category<-NULL
