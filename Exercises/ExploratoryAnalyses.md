@@ -495,7 +495,8 @@ grep "^Loglikelihood" */*_2_out.log
 4/4_2_out.log:Loglikelihood: -3470719.048495
 5/5_2_out.log:Loglikelihood: -3470719.048501
 ```
-**How do we chose the replicate with the best likelihood? **
+
+##### How do we chose the replicate with the best likelihood?
 
 Remember that Likelihoods are the product of probabilities, therefore they become very small numbers very quickly. 
 
@@ -514,6 +515,8 @@ logLikelihood<-log(Likelihood)
 # Let's visualize the numbers
 plot(Likelihood, logLikelihood)
 ```
+
+![Likelihoods.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/Exercises/loglikevslike.png)
 
 As you can see, as the likelihood increases the *log* likelihood gets closer to 0. 
 
