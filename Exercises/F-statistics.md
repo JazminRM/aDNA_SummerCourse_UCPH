@@ -1,10 +1,9 @@
-### *f*-statistics
+## *f*-statistics
 
-<p>&nbsp;</p>
 
-Today we will use the SNP dataset that we generated yesterday to estimate outgroup $f_3$-statistics and *D*-statistics to test for treeness and gene-flow between the reference samples and our mystery samples. For the *f-* and *D*-statistics will try two approaches one using ```FrAnTK``` <sup>2</sup> and one using ```ANGSD``` <sup>3</sup>. We also build a tree and incorporate migration edges using ```TreeMix``` <sup>1</sup>.
+Today we will use the SNP dataset that we generated yesterday to estimate outgroup $f_3$-statistics and *D*-statistics to test for treeness and gene-flow between the reference samples and our ancient canid. For the *f-* and *D*-statistics will try two approaches one using ```FrAnTK``` <sup>2</sup> and one using ```ANGSD``` <sup>3</sup>.
 
-Outline:
+### Outline:
 
 * Incorporate an outgroup to our dataset
 * Pre-compute allele frequencies using ```FrAnTK``` <sup>2</sup> 
@@ -16,28 +15,38 @@ Outline:
     + using ```ANGSD``` <sup>3</sup>
 * Estimae $f_3$-statistics to locate the sample closest to our mystery sample 
    + using ```FrAnTK```
-* Build a ```TreeMix``` <sup>1</sup> tree
-   + using ```FrAnTK``` <sup>2</sup> + ```TreeMix``` <sup>1</sup>
-   
-<p>&nbsp;</p>
 
-----------------------------------------------
-Start by creating a directory for today's exercises:
+
+### Interactive node
+
+We will use an interactive node in mjolnir to run the exercises throughout the course, so you always start by opening an interactive session in the server. Follow the steps below.
 
 ```{bash, eval = FALSE}
+# First log in to the server (remember to change ku_username for your username)
+ssh ku_username@mjolnirgate.unicph.domain
+
+# first request one CPU using salloc like this:
+salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --account=teaching --reservation=aDNA_PHD_course
+
+# once the job has been allocated, you can login to the node with srun like this:
+srun --pty -n 1 -c 1 bash -i
+```
+
+Now, let's create a directory for the $f$-statistics exercises:
+```{bash, eval = FALSE}
+# remember you change for you username
 username="write_your_username"
-
-directoryGF="/home/$username/fstats/"
-
+directoryGF="/projects/course_1/people/${username}/fstats/"
 mkdir -p $directoryGF
 
+# go to the directory
 cd $directoryGF
 ```
 
-<p>&nbsp;</p>
 ----------------------------------------------
 
-#### Add an outgroup to the SNP dataset
+
+### Add an outgroup to the SNP dataset
 
 The exercises for today, require that we have an outgroup in our SNPs dataset, so we will start by adding 3 golden jackal samples (*Canis aureus*) and a 7 coyotes (*Canis latrans*) to the PLINK files that we created for yesterday. 
 
@@ -45,8 +54,8 @@ Define some paths and sample names:
 
 ```{bash, eval=FALSE}
 # Here we are using the SNP dataset that contain the full name of the scaffolds, since we will be manipulating the files with plink
-PLINKDS="/home/$username/exploratoryA/wolves_mergedTv"
-OUTGROUP="/home/ec2-user/Data/SNPs/Outgroups_sites"
+PLINKDS="/projects/course_1/people/$username/ExploratoryAnalyses/wolves_mergedTv"
+OUTGROUP="/projects/course_1/people/clx746/Data/Outgroups_sites"
 ```
 
 First, take a look at the FAM file of the outgroups:
@@ -67,25 +76,24 @@ GoldenJackal GoldenJackal 0 0 0 1
 GoldenJackal SyrianJackal 0 0 0 1
 ```
 
-<span style="color: purple;"> **Q:** </span>  Do you see anything different compared to the PLINK files we worked with yesterday?
+<span style="color: purple;"> **Question:** </span>  Do you see anything different compared to the PLINK files we worked with yesterday?
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName1"> Show/hide solution </button>  
-<div id="BlockName1" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
 We are grupping some samples into populations/groups. We can see this in the first column of the FAM file: all of the 7 coyote samples have the same population name in the first column, and the same for all 3 golden jackals.
-</div>
 
-<p>&nbsp;</p>
+</details>
 
-Now, let's use ```plink```<sup>4</sup> to add the outgroup to the previous SNP dataset:
-
+Now, let's use `plink`<sup>4</sup> to add the outgroup to the previous SNP dataset:
 ```{bash, eval=FALSE}
+# load plink
+module load plink/1.9.0
+
+# merge the two files:
 plink --bfile $PLINKDS --bmerge $OUTGROUP --out wolves_rand_out --make-bed  --allow-extra-chr --allow-no-sex
 ```
-
 Check the parameters we are using! Do you remember what *-bmerge* is for?
-
-<p>&nbsp;</p>
 
 Finally, we want to pool some of the dogs and wolves from the same locations together into populations/groups. We will do that by editing the first column of the FAM file we just created. 
 
@@ -127,16 +135,13 @@ Wolf_Israel Wolf_Israeli 0 0 0 1
 Wolf_Israel Wolf_Israeli2 0 0 0 1
 ```
 
-<p>&nbsp;</p>
-
 ------------------------------------------
 
-#### Precompute allele frequencies using FrAnTK
-<p>&nbsp;</p>
+
+### Precompute allele frequencies using FrAnTK
 
 For today's exercises we will be using ```FrAnTK```, which uses pre-computed allele frequencies for the population/groups in our PLINK files. ```FrAnTK``` has many different tools that we can use to explore allele sharing patterns and test specific hypotheses about gene-flow, it can also be used to incorporate BAM files into SNP panels and to create the input file required by ```TreeMix```, you can read more about it [here](https://github.com/morenomayar/FrAnTK).
 
-<p>&nbsp;</p>
 
 Start by creating a CLUST file that contains information about the sample's name, population and ploidy. We need a table with four columns *tab* separated with the following information:
 
@@ -170,6 +175,9 @@ Dog_Dingo	Dog_Dingo	Dog_Dingo	1
 Now we will estimate allele frequencies for all of the populations using ```BuildFreqs``` tool from ```FrAnTK```:
 
 ```{bash, eval=FALSE}
+# load frantk
+module load frantk/20220523
+
 # Here we are getting the number of populations from our CLUST file:
 npops=`cut -f 1 clust_file | sort |uniq |wc -l`
 
@@ -201,8 +209,8 @@ wolves_rand_ftk_regions
 ```
 <span style="color: purple;"> **Optional:** </span> Take a look at each of these files to familiarise with their content.
   
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName2"> Show/hide solution </button>  
-<div id="BlockName2" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
 The *wolves_rand_ftk_chrs* file contains information about the chromosome (scaffold) names, their size and number of blocks (used for the jacknife procedure):
 ```{bash, eval = FALSE}
@@ -260,17 +268,17 @@ zcat wolves_rand_ftk_freqs.gz | head -n 1
 scaffold_0	9493	scaffold_0_9493	A	C	0.0	0	5	1.0	1	0	1.0	1	0	N	N	N	0.0	0	1	0.0	0	1	0.0	0	1	0.0	0	1	0.0	0	1	1.0	1	0	N	N	N	0.0	0	1	0.0	0	1	0.0	0	1	0.01.0	2	0	0.0	0	1	0.0	0	1	N	N	N	0.0	0	2	0.0	0	1	0.0	0	1	0.0	0	1	0.00.0	0	1	0.0	0	1	0.0	0	1	0.0	0	1	N	N	N	0.0	0	1	0.0	0	1	N	N	N	0.00.0	0	1	0.0	0	1	N	N	N	0.0	0	1	0.0	0	1	0.0	0	1	0.0	0	1	N	N	N	0.00.0	0	1	N	N	N	0.0	0	1	0.0	0	1	0.0	0	1	5	40
 ```
 
-</div>
-<p>&nbsp;</p>
+</details>
 
-One of the really nice things about ```FrAnTK``` is that you can use it to create plots of the tests you perform, so in order to have some pretty plots we will take a bit of time to prepare two files: a CATEGORY file and a LEGEND file.
+
+One of the perks of ```FrAnTK``` is that you can use it to create plots of the tests you perform, so in order to have some pretty plots we will take a bit of time to prepare two files: a CATEGORY file and a LEGEND file.
 
 The CATEGORY file contains two columns (*tab* separated) with the population name and a category you want to use for plotting: 
 
 ```{bash, eval=FALSE}
 R
 
-info<-read.table("/home/ec2-user/Data/SNPs/wolves_rand_tv_info.txt", as.is=T, sep="\t")
+info<-read.table("/projects/course_1/people/clx746/Data/wolves_rand_tv_info.txt", as.is=T, sep="\t")
 pops<-read.table("wolves_rand_ftk_pop", as.is=T)[,1]
 
 category<-NULL
@@ -328,25 +336,20 @@ MysterySample	red	darkslategray1	23
 ```
 Feel free to change the colors if you like :)
 
-<p>&nbsp;</p>
-
 ------------------------------------------
 
-#### *D*-statistics
+
+### *D*-statistics
 
 We will start by computing a simple *D*-statistic to see how ```FrAnTK``` works. 
 
 The simplest way to run a *D*-statistic is by defining a tree of four samples (which represents our null hypothesis):
-
-<p>&nbsp;</p>
 
 <center>
 
 *D*(Dog_Peru, Dog_Dingo; Wolf_Portuguese, Golden jackal) 
 
 </center>
-
-<p>&nbsp;</p>
 
 We can estimate the *D*-statistic for that tree using ```FrAnTK```'s ```getD``` tool:
 
@@ -388,18 +391,20 @@ nABBA       number of nABBA sites
 nBABA       number of nBABA sites
 ```
 
-<span style="color: purple;"> **Q:** </span> Based on what we talked about before, what can we infer from the results? Can we reject H0? 
+<span style="color: purple;"> **Question:** </span> Based on what we talked about before, what can we infer from the results? Can we reject H0? 
+
 
 ---------------------------------------
 
 <span style="color: red;">  STOP HERE </span>
 
 ------------------------------------------
-#### *D*-statistics for treeness
+
+
+### *D*-statistics for treeness
 
 Imagine we have a sample x (Dog_Ilulissat) and we want to know if it forms a clade with one of two other populations (Dog_Greenland or Dog_Peru). We can test this using *D*-statistics by estimating all three possible configurations:
 
-<p>&nbsp;</p>
 
 <center>
 
@@ -411,7 +416,6 @@ Imagine we have a sample x (Dog_Ilulissat) and we want to know if it forms a cla
 
 </center>
 
-<p>&nbsp;</p>
 
 We can estimate those three tests using ```FrAnTK```'s ```getDtrip```:
 
@@ -441,13 +445,15 @@ Dog_Greenland	Dog_Peru	Dog_Ilulissat	GoldenJackal	0.4076524741081703	0.013154508
 
 <span style="color: purple;"> **Q:** </span> Based on what we talked about before, what can we infer from the results? Do we know whether Dog_Ilulissat forms a clade with the dogs from Greenland or Peru ? 
 
+
 ---------------------------------------
 
 <span style="color: red;">  STOP HERE </span>
 
 ------------------------------------------
 
-#### *D*-statistics for our mystery samples
+
+### *D*-statistics for our mystery samples
 
 After running the exploratory analyses we have now a general idea of the ancestry of our mystery samples, so for the following step we will use *D*-statistics to test specific hypotheses about treeness and gene-flow. 
 
@@ -461,20 +467,21 @@ Since we will be asking specific questions about the ancestry and gene-flow of t
 
 <span style="color: orangered;"> Go to the section corresponding to the mystery sample you chose. </span>
 
-<p>&nbsp;</p>
+
 ----------------------------------------------
 
-##### Mystery sample 1
+
+#### Ancient canid 1
 
 
 **Using *D*-statistics to test for treeness**
 
-Does our mystery sample 1 belongs to the same clade as the Greenland & Husky dogs? 
+Does our ancient canid 1 belongs to the same clade as the Greenland & Husky dogs? 
 
 Our previous results suggest that mystery sample 1 is closest to the Greenland dogs, Huskies, and Alaskan malamutes. So we would like to formally test whether this sample forms a clade with the Greenland dog (I picked the Greenland dog, but feel free to chose a different one if you think another dog looks closest to the mystery sample 1). 
 
 To test that we will run a *D*-statistic test of the form: 
-<p>&nbsp;</p>
+
 
 <center>
 
@@ -482,30 +489,27 @@ To test that we will run a *D*-statistic test of the form:
 
 </center>
 
-<p>&nbsp;</p>
 
 One way to look at this test is that we are evaluating the following topology (our NULL hypothesis):
 
 <center>
 
-![*D*(Mystery sample 1, Greenland dog; X, Golden jackal) ](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/Exercises/Dstat1_drawing.png){width=50%}
+<img src="../Figures/Dstat1_drawing.png" width=50%>
 
 </center>
 
-<span style="color: purple;"> **Q:** </span>  What are the possible results from this test?
+<span style="color: purple;"> **Question:** </span>  What are the possible results from this test?
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName8"> Hide/Show solution </button>  
-<div id="BlockName8" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
 **D = 0**     for all possible X's would mean we cannot reject our null hypothesis (i.e. the Mystety sample 1 forms a clade with the Greenland dog without any gene-flow)
 
 **D < 0**     the Greenland dog shares more alleles with X than the mystery sample does, thus or tree is incorrect or there is gene-flow betwen X and the Greenland dog
 
 **D > 0**     the Mystery sample shares more alleles with X than the Greenland dog does, thus or tree is incorrect or there is gene-flow betwen X and the Mystery sample
-</div>
 
-
-<p>&nbsp;</p>
+</details>
 
 For the *D*-statistics we will use ```FrAnTK```'s ```autoDwfixed``` tool, which we can call like this:
 
@@ -565,59 +569,48 @@ nBABA       number of nBABA sites
 
 We will be mostly interested in two of the columns, the value of *D* and the *Z*-score that we can use to measure the statistical significance of our result.
 
-Now download and check the results in the plot:
+Download the plot with the results. 
 
-<center>
+<span style="color: purple;"> **Question:** </span> What does the results show? What are the possible interpretations of the test? 
 
-![D-statistic testing whether mystery sample 1 forms a clade with the Greenland dogs. Horizontal bars indicate 3.33 standard erros.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2022/E1_2/Results_D__h3_MysterySample1.png){width=60%}
-
-</center>
-
-<span style="color: purple;"> **Q:** </span> What does the results show? What are the possible interpretations of the test? 
-
-<p>&nbsp;</p>
 ------------------------------------------------------
-##### Mystery sample 2
-<p>&nbsp;</p>
+
+#### Ancient canid 2
+
 
 **Using *D*-statistics to test for treeness**
 
-Does our mystery sample 1 belongs to the same clade as the younger Pleistocene wolf? 
+Does our ancient sample 1 belongs to the same clade as the younger Pleistocene wolf? 
 
-Our previous results suggest that mystery sample 2 is closest to the younger Pleistocene wolf (Ulakhan Sular). So we would like to formally test whether this sample forms a clade with the Pleistocene wolves. 
+Our previous results suggest that sample 2 is closest to the younger Pleistocene wolf (Ulakhan Sular). So we would like to formally test whether this sample forms a clade with the Pleistocene wolves. 
 
 To do that, we will run a *D*-statistic test of the form
-<p>&nbsp;</p>
 
 <center>
 *D*(Mystery sample 2, Pleistocene wolf Y; X, Golden jackal) 
 
 </center>
 
-<p>&nbsp;</p>
-
 One way to look at this test is that we are evaluate the following topology (our NULL hypothesis):
 
 <center>
 
-![*D*(Mystery sample 2, Pleistocene wolf Y; X, Golden jackal)](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/Exercises/Dstat3_drawing.png){width=50%}
+<img src="../Figures/Dstat3_drawing.png" width=50%>
 
 </center>
 
-<p>&nbsp;</p>
+<span style="color: purple;"> **Question:** </span> What are the possible results from this test? 
 
-<span style="color: purple;"> **Q:** </span> What are the possible results from this test? 
-
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName9"> Hide/Show solution </button>  
-<div id="BlockName9" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
 **D = 0**     for all possible X's would mean we cannot reject our null hypothesis (i.e. the Mystety sample 2 forms a clade with the Ulakhan Sular wolf without any gene-flow)
 
 **D < 0**     the Ulakhan Sular wolf shares more alleles with X than the mystery sample does, thus or tree is incorrect or there is gene-flow betwen X and the Ulakhan Sular wolf
 
 **D > 0**     the Mystery sample shares more alleles with X than the Ulakhan Sular wolf does, thus or tree is incorrect or there is gene-flow betwen X and the Mystery sample
-</div>
 
+</details>
 
 For the *D*-statistics we will use ```autoDwfixed```'s tool from ```FrAnTK```:
 
@@ -677,16 +670,9 @@ nBABA       number of nBABA sites
 
 We will be mostly interested in two of the columns, the value of *D* and the *Z*-score that we can use to measure the statistical significance of our result.
 
-<span style="color: purple;"> **Q:** </span> What does the results show?
+<span style="color: purple;"> **Question:** </span> What does the results show?
 
-Now download and check the results in the plot:
-
-<center>
-
-![D-statistic showing mystery sample 2 forms a clade young Pleistocene wolves. Horizontal bars indicate 3.33 standard erros.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2022/E1_2/Results_D__h3_MysterySample2.png){width=60%}
-
-</center>
-<p>&nbsp;</p>
+Now download and check the results in the plot.
 
 ---------------------------------------
 
@@ -695,7 +681,7 @@ Now download and check the results in the plot:
 ---------------------------------------
 
 
-##### *D*-statistics a case of coyote admixture
+#### *D*-statistics a case of coyote admixture
 
 It has been shown that the American grey wolf and coyote frequently admixed <sup>6</sup>. We will use them as case study to run some *D*-statistics to test for gene-flow.
 
@@ -705,7 +691,7 @@ In this case the test we want to run is the following:
 *D*(Eurasian wolf (with no Coyote Admixture), American wolf; Coyote, Golden jackal) 
 </center>
 
-<span style="color: purple;"> **Q:** </span> What would be the expected results in this case?
+<span style="color: purple;"> **Question:** </span> What would be the expected results in this case?
 
 Remember that in contrast to our mystery samples, in this case we know that the topology of the tree we are proposing (where the two wolves form a clade and coyote is outside in the tree) is correct, so any significant deviation from D=0 can be interpreted as gene-flow.
 
@@ -715,14 +701,7 @@ Now run ```autoDwfixed```:
 frantk autoDwfixed h2=Wolf_Portuguese h3=Coyote h4=GoldenJackal freqpref=wolves_rand_ftk nthr=2 catfile=categories.txt legfile=legend.txt rmtrns=1
 ```
 
-And take a look at the results:
-
-<center>
-
-![D-statistic testing for gene flow between mystery sample 2 and dogs. Horizontal bars indicate 3.33 standard errors.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2022/E1_2/Results_D__h1_Wolf_Portuguese_Coyote_GoldenJackal_wolves_rand_ftk_I4bZ66.png){width=60%}
-</center>
-
-<p>&nbsp;</p>
+Download the plot and take a look at the results.
 
 
 ---------------------------------------
@@ -731,9 +710,9 @@ And take a look at the results:
 
 --------------------------------------------------
 
-#### Outgroup $f_3$-statistics 
 
-<p>&nbsp;</p>
+### Outgroup $f_3$-statistics 
+
 
 One of the most basic $f$-statistics we can do is an outgroup $f_3$-statistic to measure  shared drift between our ancient mystery sample and the other populations in the dataset. To do that, we will use ```autof3wfixed```'s tool from ```FrAnTK```:
 
@@ -762,15 +741,13 @@ catfile     our CATEGORY file
 legfile     our LEGEND file
 rmtrns      whether we want to remove (1) or not (0) transition sites
 ```
-<span style="color: purple;"> **Q:** </span> Do you remember why we want to remove transitions?  
+<span style="color: purple;"> **Question:** </span> Do you remember why we want to remove transitions?  
   
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName3"> Show/hide solution </button>  
-<div id="BlockName3" class="collapse">  
-
+<details>
+<summary> <b>Show answer</b> </summary>
 Ancient DNA damage can affect transition (C<->T and G<->A) sites!  
-</div>
-<p>&nbsp;</p>
 
+</details>
 
 Once ```FrAnTK``` is done running you will have TEXT file with the results and a PDF file with a plot. 
 ```{bash, eval=FALSE}
@@ -816,334 +793,21 @@ Cat         category for the plot
 As we discussed before, one way to look at the $f_3$-statistic is as the length of the branch that leads from the common ancestor of population 1 and 2 in the test and the outgroup:
 
 <center>
-![f3-stats.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2022/E1_2/F3_drawing.png){width=30%}
+<img src="../Figures/F3_drawing.png" width=30%>
 
 </center>
 
 So longer branches (larger $f_3$) are expected from pairs of samples that share more drift. 
 
-Now let's look at the plot (but try to check the one you created first!)
- 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName5"> Look at the plot </button>  
-<div id="BlockName5" class="collapse">  
+Now let's look at the plot.
 
-![Outrgorup $f_3$-statistic for mystery sample 1. Colors indicate the main ancestry groups. Vertical bars show 3.33 standard errors.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2022/E1_2/Results_f3.png)
-</div>
-<p>&nbsp;</p>
+<span style="color: purple;"> **Question:** </span> What can you say about your mystery sample? Does this match with the PCA and ADMIXTURE analyses from yesterday?  
 
-<span style="color: purple;"> **Q:** </span> What can you say about your mystery sample? Does this match with the PCA and ADMIXTURE analyses from yesterday?  
+*<span style="color: cornflowerblue;"> BONUS</span>* Try estimating an $f_3$-statistic using ```FrAnTK```'s ```autof3wfixed``` for another population instead of our ancient canid and compare the results.  
 
-*<span style="color: cornflowerblue;"> BONUS</span>* Try estimating an $f_3$-statistic using ```FrAnTK```'s ```autof3wfixed``` for another population instead of the MysterySample and compare the results.  
-
-
----------------------------------------
-
-<span style="color: red;">  STOP HERE </span>
-
---------------------------------------------------
-#### TreeMix trees
-
-Now we now how our mystery sample looks like in terms of its general genetic ancestry. We know what is the population it is closest to, we also have an idea of potential admixture with other populations, so the next thing we want to do is to build a tree. 
-
-In this section we will build a tree with the reference data and our mystery samples using ```TreeMix``` <sup>1</sup> . 
-
-```TreeMix``` takes as input a file with allele counts and since we want to discard sites with missing data we will select only some relevant and high coverage samples for the tree (two samples from each category) and we will use the golden jackal as outgroup:
-
-(Feel free to include/exclude more samples if you want!)
-```{bash, eval=FALSE}
-cut -f 1 wolves_rand_ftk_pop |grep -e GoldenJackal -e Dog_GMums -e Dog_Qaanaaq -e Dog_Hebei -e Dog_TM -e Wolf_Israel -e Wolf_UlakhanSular -e Wolf_Qamanirjuaq -e Wolf_NorthBaffin -e Wolf_Portuguese -e MysterySample -e Dog_SibHusky -e Dog_Greenland -e Dog_AlaskanM -e Dog_AlaskanHusky >  pop2kep
-```
-
-Our *pop2kep* file now contains a list of the populations we want to include in the tree. We will use ```FrAnTK```'s ```Freqs2Treemix``` tool to create the input for ```TreeMix```
-
-```{bash, eval=FALSE}
-frantk Freqs2Treemix freqpref=wolves_rand_ftk popsofint=pop2kep tmpref=wolves_rand_ftk_treemix
-```
-
-Take a look at the parameters we are using with ```Freqs2Treemix```:
-
-```
-freqpref    the basename or prefix of our precomputed allele frequencies
-popsofint   a list of population that we want to include in the treemix tree
-tmpref      prefix for the output file
-```
-
-After it is done running we will have four files:
-```{bash, eval=FALSE}
-ls wolves_rand_ftk_treemix*
-```
-```
-wolves_rand_ftk_treemix_ALL_tm.gz
-wolves_rand_ftk_treemix_ALL_tmpos
-wolves_rand_ftk_treemix_NT_tm.gz
-wolves_rand_ftk_treemix_NT_tmpos
-```
-The ones ending in *ALL_tm* contain all sites and the ones ending in *NT_tm* contain only the transversion sites. (Since our original files do not have transitions, these will be the same length.)
-
-<span style="color: purple;"> **Optional (but highly encouraged):** </span> Take a look at the output files, check what they contain and how many sites/SNPs we will be using for the ```TreeMix``` analysis.
-
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName6"> Hide/Show solution </button>  
-<div id="BlockName6" class="collapse">  
-
-The *wolves_rand_ftk_treemix_ALL_tm.gz* file contains the allele counts and it is the one we will be using for ```TreeMix```:
-```{bash, eval=FALSE}
-zcat wolves_rand_ftk_treemix_ALL_tm.gz |head
-```
-```
-Dog_AlaskanHusky Dog_AlaskanM Dog_GMums Dog_Greenland Dog_Hebei Dog_Qaanaaq Dog_SibHusky Dog_TM GoldenJackal MysterySample Wolf_Israel Wolf_NorthBaffin Wolf_Portuguese Wolf_Qamanirjuaq Wolf_UlakhanSular
-0,1 0,1 0,1 0,1 0,1 0,1 0,2 0,1 2,0 1,0 0,2 0,1 0,1 0,1 0,1
-0,1 0,1 0,1 0,1 0,1 0,1 1,1 0,1 0,2 0,1 0,2 1,0 0,1 0,1 0,1
-0,1 0,1 0,1 0,1 0,1 0,1 0,2 0,1 2,0 0,1 0,2 1,0 1,0 0,1 0,1
-0,1 1,0 0,1 0,1 0,1 1,0 0,2 1,0 0,1 0,1 0,2 0,1 1,0 0,1 0,1
-0,1 0,1 0,1 1,0 0,1 0,1 0,2 0,1 0,1 0,1 0,2 0,1 0,1 0,1 0,1
-0,1 0,1 0,1 0,1 0,1 0,1 0,2 0,1 0,3 0,1 0,2 0,1 0,1 0,1 1,0
-1,0 0,1 0,1 0,1 0,1 0,1 1,0 0,1 0,2 0,1 0,2 0,1 0,1 0,1 1,0
-0,1 0,1 0,1 0,1 0,1 1,0 2,0 1,0 0,2 0,1 0,2 0,1 0,1 0,1 0,1
-0,1 0,1 0,1 0,1 0,1 1,0 0,2 0,1 0,2 0,1 0,2 0,1 0,1 0,1 0,1
-```
-As you can see the first line is the header with the population names. Each column corresponds to a population and each row to a SNP. For each SNP and population we have allele counts, for example for the *Dog_AlaskanHusky* we have *0,1* (0 alleles reference and 1 allele alternative) for the first SNP. 
-
-We can check the number of SNPs by counting the lines:
-```{bash, eval=FALSE}
-zcat wolves_rand_ftk_treemix_ALL_tm.gz |wc -l
-```
-```
-32761
-```
-so, that would be 32761-1 = 32760 SNPs that we will be using for the tree. 
-<p>&nbsp;</p>
-
-The other file *wolves_rand_ftk_treemix_ALL_tmpos* contains information about the SNPs (chromosome, coordinate, snpname, ref and alternative alleles). 
-
-```{bash, eval=FALSE}
-head wolves_rand_ftk_treemix_NT_tmpos
-```
-```
-scaffold_0	71165	scaffold_0_71165	A	T
-scaffold_0	96026	scaffold_0_96026	A	C
-scaffold_0	113242	scaffold_0_113242	A	T
-scaffold_0	134733	scaffold_0_134733	G	T
-scaffold_0	147209	scaffold_0_147209	T	A
-scaffold_0	162559	scaffold_0_162559	G	C
-scaffold_0	202531	scaffold_0_202531	G	T
-scaffold_0	314745	scaffold_0_314745	A	T
-scaffold_0	346152	scaffold_0_346152	T	A
-scaffold_0	360221	scaffold_0_360221	T	A
-```
-
-</div>
-
-<p>&nbsp;</p>
-
-```TreeMix``` allow us to model migration edges on top of our tree to include potential admixture events, so we will test from 0 to 3 possible migration edges (*-m* parameter). Since ```TreeMix``` uses a maximum-likelihood approach (same as ```ADMIXURE```), we want to run ```TreeMix``` several times starting at different seeds and keep the replicate with the best likelihood for each number of migrations (*-m*). 
-
-We can use the following loop in ```bash``` to run 5 replicates for each value of *-m*:
-
-```{bash, eval=FALSE}
-mkdir treemixRes
-cd treemixRes
-for rep in 1 2 3 4 5
-do
- for migration in 0 1 2 3
- do
-  treemix -j1 -i ../wolves_rand_ftk_treemix_ALL_tm.gz -seed $RANDOM -o wolvesTM_m"$migration"_rep"$rep" -k 500 -noss -global -m $migration -root GoldenJackal
- done 
-done
-```
-
-Take a look at the parameters:
-
-```
--i      input file
--seed   starting seed, we want a different seed for each run, so we set it to random
--k      number of SNPs for each block, this will depend on the distribution of SNPs in your genome and the expected LD block size 
--m      number of migration edges to be modelled
--root   an individual to root the tree (GoldenJackal)
--o      base name for the output files
-```
-
-After TreeMix is done, we will have the following files for each migration and each replicate. For example, for migration 3 and replicate 5:
-
-```{bash, eval=FALSE}
-ls wolvesTM_m3_rep5*
-```
-```
-wolvesTM_m3_rep5.cov.gz
-wolvesTM_m3_rep5.covse.gz
-wolvesTM_m3_rep5.edges.gz
-wolvesTM_m3_rep5.llik
-wolvesTM_m3_rep5.modelcov.gz
-wolvesTM_m3_rep5.treeout.gz
-wolvesTM_m3_rep5.vertices.gz
-```
-
-In this case the *.llik* that contains the final likelihood. 
-
-For migration 3 replicate 5:
-```{bash, eval=FALSE}
-cat wolvesTM_m3_rep5.llik
-```
-```
-Starting ln(likelihood) with 0 migration events: 385.131 
-Exiting ln(likelihood) with 3 migration events: 436.014 
-```
-
-For all the replicates for migration 3:
-
-```{bash, eval=FALSE}
- grep "^Exiting" wolvesTM_m3_*llik
- ```
- ```
-wolvesTM_m3_rep1.llik:Exiting ln(likelihood) with 3 migration events: 436.014 
-wolvesTM_m3_rep2.llik:Exiting ln(likelihood) with 3 migration events: 436.014 
-wolvesTM_m3_rep3.llik:Exiting ln(likelihood) with 3 migration events: 435.144 
-wolvesTM_m3_rep4.llik:Exiting ln(likelihood) with 3 migration events: 436.014 
-wolvesTM_m3_rep5.llik:Exiting ln(likelihood) with 3 migration events: 436.014 
-```
-
-In this case there are four replicates with the same final likelihood: 436.014
-
-Let's evaluate the likelihood of the replicates and choose the best one using ```R``` <sup>5</sup>, we will also plot the results using ```TreeMix``'s` ```R``` functions. 
-
-We will need a file with a list of the populations, so let's create that one first:
-
-```{bash, eval=FALSE}
-zcat ../wolves_rand_ftk_treemix_ALL_tm.gz |head -n 1 |perl -pe 's/ /\n/g;' >poporderWolves
-```
-
-Plot the results using ```R```. 
-
-```{r, eval=FALSE}
-R
-
-# load Treemix functions
-source("/home/ec2-user/Software/treemix/nygcresearch-treemix-f38bfada3286/src/plotting_funcs.R")
-
-pdf("wolves_treemix.pdf", width=14, height=7)
-par(mfrow=c(1,2))
-
-for(m in 0:3){
- llik<-read.table(pipe(paste0("grep 'Exiting' wolvesTM_m", m, "_rep*.llik")), as.is=T)
- reps<-as.numeric(gsub("rep", "", sapply(strsplit(sapply(strsplit(llik[,1], "_"), "[[", 3), "\\."), "[[", 1)))
- bestrep<-reps[which.max(as.numeric(llik[,7]))]
- basena<-paste0("wolvesTM_m", m, "_rep", bestrep[1])
- 
- plot_tree(basena)
-# par(mar=c(13.1,13.1,7.1,7.1))
- plot_resid(basena, "poporderWolves")
-}
-
-dev.off()
-
-q("no")
-```
-
-Download the plot we just created to your local computer using **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). 
-
-Example of the **scp** command:
-
-```{bash, eval = FALSE}
-scp -i apgc-2022-key.pem.txt ec2-user@54.216.412.93:/home/ec2-user/$username/geneflow/treemixRes/wolves_treemix.pdf .
-```
-(remember to write your own username)
-
-Here we can see how the result look like for mystery sample 1:
-
-![Treemix figure. Treemix trees obtained for mysterty sample 1](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2022/E1_2/wolves_treemix_ed.png)
-Are the results in agreement with what we learned about the mystery sample yesterday? 
-
-<p>&nbsp;</p>
-
-------------------------------------------------
-
-#### ANGSD ABBA-BABA tests
-
-<p>&nbsp;</p>
-
-##### Mystery sample 1 
-
-Now we will repeat the treeness test we did to check whether MysterySample 1 forms a clade with Greenland dogs, but this time we will use ```ANGSD```. We will also estimate the D-statistic using all sites and excluding transition sites:
-
-So the test is the following:
-
-*D*(Dog TM, X; MysterySample, Golden jackal) 
-
-where X corresponds to all dogs in the dataset, but for now we will choose only a few of them since ANGSD is quite slow. 
-
-Declare some variables and paths:
-
-```{bash, eval=FALSE}
-OUTGROUP="/home/ec2-user/Data/RefGenome/GJ.fasta"
-
-cd $directoryGF 
-```
-
-
-You'll need to inded your fasta file using samtools:
-
-```{bash, eval=FALSE}
-samtools faidx /home/ec2-user/Data/RefGenome/GJ.fasta
-```
-
-It will take a minute...
-
-Now we will create a list with BAM files that we want to include in the tests. ```ANGSD``` will run all the possible combinations of three samples from the ones file and will only fix the outgroup, so in this case you just need to make sure we include all the samples we want to include in the tests. 
-
-Create the file:
-
-```{bash, eval=FALSE}
-echo "/home/ec2-user/Data/BAMS/sample1.bam
-/home/ec2-user/Data/BAMS/Wolf_Portuguese.bam
-/home/ec2-user/Data/BAMS/Dog_GMums.bam
-/home/ec2-user/Data/BAMS/Dog_Shanxi.bam
-/home/ec2-user/Data/BAMS/Dog_TM.bam
-/home/ec2-user/Data/BAMS/Dog_Tasiilaq.bam" > DstatPops.txt
-```
-
-Now we will run ```ANGSD``` twice, one including the transitions and a second one excluding the transitions:
-
-```{bash, eval=FALSE}
-# excluding transitions
-angsd -anc $OUTGROUP -minQ 20 -minMapQ 30 -doAbbababa 1 -rmTrans 1 -doCounts 1 -bam  DstatPops.txt -out DstatPops_Tv
-# compute the jacknife
-Rscript /home/ec2-user/software/angsd/angsd/R/jackKnife.R file=DstatPops_Tv.abbababa indNames=DstatPops.txt outfile=DstatPops_Tv
-
-```
-
-and then:
-
-```{bash, eval=FALSE}
-# with transitions
-angsd -anc $OUTGROUP -minQ 20 -minMapQ 30 -doAbbababa 1 -rmTrans 0 -doCounts 1 -bam  DstatPops.txt -out DstatPops_all
-# compute the jacknife
-Rscript /home/ec2-user/software/angsd/angsd/R/jackKnife.R file=DstatPops_all.abbababa indNames=DstatPops.txt outfile=DstatPops_all
-```
-
-While it is running, let's take a look at the parameters:
-
-```
--anc             this is where you provide the outgroup, which in this case it is the golden jackal. You'll need to have it in a FASTA format. 
--minQ            minimum base quality for the bases incorporated
--minMapQ         minimum mapping quality for the reads
--doAbbababa 1    this indicates we want to do an abba/baba tests
--rmTrans         you can set this flag to 1 if you want to remove transitions (default is 0)
--doCounts 1      necessary for the abba/baba test
--bam             the list of BAM files you want to test (it should be at least 3 files)
--out             output file name
-```
-
-It will take a while, so just wait until it is done running...
-
-
-Now let's check the results in group! 
-
-<p>&nbsp;</p>
-
-**Congratulations! You made it to the end of the exercise!**
-<p>&nbsp;</p>
 
 ### References 
-<p>&nbsp;</p>
+
 
 1. Pickrell, J K and Pritchard, J K. 2012. **Inference of Population Splits and Mixtures from Genome-Wide Allele Frequency Data.** PLoS Genet. 8, e1002967.
 
