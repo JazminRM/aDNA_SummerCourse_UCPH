@@ -2,9 +2,9 @@
 
 ### Outline
 
-* Admixture graphs using Treemix  <sup>1</sup
+* Admixture graphs using Treemix  <sup>1</sup>
    + Create Treemix input using `FrAnTK` <sup>2</sup>
-   + Build a ```TreeMix``` tree
+   + Build a `TreeMix` tree
 
 ### Interactive node
 
@@ -69,8 +69,8 @@ The ones ending in *ALL_tm* contain all sites and the ones ending in *NT_tm* con
 
 <span style="color: purple;"> **Optional (but highly encouraged):** </span> Take a look at the output files, check what they contain and how many sites/SNPs we will be using for the ```TreeMix``` analysis.
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName6"> Hide/Show solution </button>  
-<div id="BlockName6" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
 The *wolves_rand_ftk_treemix_ALL_tm.gz* file contains the allele counts and it is the one we will be using for ```TreeMix```:
 ```{bash, eval=FALSE}
@@ -98,7 +98,6 @@ zcat wolves_rand_ftk_treemix_ALL_tm.gz |wc -l
 32761
 ```
 so, that would be 32761-1 = 32760 SNPs that we will be using for the tree. 
-<p>&nbsp;</p>
 
 The other file *wolves_rand_ftk_treemix_ALL_tmpos* contains information about the SNPs (chromosome, coordinate, snpname, ref and alternative alleles). 
 
@@ -118,9 +117,7 @@ scaffold_0	346152	scaffold_0_346152	T	A
 scaffold_0	360221	scaffold_0_360221	T	A
 ```
 
-</div>
-
-<p>&nbsp;</p>
+</details>
 
 ```TreeMix``` allow us to model migration edges on top of our tree to include potential admixture events, so we will test from 0 to 3 possible migration edges (*-m* parameter). Since ```TreeMix``` uses a maximum-likelihood approach (same as ```ADMIXURE```), we want to run ```TreeMix``` several times starting at different seeds and keep the replicate with the best likelihood for each number of migrations (*-m*). 
 
@@ -204,7 +201,7 @@ Plot the results using ```R```.
 R
 
 # load Treemix functions
-source("/home/ec2-user/Software/treemix/plotting_funcs.R")
+source("/projects/course_1/people/clx746/Data/plotting_funcs.R")
 
 pdf("wolves_treemix.pdf", width=14, height=7)
 par(mfrow=c(1,2))
@@ -230,14 +227,7 @@ Download the plot we just created to your local computer using **WinSCP** (for W
 Example of the **scp** command:
 
 ```{bash, eval = FALSE}
-scp -i apgc-2021-key.pem.txt ec2-user@54.216.412.93:/home/ec2-user/Day4/E1/treemixRes/wolves_treemix.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/ExploratoryAnalyses/wolves_treemix.pdf .
 ```
-(remember to use your own IP address)
-
-Here we can see how the result look like for ancient sample 1:
-
-![Treemix figure. Treemix trees obtained for mysterty sample 1](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2022/E1_2/wolves_treemix_ed.png)
-Are the results in agreement with what we learned about the ancient samples earlier? 
-
-<p>&nbsp;</p>
+(remember to use your own username)
 
