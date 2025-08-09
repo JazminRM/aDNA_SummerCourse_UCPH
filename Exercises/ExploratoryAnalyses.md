@@ -1360,7 +1360,7 @@ R
 
 # Read the file with the list of BAMS, the GL file has the samples in the same order as this list
 # Remember to change the to BamList2.txt or BamList3.txt if necessary!
-fam<-readLines("/home/ec2-user/Data/BAMS/BamList1.txt")
+fam<-readLines("/projects/course_1/people/clx746/Bams/BamList1.txt")
 fam<-gsub(".bam", "", basename(fam))
 info<-read.table("/projects/course_1/people/clx746/Data/wolves_rand_tv_info.txt", as.is=T, sep="\t")
 
@@ -1411,10 +1411,11 @@ We can directly take the same GL that we used for ```NGSadmix``` and run ```pcan
 
 ```{bash, eval = FALSE}
 # first load pcangsd module
+module load python/3.12.8 
 module load pcangsd/1.2
 
 # then run pcangsd
-pcangsd --beagle wolves_gl.beagle.gz -o wolves_gl_pcangsd
+pcangsd -b wolves_gl.beagle.gz -o wolves_gl_pcangsd
 ```
 
 After this we will have a covariance matrix (wolves_gl_pcangsd.cov) that we can use for the PCA. 
