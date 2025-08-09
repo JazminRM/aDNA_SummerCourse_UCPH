@@ -23,3 +23,17 @@ Thomaz Pinotti, Postdoctoral researcher, Globe Institute, University of Copenhag
 Hernán E. Morales Villegas, Associate Professor, Globe Institute, University of Copenhagen <br>
 Anna-Sapfo Malaspinas, Associate Professor, University of Lausanne <br>
 Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br>
+
+## PROGRAM
+
+### Day 1
+
+[Practical exercises][https://github.com/JazminRM/aDNA_SummerCourse_UCPH/Exercises/Mapping.md]
+
+### Day 2
+
+### Day 3 
+
+### Day 4
+
+### Day 5 
