@@ -28,7 +28,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
 
 ### Day 1
 
-[Practical exercises][https://github.com/JazminRM/aDNA_SummerCourse_UCPH/Exercises/Mapping.md]
+[Practical exercises][https://github.com/JazminRM/aDNA_SummerCourse_UCPH/blob/main/Exercises/Mapping.md]
 
 ### Day 2
 
