@@ -496,6 +496,9 @@ grep "^Loglikelihood" */*_2_out.log
 5/5_2_out.log:Loglikelihood: -3470719.048501
 ```
 
+-----------------------------------------
+
+
 ##### How do we chose the replicate with the best likelihood?
 
 Remember that Likelihoods are the product of probabilities, therefore they become very small numbers very quickly. 
@@ -522,49 +525,50 @@ As you can see, as the likelihood increases the *log* likelihood gets closer to 
 
 **Note** that some programs instead of estimating the log likelihood, they estimate the *-log* likelihood, in which case you will have positive numbers. 
 
-<span style="color: purple;"> **Q:** </span> So, which replicate would you choose for each of the Ks?
+-----------------------------------------
+
+
+<span style="color:purple"> **Question:** </span> So, which replicate would you choose for each of the Ks?
 
 Remember you can check all the likelihoods like this:
 ```{bash, eval = FALSE}
 grep "^Loglikelihood" */*_3_out.log
 ```
 ```
-1/1_3_out.log:Loglikelihood: -3259015.293804
-2/2_3_out.log:Loglikelihood: -3282163.829765
-3/3_3_out.log:Loglikelihood: -3259037.402389
-4/4_3_out.log:Loglikelihood: -3259015.401782
-5/5_3_out.log:Loglikelihood: -3259037.160064
+1/1_3_out.log:Loglikelihood: -3286365.627536
+2/2_3_out.log:Loglikelihood: -3267099.977972
+3/3_3_out.log:Loglikelihood: -3289866.425389
+4/4_3_out.log:Loglikelihood: -3267100.164615
+5/5_3_out.log:Loglikelihood: -3286365.636164
 ```
 ```{bash, eval = FALSE}
 grep "^Loglikelihood" */*_4_out.log
 ```
 ```
-1/1_4_out.log:Loglikelihood: -3080225.071145
-2/2_4_out.log:Loglikelihood: -3117689.851233
-3/3_4_out.log:Loglikelihood: -3120583.207948
-4/4_4_out.log:Loglikelihood: -3080246.524353
-5/5_4_out.log:Loglikelihood: -3080903.640304
+1/1_4_out.log:Loglikelihood: -3088781.685134
+2/2_4_out.log:Loglikelihood: -3088787.377738
+3/3_4_out.log:Loglikelihood: -3088787.323451
+4/4_4_out.log:Loglikelihood: -3089423.942921
+5/5_4_out.log:Loglikelihood: -3088787.332344
 ```
-<p>&nbsp;</p>
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName77"> Show/hide solution </button>  
-<div id="BlockName77" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
-In the example above for admixture with K=3, the replicate with the best *log* likelihood is replicate 1 (-3259015.293804) and for K=4, the best one is also 1 (-3080225.071145)
+In the example above for admixture with K=3, the replicate with the best *log* likelihood is replicate 2 (-3267099.977972) and for K=4, the best one is 1 (-3088781.685134)
 
 Which one did you get?
-</div>
-
-<p>&nbsp;</p>
+</details>
 
 Now, let's try plotting all the replicates and see how they look:
-(This is an option for ploting the results in R, but you can also check [$pong$](https://github.com/ramachandran-lab/pong), which is a very nice option to plot the results from $ADMIXTURE$)
-```{r, eval = FALSE}
-R
+(This is an option for ploting the results in R, but you can also check [pong](https://github.com/ramachandran-lab/pong), which is a very nice option to plot the results from $ADMIXTURE$)
 
+```{r, eval = FALSE}
+# module load R/3.4.3
+R
 # Read the FAM file with information about the sample names and a file that contains a category for each sample:
 fam<-read.table("wolves_mergedTv_chrs.fam", as.is=T)[,1]
-info<-read.table("/home/ec2-user/Data/SNPs/wolves_rand_tv_info.txt", as.is=T, sep="\t")
+info<-read.table("/projects/course_1/people/clx746/Data/wolves_rand_tv_info.txt", as.is=T, sep="\t")
 
 # Find the category for each of the samples in the FAM file
 category<-NULL
@@ -580,46 +584,27 @@ pdf("admixture_K3.pdf", width=7, height=9)
 par(mar=c(7,4,1.5,4), mfrow=c(5,1))
 for(i in 1:5){
  a<-read.table(paste0( i, "/wolves_mergedTv_chrs.3.Q"))
- barplot(t(a[order(category),]), names=fam[order(category)], las=2, col=c("lightsalmon1", "#F3E96B", "#6465A5"), cex.names=0.75, border=F)
-}
-dev.off()
-
-
-pdf("admixture_K4.pdf", width=7, height=9)
-par(mar=c(7,4,1.5,4), mfrow=c(5,1))
-for(i in 1:5){
- a<-read.table(paste0( i, "/wolves_mergedTv_chrs.4.Q"))
- barplot(t(a[order(category),]), names=fam[order(category)], las=2, col=c("lightsalmon1", "purple4", "#6465A5", "#F3E96B"), cex.names=0.75, border=F)
+ barplot(t(a[order(category),]), names=fam[order(category)], las=2, col=c("palevioletred2", "papayawhip", "mediumpurple2"), cex.names=0.75, border=F)
 }
 dev.off()
 q("no")
 ```
 
 
-Remember you can download the plot we just created to your local computer using **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). In this case the **scp** command would look like this:
+Download the plot to your local computer using **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). In this case the **scp** command would look like this:
 
 ```{bash, eval = FALSE}
-scp -i apgc-2021-key.pem.txt ec2-user@3.249.84.19:/home/$username/exploratoryA/admixture_K3.pdf .
-scp -i apgc-2021-key.pem.txt ec2-user@3.249.84.19:/home/$username/exploratoryA/admixture_K4.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/ExploratoryAnalyses/admixture_K3.pdf .
 ```
-
 (use your own username)
 
-<span style="color: purple;"> **Q:** </span> Take a look at the five replicates for K=3, does the results vary? 
+<span style="color: purple;"> **Question:** </span> Take a look at the five replicates for K=3, does the results vary? 
 
 Identify the replicate with the best log likelihood, is it different from the others? 
 
 <center>
 
-![Figure 2. Admixture results using $ADMIXTURE$ assuming 3 ancestry components (K=3). The results for the mystery sample are hidden. Different colors indicate the inferred ancestry components and the proportion of each corresponds to the estimated admixture proportions.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2023/Figures/admixture_K3.png){width=80%}
-
-</center>
-
-Now take a look at the five replicates for K=4 and repeat the same exercise. 
-
-<center>
-
-![Figure 3. Admixture results using $ADMIXTURE$ assuming 4 ancestry components (K=4). The results for the mystery sample are hidden. Different colors indicate the inferred ancestry components and the proportion of each corresponds to the estimated admixture proportions.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2023/Figures/admixture_K4.png){width=80%}
+<img src="../Figures/admixture_K3.png" width=75%>
 
 </center>
 
