@@ -23,7 +23,7 @@ We will use an interactive node in mjolnir to run the exercises throughout the c
 # First log in to the server (remember to change ku_username for your username)
 ssh ku_username@mjolnirgate.unicph.domain
 
-# first request one CPU using salloc like this:
+# request one CPU using salloc like this:
 salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --account=teaching --reservation=aDNA_PHD_course
 
 # once the job has been allocated, you can login to the node with srun like this:
