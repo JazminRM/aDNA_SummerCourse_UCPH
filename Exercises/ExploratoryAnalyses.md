@@ -246,14 +246,14 @@ The result should look like this:
 
 ### Pseudohaploid approach
 
-To start exploring the ancestry of our mystery sample, we will estimate a PCA using ```smartpca``` <sup>4</sup> and use the model-based clustering  approach implemented in ```ADMIXTURE``` <sup>3</sup> to estimate ancestry proportions. Both programs can be used with pseudo-haploid data and need BED/BIM/FAM files as input.  
+To start exploring the ancestry of our unknown canid, we will estimate a PCA using ```smartpca``` <sup>4</sup> and use the model-based clustering  approach implemented in ```ADMIXTURE``` <sup>3</sup> to estimate ancestry proportions. Both programs can be used with pseudo-haploid data and need BED/BIM/FAM files as input.  
 
 <p>&nbsp;</p>
 -----------------------------------
 
 #### Adding an ancient sample (BAM) to a reference SNP dataset by randomly sampling a read
 
-The first step will be to incorporate the mystery sample to the reference dataset. We will use `bam2plink.py` tool from `FrAnTK` to randomly sample one allele/read for each of the 98,241 SNPs and merge it with the reference dataset. More information about  `FrAnTK` can be found [here](https://github.com/morenomayar/FrAnTK).
+The first step will be to incorporate the unknown canid to the reference dataset. We will use `bam2plink.py` tool from `FrAnTK` to randomly sample one allele/read for each of the 98,241 SNPs and merge it with the reference dataset. More information about  `FrAnTK` can be found [here](https://github.com/morenomayar/FrAnTK).
 
 In order to use `bam2plink.py`, we need to have an additional `regions` file that looks like this: 
 ```{bash, eval = FALSE}
@@ -660,69 +660,61 @@ q("no")
 
 <img src="../Figures/admixture_bestLL.png" width=75%>
 
-<span style="color: purple;"> **Question:** </span> What can we say about the mystery sample? 
+<span style="color: purple;"> **Question:** </span> What can we say about our ancient canid? 
 
----------------------------------------------------
+---------------------------------
 
-**Estimating cross-validation errors for the best ADMIXTURE replicate** <span style="color: cornflowerblue;"> BONUS </span>
+##### Estimating cross-validation errors for the best ADMIXTURE replicate
 
 One option to identify the K (number of clusters) that best explains your data is to perform a cross-validation (CV) for each K and identify the one with the smallest CV error. 
 
 The best way to do that is once you identified the *seed* that took you to the best likelihood for each replicate. 
 
-For example, we saw before that the replicate with the best likelihood for K=3 was replicate **1** (*log likelihood* = -3276680.135746):
+For example, we saw before that the replicate with the best likelihood for K=3 was replicate **2**:
 ```{bash, eval = FALSE}
 grep "^Loglikelihood" */*_3_out.log
 ```
 ```
-1/1_3_out.log:Loglikelihood: -3259015.293804
-2/2_3_out.log:Loglikelihood: -3282163.829765
-3/3_3_out.log:Loglikelihood: -3259037.402389
-4/4_3_out.log:Loglikelihood: -3259015.401782
-5/5_3_out.log:Loglikelihood: -3259037.160064
+1/1_3_out.log:Loglikelihood: -3286365.627536
+2/2_3_out.log:Loglikelihood: -3267099.977972
+3/3_3_out.log:Loglikelihood: -3289866.425389
+4/4_3_out.log:Loglikelihood: -3267100.164615
+5/5_3_out.log:Loglikelihood: -3286365.636164
 ```
-and the seed that took you to that loglikelihood is **2556**:
+and the seed that took you to that loglikelihood is **9416**:
 ```{bash, eval = FALSE}
-grep "Random seed:" 1/1_3_out.log
+grep "Random seed:" 2/2_3_out.log
 ```
 ```
-Random seed: 24952
+Random seed: 9416
 ```
-We can do the same for K=4 and we would get the the replicate with the best *log likelihood* (-3080225.071145) is replicate **1** as well and the seed for that replicate was **14034**.
 
 If we want to perform CV we can do that by re-running ADMIXTURE for each K starting at the seeds we identified:
-
 ```{bash, eval = FALSE}
 username="write_your_username"
 
 # Let's define our variables again:
-SNPsDSchrs="/home/$username/exploratoryA/wolves_mergedTv_chrs"
+SNPsDSchrs="/projects/course_1/people/${username}/ExploratoryAnalyses/wolves_mergedTv_chrs"
 
 # and go to your working directory:
-cd /home/$username/exploratoryA
+cd /projects/course_1/people/${username}/ExploratoryAnalyses/
 
 # Run cross-validation error for K=3
-admixture -j2  --cv --seed=24952 $SNPsDSchrs".bed" 3 &> bestR_3_out.log
-
-# and for K=4
-admixture -j2 --cv  --seed=14034 $SNPsDSchrs".bed" 4 &> bestR_4_out.log
-
+admixture -j2  --cv --seed=9416 $SNPsDSchrs".bed" 3 &> bestR_3_out.log
 ```
 
 Once this is done, you will have the cross-validation error in the $.log$ file:
 ```{bash, eval = FALSE}
-grep CV bestR_*_out.log
+grep CV bestR_3_out.log
 ```
 ```
-bestR_3_out.log:CV error (K=3): 1.13559
-bestR_4_out.log:CV error (K=4): 1.24349
+bestR_3_out.log:CV error (K=3): 1.12569
 ```
 
 Theoretically, the K that best explains your data will be the one with the smallest CV-error. Ideally, your CV-error would look like this:
 
-<center>
-![Figure 5. Example of a cross-validation error plot for K=2..12](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/IntroPalaeogenomics2022/E1_2/CV_error_CGG6.png){width=50%}
-</center>
+<img src="../Figures/CV_error_CGG6.png" width=50%>
+
 In the example above, K=9 is the one that best fits the data. 
 
 <p>&nbsp;</p>
