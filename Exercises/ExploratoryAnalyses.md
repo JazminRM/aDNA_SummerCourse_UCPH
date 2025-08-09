@@ -75,8 +75,7 @@ We will be working with `plink` <sup>7</sup> files during very often during the 
 
 PLINK files come in sets of 2 or 3 files and contain the genotype data, information about the SNP's genomic coordinates, and information about the samples. Some common sets are TPED/TFAM, BED/BIM/FAM and MAP/PED files, all of which are interchangeable using ```plink```. We will be working mostly with BED/BIM/FAM files, more information about the PLINK files and ```plink``` can be found [here](https://www.cog-genomics.org/plink/2.0/input).
 
-The **BIM** file contains the information about the SNP's genomic coordinates as well as the allelic variants (one line per SNP):
-
+The `BIM` file has the information about the SNP's genomic coordinates and allelic variants (one line per SNP):
 ```{bash, eval = FALSE}
 head $SNPbasename".bim" 
 ```
@@ -93,8 +92,7 @@ scaffold_0	scaffold_0_111381	0	111381	T	A
 scaffold_0	scaffold_0_113242	0	113242	A	T
 ```
 
-The **FAM** file contain information about the samples (one line per sample):
-
+The `FAM` file has information about the samples (one line per sample):
 ```{bash, eval = FALSE}
 head $SNPbasename".fam"
 ```
@@ -111,27 +109,27 @@ Wolf_Chinese2 Wolf_Chinese2 0 0 0 1
 Wolf_Chinese Wolf_Chinese 0 0 0 1
 ```
 
-The **BED** file is a compressed file that contains the genotype data.  
-
+The `BED` file is a compressed file that contains the genotype data.  
 ```{bash, eval = FALSE}
 ls $SNPbasename".bed"  
 ```
 
-For the first part of the exercise today (random read approach) we will be working on this set of PLINK files:
+For the pseudohaploid approach we will be working with these plink files:
 
 ```{bash, eval = FALSE}
 ls $SNPbasename.*  
 ```
 ```
-/home/ec2-user/Data/SNPs/wolves_rand.bed
-/home/ec2-user/Data/SNPs/wolves_rand.bim
-/home/ec2-user/Data/SNPs/wolves_rand.fam
+/projects/course_1/people/clx746/Data/wolves_rand.bed
+/projects/course_1/people/clx746/Data/wolves_rand.bim
+/projects/course_1/people/clx746/Data/wolves_rand.fam
 ```
 
-<span style="color: purple;"> **Q:** </span> How many SNPs and samples are present in this dataset? Consider the format of each of the files.
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName"> Show/hide solution </button>  
-<div id="BlockName" class="collapse">  
+<span style="color:purple"> **Question:** </span> How many SNPs and samples are present in this dataset? Consider the format of each of the files.
+
+<details>
+<summary> <b>Show answer</b> </summary>
 
 ```{bash, eval = FALSE}
 # You can check the number of samples by counting the lines of the FAM file:
@@ -139,17 +137,14 @@ wc -l $SNPbasename.fam
 
 # and the number of SNPs by counting the lines in the BIM file:
 wc -l $SNPbasename.bim
-
-# In total the dataset comprises SNP data for 20 dogs and 29 wolves, and 98,241 SNPs (only transversion polymorphisms). Each of the samples is pseudo-haploid (one allele was randomly chosen for each site).
 ```
+These files have pseudohaploid SNP data for 20 dogs and 29 wolves that will be useful for estimating the ancestry of our unknow ancient canids. For each of these samples we have 98,241 SNPs (only transversion polymorphisms).
 
-</div>
+</details>
 
-<p>&nbsp;</p>
+### Checking the depth of coverage of the samples
 
-#### Checking the depth of coverage of the samples
-
-Now let's take a look at the BAM file for the ancient sample. We can use $samtools$ to count the number of reads in the BAM file: 
+Before deciding which approach might be better for you sample of interest it might be a good idea to know at what depth was sequenced. We can use `samtools` to count the number of reads in the BAM file: 
 
 ```{bash, eval = FALSE}
 samtools view -c $BAM
@@ -158,9 +153,9 @@ samtools view -c $BAM
 samtools view -q 30 -c $BAM
 ```
 
-<span style="color: purple;"> **Q:** </span> Is the BAM file already filtered by mapping quality?
+<span style="color:purple"> **Question:** </span> Is the BAM file already filtered by mapping quality?
 
-We can also check the number of positions covered in our BAM file using ```samtools```:
+We can also check the number of positions covered in our BAM file using `samtools`:
 
 ```{bash, eval = FALSE}
 samtools depth -q 30 $BAM  |head
@@ -178,19 +173,17 @@ scaffold_0      9437  2
 scaffold_0      9438  2
 ```
 
-<span style="color: purple;"> **Q:** </span> How does the output from ```samtools depth``` looks like? Can you infer what each column shows?
+<span style="color:purple"> **Question:** </span> How does the output from `samtools depth` looks like? Can you infer what each column shows?
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName2"> Show/hide solution </button>  
-<div id="BlockName2" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
 ```{bash, eval = FALSE}
-
 Column 1: chromosome/scaffold name
 Column 2: genomic position
 Column 3: depth of coverage
 ```
-</div>
-<p>&nbsp;</p>
+</details>
 
 Now let's count how many positions are covered by at least one read:
 
@@ -198,10 +191,10 @@ Now let's count how many positions are covered by at least one read:
 samtools depth -q 30 $BAM  |grep -vP '\t0$' |wc -l 
 ```
 
-<span style="color: purple;"> **Q:** </span> Can you use the output number of positions covered to estimate the **coverage** of the mystery sample? (Assume the wolf genome is 2312944218 bp long).
+<span style="color:purple"> **Q:** </span> Can you use the output number of positions covered to estimate the **coverage** of your sample? (Assume the wolf genome is 2312944218 bp long).
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName8"> Show/hide solution </button>  
-<div id="BlockName8" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
 ```{bash, eval = FALSE}
 samtools depth -q 30 $BAM  |grep -vP '\t0$' |wc -l 
@@ -213,9 +206,7 @@ samtools depth -q 30 $BAM  |grep -vP '\t0$' |wc -l
 Coverage = 13406533/2312944218 = 0.005796306 ~ 0.57% 
 
 In this case it is important to mention that the BAM file you are using only contains reads overlapping with the SNPs of interest, thus the coverage will be underestimated. 
-</div>
-<p>&nbsp;</p>
-
+</details>
 
 ... and estimate its **depth of coverage**:
 
@@ -223,7 +214,7 @@ In this case it is important to mention that the BAM file you are using only con
 samtools depth -q 30 $BAM  |grep -vP '\t0$' |cut -f  3 |sort |uniq -c > CoverageHistogram.txt
 ```
 
-plot it as a histogram using ```R``` <sup>8</sup>:
+now plot it as a histogram using ```R``` <sup>8</sup>:
 
 ```{r, eval = FALSE}
 R
@@ -231,231 +222,101 @@ a<-read.table("CoverageHistogram.txt", as.is=T)
 a<-t(a[order(as.numeric(a[,2])),])
 colnames(a)<-a[2,]
 pdf("depth_of_cov.pdf")
-barplot(a, las=2, xlim=c(1,35), xlab="Depth of coverage", ylab="Frequency", cex.axis=0.7, cex.names=0.7, col="darkred", border=F)
+barplot(a, las=2, xlim=c(1,35), xlab="Depth of coverage", ylab="Frequency", cex.axis=0.7, cex.names=0.7, col="mediumpurple", border=F)
 dev.off()
 q("no")
-
 ```
 
-You can download the plot we just created to your local computer using **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). The **scp** command would look like this:
+You can use **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). 
+
+Example of the **scp** command:
 
 ```{bash, eval = FALSE}
-scp -i apgc-2023-key.pem ec2-user@54.154.37.61:/home/ec2-user/$username/exploratorya/depth_of_cov.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/ExploratoryAnalyses/depth_of_cov.pdf .
 ```
-
-(remember to use your own username)
+(remember to change the directory name to your own)
 
 The result should look like this:
 
 ![Figure 1. Histogram showing the per site depth of coverage.](/Users/Jazmin/Dropbox/Desktop/Teaching/TransmittingScience/Exercises/depth_of_cov.png)
 
-<p>&nbsp;</p>
-
-<span style="color: purple;"> **Q:** </span> Now that you know the depth of coverage of your sample, which approach (random read sampling/GL/genotype-calling) do you think is best?
-
-<p>&nbsp;</p>
+<span style="color:purple"> **Question:** </span> Now that you know the depth of coverage of your sample, which approach (random read sampling/GL/genotype-calling) do you think is best?
 
 -----------------------------------
 
-#### Sampling a random read - pseudo-haploid dataset
+### Pseudohaploid approach
 
 To start exploring the ancestry of our mystery sample, we will estimate a PCA using ```smartpca``` <sup>4</sup> and use the model-based clustering  approach implemented in ```ADMIXTURE``` <sup>3</sup> to estimate ancestry proportions. Both programs can be used with pseudo-haploid data and need BED/BIM/FAM files as input.  
 
 <p>&nbsp;</p>
 -----------------------------------
 
-##### Adding an ancient sample (BAM) to a reference SNP dataset by randomly sampling a read
+#### Adding an ancient sample (BAM) to a reference SNP dataset by randomly sampling a read
 
-The first step will be to incorporate the mystery sample to the reference dataset. We will use ```ANGSD -dohaplocall``` to randomly sample one allele/read for each of the 98,241 SNPs and merge it with the reference dataset. More information about  ```ANGSD -dohaplocall``` can be found [here](http://www.popgen.dk/angsd/index.php/Haploid_calling).
+The first step will be to incorporate the mystery sample to the reference dataset. We will use `bam2plink.py` tool from `FrAnTK` to randomly sample one allele/read for each of the 98,241 SNPs and merge it with the reference dataset. More information about  `FrAnTK` can be found [here](https://github.com/morenomayar/FrAnTK).
 
-First we need to create a file with the sites that we want to extract from the ancient sample. ```ANGSD``` needs two files in order to interrogate specific positions from a BAM file.
-
-1) A list of chromosomes:
-
+In order to use `bam2plink.py`, we need to have an additional `regions` file that looks like this: 
 ```{bash, eval = FALSE}
-cut -f1 $SNPbasename".bim" |sort|uniq >chrs.txt 
+head $SNPbasename"_regions"
 ```
-
-2) And list of positions and possible alleles (four columns: chromosome, position, allele1 and allele2):
-
-```{bash, eval = FALSE}
-cut -f 1,4,5,6 $SNPbasename".bim" > sites_wolves.txt
 ```
-
-Then, we need to index the `sites_wolves.txt` file with ```ANGSD```:
-
-```{bash, eval = FALSE}
-angsd sites index sites_wolves.txt
+# chr name	    pos-1   pos   allele1 allele2
+scaffold_0      9492    9493    A       C
+scaffold_0      23097   23098   A       C
+scaffold_0      43357   43358   A       C
+scaffold_0      53357   53358   T       G
+scaffold_0      56735   56736   A       T
+scaffold_0      71164   71165   A       T
+scaffold_0      96025   96026   A       C
+scaffold_0      102433  102434  T       G
+scaffold_0      111380  111381  T       A
+scaffold_0      113241  113242  A       T
 ```
+We already have this file, so we don't need to create it. 
 
-Now we can use $ANGSD$ $-dohaplocall$ to randomly sample a read per site from the BAM file of our ancient sample:
+Now we can use `bam2plink.py` to randomly sample a read per site from the BAM file of our ancient sample:
 
 ```{bash, eval = FALSE}
-angsd -dohaplocall 1 -i $BAM -out $SAMPLENAME  -doCounts 1 -nThreads 1 -minMapQ 30 -minQ 20  -doMajorMinor 3 -sites sites_wolves.txt
+# first load frAnTK module
+module load frantk/20220523
+
+# and then run bam2plink.py
+bam2plink.py bamfile=${BAM} plinkpref=${SNPbasename} trim=0 MinMQ=30 MinBQ=20 indname=${SAMPLENAME} popname=${SAMPLENAME}
 ```
 
 It will take a moment, meanwhile let's take a look at the parameters we are using:
 
 ```
--i              the BAM file for our ancient sample
--out            the base name for the output
--doCounts 1     this parameter is necessary with dohaplocall
--nThreads 1     number of CPUs we want to use, 1 in this case
--minMapQ 30     minimum mapping quality for the reads (remember our BAM is not filterd yet)
--minQ 20        minimum base quality for the bases to be considered
--doMajorMinor 3 the option 3 takes into consideration the alleles present in the -sites file
--sites          the file containing the sites that are present in our reference dataset
+bamfile       the BAM file for our ancient sample
+plinkpref     the base name of our plink files
+trim          how many bases we want to exclude from each read end (this is very useful for aDNA, as you might want to exclude the end of the reads where there is the most ancient DNA damage. 
+MinBQ         minimum mapping quality for the reads (remember our BAM is not filterd yet)
+MinMQ         minimum base quality for the bases to be considered
+indname       name of our ancient sample
+popname       name of the population of our ancient sample (if we have one)
 ```
 
-Once it is done running, take a look at the output:
+Once it is done running,  we will have three new PLINK that contain pseudohaploid data for each of the SNPs in our dataset:
+```{bash, eval = FALSE}
+ls AncientCanid_AncientCanid_wolves_rand.*
+```
+```
+AncientCanid_AncientCanid_wolves_rand.bed
+AncientCanid_AncientCanid_wolves_rand.bim
+AncientCanid_AncientCanid_wolves_rand.fam
+```
+
+Now we can merge the PLINK files with our ancient sample with the SNP panel using `plink`:
 
 ```{bash, eval = FALSE}
-zcat $SAMPLENAME".haplo.gz" |head
-```
-```
-chr     pos     major ind0
-scaffold_0      9493  C C
-scaffold_0      23098 C C
-scaffold_0      43358 C C
-scaffold_0      53358 G G
-scaffold_0      56736 T T
-scaffold_0      71165 A A
-scaffold_0      96026 C C
-scaffold_0      102434  G       G
-scaffold_0      111381  A       A
+#first load plink's module
+module load plink/1.9.0
+
+# then run plink 
+plink --bfile $SNPbasename --make-bed --bmerge ${SAMPLENAME}_${SAMPLENAME}_wolves_rand --allow-extra-chr --allow-no-sex --out  wolves_mergedTv
 ```
 
-<span style="color: purple;"> **Q:** </span> Did we recover all of the sites in the SNP dataset? Is it expected given the coverage of the mystery sample?
-
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName3"> Show/hide solution </button>  
-<div id="BlockName3" class="collapse">  
-
-We can count the number of sites reference dataset by counting the lines of the BIM file:
-
-```{bash, eval = FALSE}
-wc -l $SNPbasename".bim" 
-```
-```
-98241
-```
-And then do the same for the *.haplo.gz* file with the calls for the ancient sample:
-```{bash, eval = FALSE}
-zcat $SAMPLENAME".haplo.gz" |wc -l
-```
-```
-96910
-```
-</div>
-
-<p>&nbsp;</p>
-
-The next step is to transform ```ANGSD``` output into PLINK files (same format as our panel) so we can merge them with the reference SNP panel.
-
-To do that, we will use ```ANGSD```'s script called ```haploToPlink``` which takes the *.haplo.gz* file and creates a TPED/TFAM files (the uncompressed version of the BED/BIM/FAM files):
-
-```{bash, eval = FALSE}
-haploToPlink $SAMPLENAME".haplo.gz" $SAMPLENAME"_haploid"
-```
-
-then, we can use ```plink``` to convert them into BED/BIM/FAM files:
-
-```{bash, eval = FALSE}
-plink --tfile $SAMPLENAME"_haploid" --allow-extra-chr --make-bed --out $SAMPLENAME"_haploid"
-```
-
-Take a look at the parameters we are using with ```plink```:
-
-```
---tfile           this specifies the basename of our input file, the 't' in the tfile means we are providing unzipped files (tped/tfam)
---make-bed        this specifies the format of the output, here we want BED/BIM/FAM files 
---allow-extra-chr since our chromosomes have non-standard names ('scaffold_0' in this case), we need to add this parameter
---out             base name for the output
-```
-
-Before merging our ancient sample with the reference dataset, we want to edit the FAM file so that it has a meaningful name (this is optional, but it could help us to later identify the sample(s)). 
-
-Currently the FAM file looks like this:
-
-```{bash, eval = FALSE}
-cat $SAMPLENAME"_haploid.fam"
-```
-```
-ind0 ind0 0 0 0 -9
-```
-
-We will change ind0 ($ANGSD$ default name) for MysterySample and the -9 at the end for a 1:
-
-```{bash, eval = FALSE}
-echo "$SAMPLENAME $SAMPLENAME 0 0 0 1" > $SAMPLENAME"_haploid.fam"
-```
-
-Now we can merge the two files with ```plink```:
-
-```{bash, eval = FALSE}
-plink --bfile $SNPbasename --make-bed --bmerge $SAMPLENAME"_haploid"  --allow-extra-chr --allow-no-sex --out  wolves_merged
-```
-
-Take a look at the parameters we are using with ```plink```:
-
-```
---bfile           the basename of our reference dataset, the 'b' in the bfile means we are providing BED/BIM/FAM files
---make-bed        this specifies the format of the output, here we want BED/BIM/FAM files 
---allow-extra-chr since our chromosomes have non-standard names ('scaffold_0' in this case), we need to add this parameter
---allow-no-sex    since we do not have information about the sex of the samples in the FAM file, we need to add this flag
---out             base name for the output
-```
-
-<span style="color: purple;"> **Q:** </span> Did you get an **ERROR** message? Take a look at what the message says. Why do you think we have triallelic sites?
-
-$plink$ created a file that contains the SNPs where our ancient sample carries an allele different to the two alleles in the reference dataset:
-
-```{bash, eval = FALSE}
-head wolves_merged-merge.missnp
-```
-```
-scaffold_0_1718233
-scaffold_0_3615647
-scaffold_100_789198
-scaffold_104_3131772
-scaffold_105_2917990
-scaffold_108_2203084
-scaffold_10_1871992
-scaffold_113_950417
-scaffold_116_469755
-scaffold_117_2649962
-```
-
-<span style="color: purple;"> **Q:** </span> Why do you think this is happening? How many sites are different?
-
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName6"> Show/hide solution </button>  
-<div id="BlockName6" class="collapse">  
-
-Check the number of lines in the `wolves_merged-merge.missnp` file, which will tell you how many sites are problematic:
-```{bash, eval = FALSE}
-wc -l wolves_merged-merge.missnp
-```
-</div>
-
-<p>&nbsp;</p>
-
-
-We have to remove these sites from the BED/BIM/FAM files of our ancient sample before merging using ```plink```:
-
-```{bash, eval = FALSE}
-plink --bfile $SAMPLENAME"_haploid"  --make-bed --allow-extra-chr --exclude wolves_merged-merge.missnp --allow-no-sex --out  $SAMPLENAME"_haploid_notri"
-```
-
-```
---exclude  will take the list of sites in wolves_merged-merge.missnp and exclude them
-```
-
-Now let's try to merge the two files with ```plink``` again:
-
-```{bash, eval = FALSE}
-plink --bfile $SNPbasename --make-bed --bmerge $SAMPLENAME"_haploid_notri" --allow-extra-chr --allow-no-sex --out  wolves_mergedTv
-```
-
-Finally, we have a new SNP dataset that contains the reference data and our ancient sample:
+We now have a new SNP dataset that contains the reference data and our ancient sample:
 
 ```{bash, eval = FALSE}
 ls wolves_mergedTv*
@@ -466,61 +327,61 @@ wolves_mergedTv.bim
 wolves_mergedTv.fam 
 ```
 
-We will use these files today for the ```ADMIXTURE``` clustering and PCA, and tomorrow for the *D-*/*f*-statistics. 
+We will use these files to run ```ADMIXTURE``` clustering and PCA, and tomorrow for the *f*-statistics. 
 
-If you start with multiple ancient samples and want to incorporate them in a reference dataset it is possible to provide a list of BAMS to ```ANGSD -dohaplocall``` with the parameter ```-bam``` (you can read more about ```-dohaplocall``` [here](http://www.popgen.dk/angsd/index.php/Haploid_calling)).  
+ <span style="color:cornflowerblue">**BONUS**</span> If you have left over time, you can try creating a SNP dataset with all three unknown canids. 
 
- *<span style="color: cornflowerblue;">BONUS</span>* for homework. Repeat the previous exercise but now include both mystery samples to the SNP dataset. **Do it in a separate directory, since you'll need the PLINK files with the single sample for the next exercises.  **
-
-<p>&nbsp;</p>
 -----------------------------------
-##### Clustering using $ADMIXTURE$
 
-Now that we have all our data in BED/BIM/FAM format we can use ```ADMIXTURE``` to estimate ancestry component and proportions.
 
-**NOTE**: In this case our reference SNP dataset was already pseudo-haploid before we incorporated the ancient sample, however if you start with diploid genotypes and incorporate an ancient sample as pseudo-haploid, you'll need to sample one allele for each of the reference samples. All samples need to have the same ploidy before running ```ADMIXTURE```. 
+#### Clustering using ADMIXTURE
+
+Now that we have a SNP panel (our BED/BIM/FAM files) with both the reference data and our unknown ancient canid we can use perform ancestry clustering using `ADMIXTURE`.
+
+**NOTE**: In this case our reference SNP dataset was already pseudo-haploid before we incorporated the ancient sample, however if you start with diploid genotypes and incorporate an ancient sample as pseudohaploid, you'll need to sample one allele for each of the reference samples. All samples need to have the same ploidy before running `ADMIXTURE`. 
 
 Defining some paths and file names:
 
 ```{bash, eval = FALSE}
+#remember to change here for your username
 username="write_your_username"
 # files
-SNPsDS="/home//$username/exploratoryA/wolves_mergedTv"
-SNPsDSchrs="/home/$username/exploratoryA/wolves_mergedTv_chrs"
+SNPsDS="/projects/course_1/people/${username}/ExploratoryAnalyses/wolves_mergedTv"
+SNPsDSchrs="/projects/course_1/people/${username}/ExploratoryAnalyses/wolves_mergedTv_chrs"
 ```
 
-**NOTE**: A common problem when working with ```plink``` files and fragmented reference genomes is that different programs require the chromosomes to be numeric or to be limited to a certain amount of chromosomes. For example, ```plink``` complains when the chromosomes are numbers and are more than 99 so we need to add the 'scaffold_' part to the chromosome name and the flag ```--allow-extra-chr```. ```ADMIXTURE```, on the other hand, prefers chromosomes to be numeric and but doesn't have a restriction for the number of chromosomes. So we will be changing the chromosome/scaffold names in our BIM files depending on which program we use. If you are working with an organisms that has a good genome assembly, you can skip steps marked with  <span style="color: orchid;"> † </span>
+**NOTE**: A common problem when working with ```plink``` files and fragmented reference genomes is that different programs require the chromosomes to be numeric or to be limited to a certain amount of chromosomes. For example, `plink` complains when the chromosomes are numbers and are more than 99 so we need to add the 'scaffold_' part to the chromosome name and the flag `--allow-extra-chr`. `ADMIXTURE`, on the other hand, prefers chromosomes to be numeric and but doesn't have a restriction for the number of chromosomes. So we will be changing the chromosome/scaffold names in our BIM files depending on which program we use. If you are working with an organisms that has a good genome assembly, you can skip steps marked with  <span style="color: orchid;"> † </span>
 
 <span style="color: orchid;"> † </span> We will edit the BIM file and create a new set of BED/BIM/FAM files: 
 
 ```{bash, eval = FALSE}
-cat $SNPsDS".bim"  |perl -pe 's/scaffold_//g;' > $SNPsDSchrs".bim" 
-cp $SNPsDS".bed" $SNPsDSchrs".bed" 
-cp $SNPsDS".fam" $SNPsDSchrs".fam" 
+cat ${SNPsDS}.bim  |perl -pe 's/scaffold_//g;' > ${SNPsDSchrs}.bim 
+cp ${SNPsDS}.bed ${SNPsDSchrs}.bed 
+cp ${SNPsDS}.fam ${SNPsDSchrs}.fam 
 ```
 
-An example of an ```ADMIXTURE``` run looks like this (don't run it yet):
-
+An example of an ```ADMIXTURE``` run looks like this (don't run it):
 ```
 admixture -j1 --seed=$RANDOM wolves_mergedTv_c.bed 2 &> out.log
 ```
  
 What parameters are we providing in this case?
-
 ```
 -j1                     number of CPUs we want to use
 -seed                   a starting seed, in this case $RANDOM is picking a random number
 wolves_mergedTv_c.bed   our SNPs dataset
 2                       the number of Ks or components into which we want to split our individuals
 out.log                 a file to print the STDOUT 
-
 ```
 
-A peculiarity of ```ADMIXTURE``` is that it doesn't allow you to specify the name of the output and instead the name is created from the name of the input file. Given we would like to run several replicates for each value of K we will need to create a directory for each ```ADMIXTURE``` run. 
+A peculiarity of `ADMIXTURE` is that it doesn't allow you to specify the name of the output and instead the name is created from the name of the input file. Given we would like to run several replicates for each value of K we will need to create a directory for each ```ADMIXTURE``` run. 
 
 For example, let's say we want to run 5 replicates for each K and we would like split our samples into 3 and 4 ancestry components (Ks):
-
 ```{bash, eval = FALSE}
+# first load admixture's module
+module load admixture/1.3.0
+
+# then run admixture:
 # the first _for_ loop will determine the number of replicates
 for rep in 1 2 3 4 5
 do
@@ -528,9 +389,9 @@ do
  mkdir $rep
  cd $rep
  # the second _for_ loop will determine the K
- for k in 3 4
+ for k in 2 3
  do
-   admixture -j1 --seed=$RANDOM $SNPsDSchrs".bed" $k &> $rep"_"$k"_out.log"
+   admixture -j1 --seed=$RANDOM ${SNPsDSchrs}.bed $k &> ${rep}_${k}_out.log
  done 
  cd ../
 done
@@ -539,24 +400,21 @@ done
 
 <span style="color: purple;"> **Q:** </span> Do you remember why running replicates is important? How many parameters are we asking ADMIXTURE to estimate when we ask for K=3?
 
-<button class="btn btn-primary" button style="background-color:purple; border-color:purple; color:white" data-toggle="collapse" data-target="#BlockName7"> Show/hide solution </button>  
-<div id="BlockName7" class="collapse">  
+<details>
+<summary> <b>Show answer</b> </summary>
 
-The more parameters our model has, the most likely it is that we can reach a local maximum. When assuming 3 ancestry components we are estimating allele frequencies for 3 populations for 98,241 SNPs, and admixture proportions for 49 samples for each of the 3 components:
+The more parameters our model has, the most likely it is that we can reach a local maximum. When assuming 3 ancestry components we are estimating allele frequencies for 3 populations for 98,241 SNPs, and admixture proportions for 50 samples for each of the 3 components:
 ```{bash, eval = FALSE}
 K=3
 nSNPS=98241
-nInds=49
+nInds=50
 TotalParms=(K*nSNPS)+(nIds*(K-1))
 ```
-</div>
-
-<p>&nbsp;</p>
-
+</details>
 
 Now let's check the results. 
 
-For each ```ADMIXURE``` run you will get three files, for example for replicate=1 and K=3:
+For each `ADMIXURE` run you will get three files, for example for replicate=1 and K=2:
 
 ```{bash, eval = FALSE}
 ls -l 1/*3*
