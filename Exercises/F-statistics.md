@@ -1,7 +1,7 @@
 ## *f*-statistics
 
 
-Today we will use the SNP dataset that we generated yesterday to estimate outgroup $f_3$-statistics and *D*-statistics to test for treeness and gene-flow between the reference samples and our ancient canid. For the *f-* and *D*-statistics will try two approaches one using ```FrAnTK``` <sup>2</sup> and one using ```ANGSD``` <sup>3</sup>.
+Today we will use the SNP dataset that we generated yesterday to estimate outgroup $f_3$-statistics and *D*-statistics to test for treeness and gene-flow between the reference samples and our ancient canid.
 
 ### Outline:
 
