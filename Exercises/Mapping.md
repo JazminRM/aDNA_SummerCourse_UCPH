@@ -39,13 +39,13 @@ cd /projects/course_1/people/ku_username/
 
 **NOTE 1**: When you are done working, remember to logout and close the interactive session, you can do that by typing exit twice. It will look something like this: 
 
-```
+`
 clx746@mjolnircomp04fl fst]$ exit
 exit
 clx746@mjolnirgate01fl fst]$ exit
 exit
 salloc: Relinquishing job allocation 31797328
-```
+`
 **NOTE 2**: If you loose internet connection or disconnect from the server (for example during the coffee break or lunch), you'll need to start a new interactive session, or login again to the one you had. 
 
 -----------------------------------
