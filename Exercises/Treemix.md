@@ -27,7 +27,7 @@ Go to the ExploratoryAnalyses directory (we will use the same PLINK files we gen
 cd /projects/course_1/people/ku_username/ExploratoryAnalyses
 ```
 
-#### TreeMix trees
+### TreeMix trees
 
 Now we now how our ancient sample looks like in terms of its general genetic ancestry. We know what is the population it is closest to, we also have an idea of potential admixture with other populations, so the next thing we want to do is to build a tree. 
 
