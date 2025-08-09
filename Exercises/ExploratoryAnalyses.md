@@ -516,7 +516,7 @@ logLikelihood<-log(Likelihood)
 plot(Likelihood, logLikelihood)
 ```
 
-![Likelihoods.](../Figures/loglikevslike.png){width 50%}
+<img src="../Figures/loglikevslike.png" width=50%>
 
 As you can see, as the likelihood increases the *log* likelihood gets closer to 0. 
 
