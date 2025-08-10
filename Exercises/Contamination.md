@@ -17,7 +17,7 @@ First, get an interactive node.
 ssh ku_username@mjolnirgate.unicph.domain
 
 # request one CPU using salloc like this:
-salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --account=teaching --reservation=aDNA_PHD_course
+salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --qos=teaching --reservation=aDNA_PHD_course --account=teaching
 
 # login to the node with srun like this:
 srun --pty -n 1 -c 1 bash -i
@@ -131,9 +131,18 @@ mafft --auto --add S6_mt.fasta /projects/course_1/people/clx746/Data/311humans.f
 
 Finally, we will run contamMix using the alignment and our re-mapped data:
 ```{bash, eval=FALSE}
-Rscript /projects/course_1/people/clx746/Data/estimate.R --samFn S6.MT.bam --malnFn S6_alignment.fa --figure S6_contamix.pdf --tabOutput --nChains 3 --save S6_chains
+Rscript /projects/course_1/people/clx746/Data/estimate.R --samFn S6.MT.bam --malnFn S6_alignment.fa --figure S6_contamix.pdf --tabOutput --nChains 3 --save S6_chains > s6_contamination.txt
 ```
 
+It will take a while to run, so once you get it running take a break. 
+
+...
+
+Once it is done running, you can take a look at the contamination estimate: 
+
+```{bash, eval=FALSE}
+cat s6_contamination.txt
+```
 
 #  <inferred-error-rate> <MAP-authentic> <2.5% authentic> <97.5% authentic> <gelman diagnostic> <gelman diag upper bound>
 
