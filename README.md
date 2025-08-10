@@ -58,7 +58,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
               [Hands-on exercise: Locator, mobest] <br>
               *Coffee break* <br>
 14:45 - 15:45	Phylogenetic inference in ancient DNA  <br>
-              [Hands-on exercise: Building a phylogenetic tree while accounting for admixture] <br>
+              [Hands-on exercise: Building a phylogenetic tree while accounting for admixture](Exercises/Treemix.md) <br>
 15:45 - 16:00	Biases (reference bias, capture bias) and strategies to overcome them <br>
               *Coffee break* <br>
 16:10 - 17:00	Research talk: A genomic history of Rapa Nui and some methodological insights into ancient genomics <br>
