@@ -115,9 +115,9 @@ paleomix bam run --jre-option=-Xmx2g --jar-root /projects/symbean/people/clx746/
 It will take a few minutes to run, so just wait...
 
 
-#### Estimate contamination using contanMix
+#### Estimate contamination using contamMix
 
-Now we have almost everything we need to run contanMix. We will now add our mtDNA consensus sequence to an alingment consisting of 311 mtDNA human genomes using `mafft`.
+Now we have almost everything we need to run contamMix. We will now add our mtDNA consensus sequence to an alingment consisting of 311 mtDNA human genomes using `mafft`.
 
 ```{bash, eval=FALSE}
 # load the modules you need:
@@ -129,7 +129,7 @@ module load mafft/7.515
 mafft --auto --add S6_mt.fasta /projects/course_1/people/clx746/Data/311humans.fa > S6_alignment.fa
 ```
 
-Finally, we will run contanMix using the alignment and our re-mapped data:
+Finally, we will run contamMix using the alignment and our re-mapped data:
 ```{bash, eval=FALSE}
 Rscript /projects/course_1/people/clx746/Data/estimate.R --samFn S6.MT.bam --malnFn S6_alignment.fa --figure S6_contamix.pdf --tabOutput --nChains 3 --save S6_chains
 ```
