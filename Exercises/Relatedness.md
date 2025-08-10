@@ -75,8 +75,15 @@ module load python/2.7.17
 python /projects/course_1/people/clx746/Data/read/READ.py /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k_subset
 ```
 
-#### NGSrelate
+#### KIN
 
+
+```{bash, eval=FALSE}
+module load kin/3.1.4
+
+KINgaroo
+
+```
 
 
 --------------------------------------------
