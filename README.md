@@ -29,7 +29,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
 ### Day 1 - Introduction (11 August)
 9:00 - 9:20 &nbsp;  &nbsp; Welcome and introduction  <br>
 9:20 - 10:30 &nbsp; A brief introduction to the field of ancient DNA: a historical and technological perspective  <br>
- &nbsp;  &nbsp;  &nbsp; Overview of a common ancient DNA laboratory workflow: DNA extraction, library preparation methods, enrichment and sequencing strategies  <br>
+ &nbsp;  &nbsp;  &nbsp; &nbsp;  &nbsp;  &nbsp; Overview of a common ancient DNA laboratory workflow: DNA extraction, library preparation methods, enrichment and sequencing strategies  <br>
  &nbsp;  &nbsp;  &nbsp; *Coffee break*  <br>
 10:45-11:00 &nbsp; Introduction to mjolnir (the computer server for the course)  <br>
                 [Login to mjolnir](Exercises/Login2Mjolnir.md)  <br>
