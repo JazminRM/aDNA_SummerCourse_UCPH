@@ -32,6 +32,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
 	            Overview of a common ancient DNA laboratory workflow: DNA extraction, library preparation methods, enrichment and sequencing strategies  <br>
                 *Coffee break*  <br>
 10:45-11:00	    Introduction to mjolnir (the computer server for the course)  <br>
+                [Login to mjolnir](Exercises/Login2Mjolnir.md)  <br>
 11:00 - 12:00	Fundamentals of ancient genomics: reference-based mapping  <br>
                 [Hands-on exercise: Mapping to the human reference genome](Exercises/Mapping.md)  <br>
             	*Lunch break*  <br>
