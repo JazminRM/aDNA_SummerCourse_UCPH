@@ -23,8 +23,7 @@ salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-n
 srun --pty -n 1 -c 1 bash -i
 ```
 
-Now you are in a node of the server, we can create a directoy for the contamination exercises. 
-
+Now that you are in a node of the server, we can create a directoy for the contamination exercises:
 ```{bash, eval = FALSE}
 # remember to change ku_username for your username:
 username="your_ku_username"
@@ -70,7 +69,7 @@ S6_mt.fa.gz
 
 #### Re-map the reads to the consensus sequence
 
-The second step is to re-map the data to its own consensus sequence. To make the mapping process easier, we will use paleomix <sup>5</sup>. 
+The second step is to re-map the data to its own consensus sequence. To make the mapping process easier, we will use paleomix <sup>2</sup>. 
 
 Start by preparing the consensus sequence (FASTA file) we just generated with `angsd` for mapping. 
 ```{bash, eval=FALSE}
@@ -143,19 +142,24 @@ Once it is done running, you can take a look at the contamination estimate:
 ```{bash, eval=FALSE}
 cat s6_contamination.txt
 ```
+```
+#<inferred-error-rate> <MAP-authentic> <2.5% authentic> <97.5% authentic> <gelman diagnostic> <gelman diag upper bound>
+0.0143    0.9920751       0.9705297       0.9990772       1.008536        1.030358
+```
+We are interested in the second column which is the posterior probability that the mtDNA genome is authentic (MAP-authentic), our contamination estimate is 1-(MAP-authentic). 
 
-#  <inferred-error-rate> <MAP-authentic> <2.5% authentic> <97.5% authentic> <gelman diagnostic> <gelman diag upper bound>
-
-
-module load angsd/0.921
-
-angsd -i /projects/course_1/people/clx746/Data/Sumidouro6_final.bam -r X:5000000-154900000 -doCounts 1  -iCounts 1 -minMapQ 30 -minQ 20 -out s6
-
-contamination mapFile="/projects/course_1/people/clx746/Data/map100.chrX.gz" hapFile="/projects/course_1/people/clx746/Data/hapMapCeuXlift.map.gz" -a s6.icnts.gz -p 1
-
-contamination -h /projects/course_1/people/clx746/Data/map100.chrX.gz -m /projects/course_1/people/clx746/Data/hapMapCeuXlift.map.gz -a s6.icnts.gz -p 1
+<span stype="color:red"> **Question** </span> Would you say our ancient genome is contaminated? How do you think this could affect our analyses?
 
 
+### References
+
+1. Korneliussen, T.S *et al.* 2014. **ANGSD: Analysis of Next Generation Sequencing Data.** BMC Bioinformatics 15, 356.
+
+2. Schubert M, *et al.* (2014) **Characterization of ancient and modern genomes by SNP detection and phylogenomic and metagenomic analysis using PALEOMIX**. Nat Protoc. May;9(5):1056-82.
+
+3. Fu Q, *et al.* (2013). **A revised timescale for human evolution based on ancient mitochondrial genomes**. Curr Biol, 23:553-9.
+
+4. Moreno-Mayar J.V. *et al*. (2018). **Early human dispersals within the Americas.** Science. 362, 1128.
 
 
 
