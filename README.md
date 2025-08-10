@@ -70,7 +70,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
               [Hands-on exercise: testing for admixture, testing for treeness](Exercises/F-statistics.md) <br>
               *Coffee break* <br>
 10:45 - 12:00	Considerations when using f-statistics  <br>
-              [Hands-on exercise: testing for admixture, testing for treeness] <br>
+              [Hands-on exercise: testing for admixture, testing for treeness](Exercises/F-statistics.md) <br>
              	*Lunch break* <br>
 13:00 - 14:30	Estimating genetic diversity <br>
               [Hands-on exercise: estimating diversity using ancient genomes] <br>
