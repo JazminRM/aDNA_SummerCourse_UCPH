@@ -40,7 +40,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
                 [Hands-on exercise: Estimating damage patterns](Exercises/Mapping.md)  <br>
                 *Coffee break*  <br>
 14:45 - 15:30	Fundamentals of ancient genomics: Estimating contamination  <br>
-                [Hands-on exercise: Estimating modern human contamination]  <br>
+                [Hands-on exercise: Estimating modern human contamination](Exercises/Contamination.md)   <br>
                 *Coffee break*  <br>
 15:45 - 16:30	Ethics in aDNA research round table  <br>
 16:30 - 17:00	Research talk: A research collaboration with the Picuris Pueblo Tribe to preserve their ancestral heritage  <br>
