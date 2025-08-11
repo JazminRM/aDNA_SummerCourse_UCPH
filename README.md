@@ -59,7 +59,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
               [Hands-on exercise: Building a phylogenetic tree while accounting for admixture](Exercises/Treemix.md) <br>
               *Coffee break* <br>
 14:45 - 15:45  Spatio-temporal methods for inferring ancestry <br>
-              [Hands-on exercise: Locator, mobest] <br>
+              [Hands-on exercise: Locator] <br>
               *Coffee break* <br>
 16:00 - 17:00  Research talk: A genomic history of Rapa Nui and some methodological insights into ancient genomics <br>
               Anna-Sapfo Malaspinas, University of Lausanne (online) <br>
