@@ -125,7 +125,6 @@ ls $SNPbasename.*
 /projects/course_1/people/clx746/Data/wolves_rand.fam
 ```
 
-
 <span style="color:purple"> **Question:** </span> How many SNPs and samples are present in this dataset? Consider the format of each of the files.
 
 <details>
@@ -147,6 +146,9 @@ These files have pseudohaploid SNP data for 20 dogs and 29 wolves that will be u
 Before deciding which approach might be better for you sample of interest it might be a good idea to know at what depth was sequenced. We can use `samtools` to count the number of reads in the BAM file: 
 
 ```{bash, eval = FALSE}
+# load samtools
+module load samtools/1.21
+
 samtools view -c $BAM
 
 # -q 30 discard reads with mapping quality lower than 30
@@ -244,7 +246,6 @@ The result should look like this:
 
 -----------------------------------
 
-
 ### Pseudohaploid approach
 
 To start exploring the ancestry of our unknown canid, we will estimate a PCA using ```smartpca``` <sup>4</sup> and use the model-based clustering  approach implemented in ```ADMIXTURE``` <sup>3</sup> to estimate ancestry proportions. Both programs can be used with pseudo-haploid data and need BED/BIM/FAM files as input.  
@@ -276,15 +277,24 @@ We already have this file, so we don't need to create it.
 Now we can use `bam2plink.py` to randomly sample a read per site from the BAM file of our ancient sample:
 
 ```{bash, eval = FALSE}
-# first load frAnTK module
-module load frantk/20220523
+# first let's clear all the modules to avoid conflicts.
+# when you run the following it will ask you to type 'yes', so do that and hit ENTER:
+module clear
+
+# then load frAnTK and other tools we will be using:
+module load gcc/13.2.0
+module load openjdk/20.0.0
+module load R/4.4.2
+module load plink/1.9.0
+module load samtools
+module load python
+export PATH=/projects/course_1/people/bkl835/FrAnTK/bin:$PATH
 
 # and then run bam2plink.py
 bam2plink.py bamfile=${BAM} plinkpref=${SNPbasename} trim=0 MinMQ=30 MinBQ=20 indname=${SAMPLENAME} popname=${SAMPLENAME}
 ```
 
 It will take a moment, meanwhile let's take a look at the parameters we are using:
-
 ```
 bamfile       the BAM file for our ancient sample
 plinkpref     the base name of our plink files
@@ -295,7 +305,7 @@ indname       name of our ancient sample
 popname       name of the population of our ancient sample (if we have one)
 ```
 
-Once it is done running,  we will have three new PLINK that contain pseudohaploid data for each of the SNPs in our dataset:
+Once it is done running,  we will have three new PLINK files that contain pseudohaploid data for each of the SNPs in our dataset:
 ```{bash, eval = FALSE}
 ls AncientCanid_AncientCanid_wolves_rand.*
 ```
@@ -306,12 +316,8 @@ AncientCanid_AncientCanid_wolves_rand.fam
 ```
 
 Now we can merge the PLINK files with our ancient sample with the SNP panel using `plink`:
-
 ```{bash, eval = FALSE}
-#first load plink's module
-module load plink/1.9.0
-
-# then run plink 
+# run plink like this:
 plink --bfile $SNPbasename --make-bed --bmerge ${SAMPLENAME}_${SAMPLENAME}_wolves_rand --allow-extra-chr --allow-no-sex --out  wolves_mergedTv
 ```
 
@@ -563,7 +569,7 @@ Now, let's try plotting all the replicates and see how they look:
 (This is an option for ploting the results in R, but you can also check [pong](https://github.com/ramachandran-lab/pong), which is a very nice option to plot the results from $ADMIXTURE$)
 
 ```{r, eval = FALSE}
-# module load R/3.4.3
+module load R/3.4.3
 R
 # Read the FAM file with information about the sample names and a file that contains a category for each sample:
 fam<-read.table("wolves_mergedTv_chrs.fam", as.is=T)[,1]
@@ -1411,8 +1417,8 @@ We can directly take the same GL that we used for ```NGSadmix``` and run ```pcan
 
 ```{bash, eval = FALSE}
 # first load pcangsd module
-module load python/3.12.8 
-module load pcangsd/1.2
+module load python/3.12.8
+module load pcangsd/0.98.2
 
 # then run pcangsd
 pcangsd -b wolves_gl.beagle.gz -o wolves_gl_pcangsd
@@ -1424,7 +1430,6 @@ After this we will have a covariance matrix (wolves_gl_pcangsd.cov) that we can 
 ls wolves_gl_pcangsd*
 ```
 ```
-wolves_gl_pcangsd.args
 wolves_gl_pcangsd.cov
 ```
 
