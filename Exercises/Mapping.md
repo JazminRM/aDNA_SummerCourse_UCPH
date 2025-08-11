@@ -588,7 +588,7 @@ Once you have the template ready, `paleomix` can be run like this:
 module load paleomix/1.3.9
 
 # run paleomix 
-paleomix bam run --jre-option=-Xmx2g --jar-root /projects/symbean/people/clx746/Scripts/picard/ template.yaml 
+paleomix bam run --jre-option=-Xmx2g --jar-root /projects/course_1/people/clx746/Data/picard template.yaml 
 ```
 
 Once `paleomix` is done running, you'll have your BAM file and two summary files:
