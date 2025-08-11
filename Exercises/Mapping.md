@@ -140,9 +140,9 @@ You can use **WinSCP** (for Windows users) or **scp** (for Mac or Linux users).
 Example of the **scp** command:
 
 ```{bash, eval = FALSE}
-scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/RawQual/PW13_E1_L1_fastqc.html .
-scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/RawQual/PW13_E2_L1_fastqc.html .
-scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/RawQual/PW13_E2_L2_fastqc.html .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/mapping/RawQual/PW13_E1_L1_fastqc.html .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/mapping/RawQual/PW13_E2_L1_fastqc.html .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/mapping/RawQual/PW13_E2_L2_fastqc.html .
 ```
 (remember to change the directory name to your own)
 
@@ -545,8 +545,8 @@ Download the plots we just created to your local computer using **WinSCP** (for 
 Example of the **scp** command:
 
 ```{bash, eval = FALSE}
-scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/S6_mapDamage_PW13_E2_L1/Fragmisincorporation_plot.pdf .
-scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/S6_mapDamage_PW13_E2_L1/Length_plot.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/mapping/S6_mapDamage_PW13_E2_L1/Fragmisincorporation_plot.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/mapping/S6_mapDamage_PW13_E2_L1/Length_plot.pdf .
 ```
 (remember to change the directory name to your own)
 
@@ -562,7 +562,7 @@ If you have many ancient individuals and FASTQ files that you need to map to a r
 ```{bash, eval = FALSE}
 # Create a directory so that we don't overwrite our previous file:
 username="your_own_username"
-directoryPaleomix="/projects/course_1/people/${username}/Mapping/Paleomix"
+directoryPaleomix="/projects/course_1/people/${username}/mapping/Paleomix"
 mkdir $directoryPaleomix
 
 # go to the directory:
@@ -573,7 +573,7 @@ To run `paleomix`, we need to fill in a template with the information about our 
 
 Copy the following pre-filled template to your local directory:
 ```{bash, eval = FALSE}
-cp /projects/course_1/people/clx746/Mapping/Paleomix/template.yaml .
+cp /projects/course_1/people/clx746/mapping/Paleomix/template.yaml .
 ```
 Take a look at the template and at the different options, do you recognise some of the parameters?
 ```{bash, eval = FALSE}
@@ -608,7 +608,7 @@ The first one (*S6.summary*) is a summary of the number of reads mapped at diffe
 #     /opt/shared_software/shared_envmodules/conda/paleomix-1.3.10/bin/paleomix bam run --jre-option=-Xmx2g --jar-root /projects/symbean/people/clx746/Scripts/picard/ template.yaml
 #
 # Directory:
-#     /maps/projects/course_1/people/clx746/Mapping/Paleomix
+#     /maps/projects/course_1/people/clx746/mapping/Paleomix
 #
 # Genomes:
 #     Name              Contigs    Size          Prefix
