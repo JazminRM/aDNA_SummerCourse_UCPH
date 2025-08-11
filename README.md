@@ -36,7 +36,8 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
 11:00 - 12:00   Fundamentals of ancient genomics: reference-based mapping  <br>
                 [Hands-on exercise: Mapping to the human reference genome](Exercises/Mapping.md)  <br>
             	*Lunch break*  <br>
-13:00 - 14:30   Fundamentals of ancient genomics: Estimating ancient DNA damage  <br>
+13:00 - 14:30   Biases (reference bias, capture bias) and strategies to overcome them <br>
+                Fundamentals of ancient genomics: Estimating ancient DNA damage  <br>
                 [Hands-on exercise: Estimating damage patterns](Exercises/Mapping.md)  <br>
                 *Coffee break*  <br>
 14:45 - 15:30   Fundamentals of ancient genomics: Estimating contamination  <br>
@@ -54,14 +55,13 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
 10:45-12:00    Exploratory data analysis using clustering methods <br>
               [Hands-on exercise: Unsupervised approaches: PCA, MDS, Admixture clustering](Exercises/ExploratoryAnalyses.md) <br>
 	          *Lunch break* <br>
-13:00 - 14:30  Spatio-temporal methods for inferring ancestry <br>
+13:00 - 14:30  Phylogenetic inference in ancient DNA  <br>
+              [Hands-on exercise: Building a phylogenetic tree while accounting for admixture](Exercises/Treemix.md) <br>
+              *Coffee break* <br>
+14:45 - 15:45  Spatio-temporal methods for inferring ancestry <br>
               [Hands-on exercise: Locator, mobest] <br>
               *Coffee break* <br>
-14:45 - 15:45  Phylogenetic inference in ancient DNA  <br>
-              [Hands-on exercise: Building a phylogenetic tree while accounting for admixture](Exercises/Treemix.md) <br>
-15:45 - 16:00  Biases (reference bias, capture bias) and strategies to overcome them <br>
-              *Coffee break* <br>
-16:10 - 17:00  Research talk: A genomic history of Rapa Nui and some methodological insights into ancient genomics <br>
+16:00 - 17:00  Research talk: A genomic history of Rapa Nui and some methodological insights into ancient genomics <br>
               Anna-Sapfo Malaspinas, University of Lausanne (online) <br>
 17:00 -       Refreshments <br>
 
