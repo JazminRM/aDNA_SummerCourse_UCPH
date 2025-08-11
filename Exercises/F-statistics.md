@@ -9,11 +9,11 @@ Today we will use the SNP dataset that we generated yesterday to estimate outgro
 * Pre-compute allele frequencies using ```FrAnTK``` <sup>2</sup> 
 * *D*-statistics 
 * *D*-statistics to test for treeness 
-* *D*-statistics to test for treeness in our mystery samples
+* *D*-statistics to test for treeness in our ancient canid 
 * *D*-statistics to test for gene-flow between the American wolf and coyote 
     + using ```FrAnTK``` <sup>2</sup> 
     + using ```ANGSD``` <sup>3</sup>
-* Estimae $f_3$-statistics to locate the sample closest to our mystery sample 
+* Estimae $f_3$-statistics to locate the sample closest to our ancient canid
    + using ```FrAnTK```
 
 
@@ -475,7 +475,7 @@ Consider the kind of questions discussed in the slides and what you already know
 
 Since we will be asking specific questions about the ancestry and gene-flow of the  sample, we have different sections depending sample you we are working with. 
 
-<span style="color: orangered;"> Go to the section corresponding to the mystery sample you chose. </span>
+<span style="color: orangered;"> Go to the section corresponding to the ancient sample you chose. </span>
 
 
 ----------------------------------------------
@@ -488,14 +488,14 @@ Since we will be asking specific questions about the ancestry and gene-flow of t
 
 Does our ancient canid 1 belongs to the same clade as the Greenland & Husky dogs? 
 
-Our previous results suggest that mystery sample 1 is closest to the Greenland dogs, Huskies, and Alaskan malamutes. So we would like to formally test whether this sample forms a clade with the Greenland dog (I picked the Greenland dog, but feel free to chose a different one if you think another dog looks closest to the mystery sample 1). 
+Our previous results suggest that the ancient sample 1 is closest to the Greenland dogs, Huskies, and Alaskan malamutes. So we would like to formally test whether this sample forms a clade with the Greenland dog (I picked the Greenland dog, but feel free to chose a different one if you think another dog looks closest to the ancient sample 1). 
 
 To test that we will run a *D*-statistic test of the form: 
 
 
 <center>
 
-*D*(Mystery sample 1, Greenland dog; X, Golden jackal) 
+*D*(Ancient sample 1, Greenland dog; X, Golden jackal) 
 
 </center>
 
@@ -515,9 +515,9 @@ One way to look at this test is that we are evaluating the following topology (o
 
 **D = 0**     for all possible X's would mean we cannot reject our null hypothesis (i.e. the ancient canid 1 forms a clade with the Greenland dog without any gene-flow)
 
-**D < 0**     the Greenland dog shares more alleles with X than the mystery sample does, thus or tree is incorrect or there is gene-flow betwen X and the Greenland dog
+**D < 0**     the Greenland dog shares more alleles with X than the ancient sample does, thus or tree is incorrect or there is gene-flow betwen X and the Greenland dog
 
-**D > 0**     the ancient canid shares more alleles with X than the Greenland dog does, thus or tree is incorrect or there is gene-flow betwen X and the Mystery sample
+**D > 0**     the ancient canid shares more alleles with X than the Greenland dog does, thus or tree is incorrect or there is gene-flow betwen X and the ancient sample
 
 </details>
 
@@ -616,7 +616,7 @@ One way to look at this test is that we are evaluate the following topology (our
 
 **D < 0**     the Ulakhan Sular wolf shares more alleles with X than the ancient sample 2 does, thus or tree is incorrect or there is gene-flow betwen X and the Ulakhan Sular wolf
 
-**D > 0**     the ancient sample 2 shares more alleles with X than the Ulakhan Sular wolf does, thus or tree is incorrect or there is gene-flow betwen X and the Mystery sample
+**D > 0**     the ancient sample 2 shares more alleles with X than the Ulakhan Sular wolf does, thus or tree is incorrect or there is gene-flow betwen X and the ancient sample
 
 </details>
 
@@ -701,7 +701,7 @@ In this case the test we want to run is the following:
 
 <span style="color: purple;"> **Question:** </span> What would be the expected results in this case?
 
-Remember that in contrast to our mystery samples, in this case we know that the topology of the tree we are proposing (where the two wolves form a clade and coyote is outside in the tree) is correct, so any significant deviation from D=0 can be interpreted as gene-flow.
+Remember that in contrast to our ancient samples, in this case we know that the topology of the tree we are proposing (where the two wolves form a clade and coyote is outside in the tree) is correct, so any significant deviation from D=0 can be interpreted as gene-flow.
 
 Now run ```autoDwfixed```:
 
@@ -722,12 +722,12 @@ Download the plot and take a look at the results.
 ### Outgroup $f_3$-statistics 
 
 
-One of the most basic $f$-statistics we can do is an outgroup $f_3$-statistic to measure  shared drift between our ancient mystery sample and the other populations in the dataset. To do that, we will use ```autof3wfixed```'s tool from ```FrAnTK```:
+One of the most basic $f$-statistics we can do is an outgroup $f_3$-statistic to measure  shared drift between our ancient ancient sample and the other populations in the dataset. To do that, we will use ```autof3wfixed```'s tool from ```FrAnTK```:
 
 We will estimate a test with the following configuration:
 <p>&nbsp;</p>
 <center>
-$f_3$(MysterySample, X; Golden jackal)
+$f_3$(AncientCanid, X; Golden jackal)
 </center>
 <p>&nbsp;</p>
 , where X represents all reference populations in our SNP dataset. 
@@ -759,11 +759,11 @@ Ancient DNA damage can affect transition (C<->T and G<->A) sites!
 
 Once ```FrAnTK``` is done running you will have TEXT file with the results and a PDF file with a plot. 
 ```{bash, eval=FALSE}
-ls Results_f3__h2_MysterySample_GoldenJackal_wolves_rand_ftk*
+ls Results_f3__h2_AncientCanid_GoldenJackal_wolves_rand_ftk*
 ```
 ```
-Results_f3__h2_MysterySample_GoldenJackal_wolves_rand_ftk_37rvX6.txt
-Results_f3__h2_MysterySample_GoldenJackal_wolves_rand_ftk_37rvX6.txt.pdf
+Results_f3__h2_AncientCanid_GoldenJackal_wolves_rand_ftk_37rvX6.txt
+Results_f3__h2_AncientCanid_GoldenJackal_wolves_rand_ftk_37rvX6.txt.pdf
 ```
 Let's look at the TEXT file first: 
 
@@ -809,7 +809,7 @@ So longer branches (larger $f_3$) are expected from pairs of samples that share 
 
 Now let's look at the plot.
 
-<span style="color: purple;"> **Question:** </span> What can you say about your mystery sample? Does this match with the PCA and ADMIXTURE analyses from yesterday?  
+<span style="color: purple;"> **Question:** </span> What can you say about your ancient sample? Does this match with the PCA and ADMIXTURE analyses from yesterday?  
 
 *<span style="color: cornflowerblue;"> BONUS</span>* Try estimating an $f_3$-statistic using ```FrAnTK```'s ```autof3wfixed``` for another population instead of our ancient canid and compare the results.  
 
