@@ -21,10 +21,12 @@ salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-n
 srun --pty -n 1 -c 1 bash -i
 ```
 
-Go to the ExploratoryAnalyses directory (we will use the same PLINK files we generated earlier):
+Create a directory for this exercise:
 ```{bash, eval = FALSE}
 # remember to change ku_username for your username:
-cd /projects/course_1/people/ku_username/ExploratoryAnalyses
+username="ku_username"
+mkdir -p /projects/course_1/people/${username}/TreeMix
+cd /projects/course_1/people/${username}/TreeMix
 ```
 
 ### TreeMix trees
@@ -38,13 +40,13 @@ In this section we will build a tree with the reference data and our ancient sam
 (Feel free to include/exclude more samples if you want!)
 
 ```{bash, eval=FALSE}
-cut -f 1 wolves_rand_ftk_pop |grep -e GoldenJackal -e Dog_GMums -e Dog_Qaanaaq -e Dog_Hebei -e Dog_TM -e Wolf_Israel -e Wolf_UlakhanSular -e Wolf_Qamanirjuaq -e Wolf_NorthBaffin -e Wolf_Portuguese -e AncientCanid -e Dog_SibHusky -e Dog_Greenland -e Dog_AlaskanM -e Dog_AlaskanHusky >  pop2kep
+cut -f 1 /projects/course_1/people/clx746/AllSamples/wolves_rand_ftk_pop |grep -e GoldenJackal -e Dog_GMums -e Dog_Qaanaaq -e Dog_Hebei -e Dog_TM -e Wolf_Israel -e Wolf_UlakhanSular -e Wolf_Qamanirjuaq -e Wolf_NorthBaffin -e Wolf_Portuguese -e AncientCanid -e Dog_SibHusky -e Dog_Greenland -e Dog_AlaskanM -e Dog_AlaskanHusky >  pop2kep
 ```
 
 Our *pop2kep* file now contains a list of the populations we want to include in the tree. We will use ```FrAnTK```'s ```Freqs2Treemix``` tool to create the input for ```TreeMix```
 
 ```{bash, eval=FALSE}
-frantk Freqs2Treemix freqpref=wolves_rand_ftk popsofint=pop2kep tmpref=wolves_rand_ftk_treemix
+frantk Freqs2Treemix freqpref=/projects/course_1/people/clx746/AllSamples/wolves_rand_ftk popsofint=pop2kep tmpref=wolves_rand_ftk_treemix
 ```
 
 Take a look at the parameters we are using with ```Freqs2Treemix```:
@@ -124,6 +126,10 @@ scaffold_0	360221	scaffold_0_360221	T	A
 We can use the following loop in ```bash``` to run 5 replicates for each value of *-m*:
 
 ```{bash, eval=FALSE}
+# load treemix's module
+module load treemix/1.13
+
+# run treemix:
 mkdir treemixRes
 cd treemixRes
 for rep in 1 2 3 4 5
@@ -227,7 +233,7 @@ Download the plot we just created to your local computer using **WinSCP** (for W
 Example of the **scp** command:
 
 ```{bash, eval = FALSE}
-scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/ExploratoryAnalyses/wolves_treemix.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/TreeMix/wolves_treemix.pdf .
 ```
 (remember to use your own username)
 
