@@ -59,7 +59,6 @@ OUTGROUP="/projects/course_1/people/clx746/Data/Outgroups_sites"
 ```
 
 First, take a look at the FAM file of the outgroups:
-
 ```{bash, eval=FALSE}
 head $OUTGROUP.fam
 ```
@@ -175,8 +174,18 @@ Dog_Dingo	Dog_Dingo	Dog_Dingo	1
 Now we will estimate allele frequencies for all of the populations using ```BuildFreqs``` tool from ```FrAnTK```:
 
 ```{bash, eval=FALSE}
-# load frantk
-module load frantk/20220523
+# first let's clear all the modules to avoid conflicts.
+# when you run the following it will ask you to type 'yes', so do that and hit ENTER:
+module clear
+
+# then load frAnTK and other tools we will be using:
+module load gcc/13.2.0
+module load openjdk/20.0.0
+module load R/4.4.2
+module load plink/1.9.0
+module load samtools
+module load python
+export PATH=/projects/course_1/people/bkl835/FrAnTK/bin:$PATH
 
 # Here we are getting the number of populations from our CLUST file:
 npops=`cut -f 1 clust_file | sort |uniq |wc -l`
@@ -230,7 +239,7 @@ scaffold_9	22071	7286808	5288	5824
 ```
 the *wolves_rand_ftk_pop* file contains information the population's names and their ploidy:
 ```{bash, eval = FALSE}
-head wolves_rand_ftk_chrs
+head wolves_rand_ftk_pop
 ```
 ```
 Coyote	1
@@ -286,7 +295,8 @@ for(i in 1:length(pops)){
 	if(sum(info[,3]==pops[i])>0){
 		category<-c(category, unique(info[info[,3]==pops[i],2]))	
 	}else{
-		category<-c(category, "MysterySample")	
+		#message(pops[i])
+		category<-c(category, "AncientCanid")	
 	}
 }
 category <-gsub(" ", "_", category)
@@ -314,7 +324,7 @@ Dog_Hebei	Dog
 
 The LEGEND file is has 4 columns *tab* separated (category name, outer color, inner color, ggplot shape) which is used to create the legend in the plot:
 ```{bash, eval=FALSE}
-cp /home/ec2-user/Data/SNPs/legend.txt  .
+cp /projects/course_1/people/clx746/Data/legend.txt  .
 ```
 Take a look at the legend file:
 
@@ -332,7 +342,7 @@ Grey_wolf_Asia	indianred2	indianred2	21
 Grey_wolf_Asia_Highland	coral4	coral4	21
 Grey_wolf_Europe	lightsalmon1	lightsalmon1	21
 Grey_wolf_Middle_East	orange	orange	21
-MysterySample	red	darkslategray1	23
+Sample	red	darkslategray1	23
 ```
 Feel free to change the colors if you like :)
 
@@ -371,7 +381,7 @@ Let's take a look at the output.
 cat res/D_wolves_rand_ftk_Dog_Peru_Dog_Dingo_Wolf_Portuguese_GoldenJackal.txt
 ```
 ```
-Dog_Peru	Dog_Dingo	Wolf_Portuguese	GoldenJackal	0.006625023660798789	0.014350336235089384	0.46166330546313666	5283	710	TRUE	Other	2624.0	2659.0
+Dog_Peru        Dog_Dingo       Wolf_Portuguese GoldenJackal    0.008327413696812086    0.012078304883707007    0.6894521853017078      8400    727     TRUE    Other   3413.830299999994       3471.164499999987
 ```
 
 ```FrAnTK``` writes the results in a table that contains the following columns:
@@ -438,12 +448,12 @@ cat res/D3_wolves_rand_ftk_Dog_Ilulissat_Dog_Greenland_Dog_Peru_GoldenJackal.txt
 ```
 ```
 # h1          h2            h3        h4             D                    SE                  Z                   ...
-Dog_Ilulissat	Dog_Greenland	Dog_Peru	GoldenJackal	-0.01647957965130165	0.0164339226058179	-1.0027782195753792	4187	684	TRUE	Other	2128.0	2059.0
-Dog_Ilulissat	Dog_Peru	Dog_Greenland	GoldenJackal	0.3938185443668993	0.0139862719571741	28.15750655877205	7021	723	TRUE	Other	2128.0	4893.0
-Dog_Greenland	Dog_Peru	Dog_Ilulissat	GoldenJackal	0.4076524741081703	0.013154508693502874	30.98956286444308	6952	721	TRUE	Other	2059.0	4893.0
+Dog_Ilulissat   Dog_Greenland   Dog_Peru        GoldenJackal    -0.016634480214002396   0.01455637814965092     -1.142762302750517      6357    708     TRUE    Other   2755.3336000000004      2665.1664000000023
+Dog_Ilulissat   Dog_Peru        Dog_Greenland   GoldenJackal    0.3873859700357952      0.012949432496010523    29.91528548877656       10379   731     TRUE    Other   2755.3336000000004      6239.999399999999
+Dog_Greenland   Dog_Peru        Dog_Ilulissat   GoldenJackal    0.40143362631159546     0.012405052319408853    32.36049441593369       10302   729     TRUE    Other   2665.1664000000023      6239.999399999999
 ```
 
-<span style="color: purple;"> **Q:** </span> Based on what we talked about before, what can we infer from the results? Do we know whether Dog_Ilulissat forms a clade with the dogs from Greenland or Peru ? 
+<span style="color: purple;"> **Q:** </span> Based on what we talked about before, what can we infer from the results? Do we know whether Dog_Ilulissat forms a clade with the dogs from Greenland or Peru? 
 
 
 ---------------------------------------
@@ -453,17 +463,17 @@ Dog_Greenland	Dog_Peru	Dog_Ilulissat	GoldenJackal	0.4076524741081703	0.013154508
 ------------------------------------------
 
 
-### *D*-statistics for our mystery samples
+### *D*-statistics for our  samples
 
-After running the exploratory analyses we have now a general idea of the ancestry of our mystery samples, so for the following step we will use *D*-statistics to test specific hypotheses about treeness and gene-flow. 
+After running the exploratory analyses we have now a general idea of the ancestry of our  samples, so for the following step we will use *D*-statistics to test specific hypotheses about treeness and gene-flow. 
 
-One of the first questions that I had when I started working on these samples and after looking at the clustering results, was whether our mystery sample belongs to the same population of the closest sample we identified or if it was a mixture of more than one population. <span style="color: purple;"> 
+One of the first questions that I had when I started working on these samples and after looking at the clustering results, was whether our  sample belongs to the same population of the closest sample we identified or if it was a mixture of more than one population. <span style="color: purple;"> 
 
 <span style="color: purple;"> **Q:** </span>  How would you use *D*-statistics to test this?
 
 Consider the kind of questions discussed in the slides and what you already know from the other exploratory analyses. 
 
-Since we will be asking specific questions about the ancestry and gene-flow of the mystery sample, we have different sections depending sample you we are working with. 
+Since we will be asking specific questions about the ancestry and gene-flow of the  sample, we have different sections depending sample you we are working with. 
 
 <span style="color: orangered;"> Go to the section corresponding to the mystery sample you chose. </span>
 
@@ -503,19 +513,18 @@ One way to look at this test is that we are evaluating the following topology (o
 <details>
 <summary> <b>Show answer</b> </summary>
 
-**D = 0**     for all possible X's would mean we cannot reject our null hypothesis (i.e. the Mystety sample 1 forms a clade with the Greenland dog without any gene-flow)
+**D = 0**     for all possible X's would mean we cannot reject our null hypothesis (i.e. the ancient canid 1 forms a clade with the Greenland dog without any gene-flow)
 
 **D < 0**     the Greenland dog shares more alleles with X than the mystery sample does, thus or tree is incorrect or there is gene-flow betwen X and the Greenland dog
 
-**D > 0**     the Mystery sample shares more alleles with X than the Greenland dog does, thus or tree is incorrect or there is gene-flow betwen X and the Mystery sample
+**D > 0**     the ancient canid shares more alleles with X than the Greenland dog does, thus or tree is incorrect or there is gene-flow betwen X and the Mystery sample
 
 </details>
 
 For the *D*-statistics we will use ```FrAnTK```'s ```autoDwfixed``` tool, which we can call like this:
 
 ```{bash, eval=FALSE}
-frantk autoDwfixed h1=MysterySample h2=Dog_Greenland h4=GoldenJackal freqpref=wolves_rand_ftk nthr=2 catfile=categories.txt legfile=legend.txt rmtrns=1
-
+frantk autoDwfixed h1=AncientCanid h2=Dog_Greenland h4=GoldenJackal freqpref=wolves_rand_ftk nthr=2 catfile=categories.txt legfile=legend.txt rmtrns=1
 ```
 
 Remember, in ```FrAnTK``` h1, h2, h3, and h4, corresponds to the first, second, third and fourth positions, respectively, in our tests. 
@@ -526,30 +535,30 @@ In this case ```autoDwfixed``` will allow us to loop over one of the positions i
 
 Once it is done running you will have two files (a text file with the results and a pdf with the plot):
 ```{bash, eval=FALSE}
-ls Results_D__h3_MysterySample_Dog_Greenland_GoldenJackal_wolves_rand_ftk_*
+ls Results_D__h3_AncientCanid_Dog_Greenland_GoldenJackal_wolves_rand_ftk_*
 ```
 ```
-Results_D__h3_MysterySample_Dog_Greenland_GoldenJackal_wolves_rand_ftk_KsaWxc.txt
-Results_D__h3_MysterySample_Dog_Greenland_GoldenJackal_wolves_rand_ftk_KsaWxc.txt.pdf
+Results_D__h3_AncientCanid_Dog_Greenland_GoldenJackal_wolves_rand_ftk_KsaWxc.txt
+Results_D__h3_AncientCanid_Dog_Greenland_GoldenJackal_wolves_rand_ftk_KsaWxc.txt.pdf
 ```
 Let's look at the TEXT file first: 
 ```{bash, eval=FALSE}
 # we will sort (from largest to smallest) the file by the forth column that contains the $f_3$ stat:
-cat Results_D__h3_MysterySample_Dog_Greenland_GoldenJackal_wolves_rand_ftk_KsaWxc*.txt |sort -k 4 -r |column -t |head -n 10
+cat Results_D__h3_AncientCanid_Dog_Greenland_GoldenJackal_wolves_rand_ftk_*.txt |sort -k 4 -r |column -t |head -n 10
 ```
 ```
 H1pop           H2pop          H3pop                H4pop         D                   SE               Z                   nSNPs  nBlocks  Plot  Cat                      nABBA          nBABA
-MysterySample  Dog_Greenland  Dog_Dingo            GoldenJackal  0.0119907458024     0.0129105005556  0.928759171711      7952   726      TRUE  Dog                      3316.4971      3396.9969
-MysterySample  Dog_Greenland  Wolf_China           GoldenJackal  0.00676550090686    0.0114087591393  0.593009355731      9888   726      TRUE  Grey_wolf_Asia_Highland  3352.16415     3397.83125
-MysterySample  Dog_Greenland  Wolf_BungeToll       GoldenJackal  0.00545116721101    0.0129719953935  0.420225805334      6718   719      TRUE  Ancient_grey_wolf        2721.4973      2751.3306
-MysterySample  Dog_Greenland  Wolf_Toronto         GoldenJackal  0.0032537602432     0.0128729217772  0.252760041544      7401   727      TRUE  Grey_wolf_America        3012.3315      3031.9983
-MysterySample  Dog_Greenland  Wolf_Taimyr          GoldenJackal  0.0032219068013     0.040971751193   0.0786372734258     648    375      TRUE  Ancient_grey_wolf        257.8333       259.5001
-MysterySample  Dog_Greenland  Wolf_Xinjiang        GoldenJackal  0.000903779363488   0.013251980086   0.0681995715073     7174   714      TRUE  Grey_wolf_Asia           2947.9981      2953.3316
-MysterySample  Dog_Greenland  Wolf_Ellesmere       GoldenJackal  0.000718563425007   0.0134842473296  0.0532891015304     6824   724      TRUE  Grey_wolf_America        2781.3312      2785.3312
-MysterySample  Dog_Greenland  Wolf_Qamanirjuaq     GoldenJackal  -2.30645131288e-08  0.0157441508635  -1.46495757877e-06  5306   717      TRUE  Grey_wolf_America        2167.8325      2167.8324
-MysterySample  Dog_Greenland  Dog_GMums            GoldenJackal  -0.309389413858     0.0140275462607  -22.0558469819      7829   726      TRUE  Dog_Arctic               4402.1659      2321.8321
-
+AncientCanid  Dog_Greenland  Dog_Dingo            GoldenJackal  0.0119907458024     0.0129105005556  0.928759171711      7952   726      TRUE  Dog                      3316.4971      3396.9969
+AncientCanid  Dog_Greenland  Wolf_China           GoldenJackal  0.00676550090686    0.0114087591393  0.593009355731      9888   726      TRUE  Grey_wolf_Asia_Highland  3352.16415     3397.83125
+AncientCanid  Dog_Greenland  Wolf_BungeToll       GoldenJackal  0.00545116721101    0.0129719953935  0.420225805334      6718   719      TRUE  Ancient_grey_wolf        2721.4973      2751.3306
+AncientCanid  Dog_Greenland  Wolf_Toronto         GoldenJackal  0.0032537602432     0.0128729217772  0.252760041544      7401   727      TRUE  Grey_wolf_America        3012.3315      3031.9983
+AncientCanid  Dog_Greenland  Wolf_Taimyr          GoldenJackal  0.0032219068013     0.040971751193   0.0786372734258     648    375      TRUE  Ancient_grey_wolf        257.8333       259.5001
+AncientCanid  Dog_Greenland  Wolf_Xinjiang        GoldenJackal  0.000903779363488   0.013251980086   0.0681995715073     7174   714      TRUE  Grey_wolf_Asia           2947.9981      2953.3316
+AncientCanid  Dog_Greenland  Wolf_Ellesmere       GoldenJackal  0.000718563425007   0.0134842473296  0.0532891015304     6824   724      TRUE  Grey_wolf_America        2781.3312      2785.3312
+AncientCanid  Dog_Greenland  Wolf_Qamanirjuaq     GoldenJackal  -2.30645131288e-08  0.0157441508635  -1.46495757877e-06  5306   717      TRUE  Grey_wolf_America        2167.8325      2167.8324
+AncientCanid  Dog_Greenland  Dog_GMums            GoldenJackal  -0.309389413858     0.0140275462607  -22.0558469819      7829   726      TRUE  Dog_Arctic               4402.1659      2321.8321
 ```
+
 ```FrAnTK``` writes the results in a table that contains the following columns:
 ```
 H1pop       h1 pop
@@ -577,7 +586,6 @@ Download the plot with the results.
 
 #### Ancient canid 2
 
-
 **Using *D*-statistics to test for treeness**
 
 Does our ancient sample 1 belongs to the same clade as the younger Pleistocene wolf? 
@@ -587,7 +595,7 @@ Our previous results suggest that sample 2 is closest to the younger Pleistocene
 To do that, we will run a *D*-statistic test of the form
 
 <center>
-*D*(Mystery sample 2, Pleistocene wolf Y; X, Golden jackal) 
+*D*(Ancient canid 2, Pleistocene wolf Y; X, Golden jackal) 
 
 </center>
 
@@ -604,18 +612,18 @@ One way to look at this test is that we are evaluate the following topology (our
 <details>
 <summary> <b>Show answer</b> </summary>
 
-**D = 0**     for all possible X's would mean we cannot reject our null hypothesis (i.e. the Mystety sample 2 forms a clade with the Ulakhan Sular wolf without any gene-flow)
+**D = 0**     for all possible X's would mean we cannot reject our null hypothesis (i.e. the the ancient sample 2 forms a clade with the Ulakhan Sular wolf without any gene-flow)
 
-**D < 0**     the Ulakhan Sular wolf shares more alleles with X than the mystery sample does, thus or tree is incorrect or there is gene-flow betwen X and the Ulakhan Sular wolf
+**D < 0**     the Ulakhan Sular wolf shares more alleles with X than the ancient sample 2 does, thus or tree is incorrect or there is gene-flow betwen X and the Ulakhan Sular wolf
 
-**D > 0**     the Mystery sample shares more alleles with X than the Ulakhan Sular wolf does, thus or tree is incorrect or there is gene-flow betwen X and the Mystery sample
+**D > 0**     the ancient sample 2 shares more alleles with X than the Ulakhan Sular wolf does, thus or tree is incorrect or there is gene-flow betwen X and the Mystery sample
 
 </details>
 
 For the *D*-statistics we will use ```autoDwfixed```'s tool from ```FrAnTK```:
 
 ```{bash, eval=FALSE}
-frantk autoDwfixed h1=MysterySample h2=Wolf_UlakhanSular h4=GoldenJackal freqpref=wolves_rand_ftk nthr=2 catfile=categories.txt legfile=legend.txt rmtrns=1
+frantk autoDwfixed h1=AncientCanid h2=Wolf_UlakhanSular h4=GoldenJackal freqpref=wolves_rand_ftk nthr=2 catfile=categories.txt legfile=legend.txt rmtrns=1
 ```
 
 In ```FrAnTK``` h1, h2, h3, and h4, corresponds to the first, second, third and fourth positions, respectively, in our tests. 
@@ -627,30 +635,30 @@ In this case ```autoDwfixed``` will allow us to loop over one of the positions i
 
 Once it is done running you will have two files (a text file with the results and a pdf with the plot):
 ```{bash, eval=FALSE}
-ls Results_D__h3_MysterySample_Wolf_UlakhanSular_GoldenJackal_wolves_rand_ftk_*
+ls Results_D__h3_AncientCanid_Wolf_UlakhanSular_GoldenJackal_wolves_rand_ftk_*
 ```
 ```
-Results_D__h3_MysterySample_Wolf_UlakhanSular_GoldenJackal_wolves_rand_ftk_64w66w.txt
-Results_D__h3_MysterySample_Wolf_UlakhanSular_GoldenJackal_wolves_rand_ftk_64w66w.txt.pdf
+Results_D__h3_AncientCanid_Wolf_UlakhanSular_GoldenJackal_wolves_rand_ftk_64w66w.txt
+Results_D__h3_AncientCanid_Wolf_UlakhanSular_GoldenJackal_wolves_rand_ftk_64w66w.txt.pdf
 ```
 Let's look at the TEXT file first: 
 ```{bash, eval=FALSE}
 # we will sort (from largest to smallest) the file by the forth column that contains the $f_3$ stat:
-cat Results_D__h3_MysterySample_Wolf_UlakhanSular_GoldenJackal_wolves_rand_ftk*.txt |sort -k 4 -r |column -t |head -n 10
+cat Results_D__h3_AncientCanid_Wolf_UlakhanSular_GoldenJackal_wolves_rand_ftk*.txt |sort -k 4 -r |column -t |head -n 10
 ```
 ```
-H1pop           H2pop              H3pop                H4pop         D                   SE                Z                 nSNPs  nBlocks  Plot  Cat                      nABBA          nBABA
-MysterySample  Wolf_UlakhanSular  Coyote               GoldenJackal  3.39464947002e-05   0.00912615535485  0.00371969283671  15226  730      TRUE  Coyote                   3583.45895455  3583.70225455
-MysterySample  Wolf_UlakhanSular  Wolf_Mexico          GoldenJackal  0.0169832460776     0.0183601970098   0.925003477281    3469   615      TRUE  Grey_wolf_America        1393.9992      1442.1665
-MysterySample  Wolf_UlakhanSular  Dog_Hebei            GoldenJackal  0.0122643346729     0.0101642369617   1.20661636669     11317  730      TRUE  Dog                      4630.996       4745.9986
-MysterySample  Wolf_UlakhanSular  Dog_AlaskanHusky     GoldenJackal  0.00693109915644    0.0103967505362   0.666660138887    11477  729      TRUE  Dog_Arctic               4728.3287      4794.3312
-MysterySample  Wolf_UlakhanSular  Dog_Ondo             GoldenJackal  0.00305148020502    0.0104264414634   0.292667466244    11090  727      TRUE  Dog                      4574.3294      4602.3318
-MysterySample  Wolf_UlakhanSular  Wolf_AtlanticCoast   GoldenJackal  0.00235247505255    0.0106833406691   0.220200321736    10363  729      TRUE  Grey_wolf_America        4241.3298      4261.3321
-MysterySample  Wolf_UlakhanSular  Wolf_Toronto         GoldenJackal  0.000652948347472   0.0107623181694   0.0606698610093   10280  732      TRUE  Grey_wolf_America        4210.8286      4216.3311
-MysterySample  Wolf_UlakhanSular  Wolf_Saskatchewan    GoldenJackal  0.000617977234827   0.0119291233904   0.0518040776846   7950   719      TRUE  Grey_wolf_America        3235.4972      3239.4986
-MysterySample  Wolf_UlakhanSular  Wolf_Yana            GoldenJackal  -0.0321522649955    0.0120302530031   -2.6726175241     7449   726      TRUE  Ancient_grey_wolf        3153.9982      2957.4997
+H1pop         H2pop              H3pop                H4pop         D                      SE                   Z                    nSNPs  nBlocks  Plot  Cat                      nABBA             nBABA
+AncientCanid  Wolf_UlakhanSular  Wolf_Mexico          GoldenJackal  0.0184620666474193     0.0177832566704394   1.03817129728033     3461   613      TRUE  Grey_wolf_America        1391.1663         1443.5001
+AncientCanid  Wolf_UlakhanSular  Dog_Hebei            GoldenJackal  0.0100783467580715     0.0103326275503358   0.975390500526069    11385  731      TRUE  Dog                      4673.8302         4768.9983
+AncientCanid  Wolf_UlakhanSular  Dog_Ondo             GoldenJackal  0.00758216194937285    0.0105516263757006   0.71857756135432     11152  729      TRUE  Dog                      4581.1631         4651.16409999999
+AncientCanid  Wolf_UlakhanSular  Dog_AlaskanHusky     GoldenJackal  0.00718840931075457    0.0102871703417715   0.698774208254893    11553  729      TRUE  Dog_Arctic               4764.9964         4833.9979
+AncientCanid  Wolf_UlakhanSular  Dog_SibHusky         GoldenJackal  0.00119637037291694    0.00969902419456187  0.123349560627732    13697  732      TRUE  Dog_Arctic               4800.99659999999  4812.4979
+AncientCanid  Wolf_UlakhanSular  Dog_GS               GoldenJackal  0.00104727515829528    0.0110064216699568   0.095151284377367    10960  727      TRUE  Dog                      4531.1636         4540.66429999999
+AncientCanid  Wolf_UlakhanSular  Wolf_NorthBaffin     GoldenJackal  0.000379428320411498   0.0102464827131111   0.0370301039912938   11161  734      TRUE  Grey_wolf_America        4612.16429999999  4615.66559999999
+AncientCanid  Wolf_UlakhanSular  Wolf_Taimyr          GoldenJackal  -0.0453507391163696    0.0351869181530402   -1.28885226376244    884    467      TRUE  Ancient_grey_wolf        380.3332          347.333
+AncientCanid  Wolf_UlakhanSular  Wolf_Yana            GoldenJackal  -0.0291271667855427    0.0124230014186244   -2.34461591076337    7516   725      TRUE  Ancient_grey_wolf        3173.9984         2994.3324
+```
 
-```
 ```FrAnTK``` writes the results in a table that contains the following columns:
 ```
 H1pop       h1 pop
@@ -727,7 +735,7 @@ $f_3$(MysterySample, X; Golden jackal)
 Now let's run the test:
 ```{bash, eval=FALSE}
 # software
-frantk autof3wfixed h1=MysterySample target=GoldenJackal freqpref=wolves_rand_ftk nthr=2 catfile=categories.txt legfile=legend.txt rmtrns=1
+frantk autof3wfixed h1=AncientCanid target=GoldenJackal freqpref=wolves_rand_ftk nthr=2 catfile=categories.txt legfile=legend.txt rmtrns=1
 ```
 
 Take a look at the parameters we are using with ```autof3wfixed``` tool:
@@ -761,19 +769,19 @@ Let's look at the TEXT file first:
 
 ```{bash, eval=FALSE}
 # we will sort (from largest to smallest) the file by the forth column that contains the $f_3$ stat:
-cat Results_f3__h2_MysterySample_GoldenJackal_wolves_rand_ftk_*.txt |sort -k 4 -r |column -t |head -n 10
+cat Results_f3__h2_AncientCanid_GoldenJackal_wolves_rand_ftk_*.txt |sort -k 4 -r |column -t |head -n 10
 ```
 ```
-Apop           Bpop                 Opop          f3              SE               Z              nSNPs  nBlocks  Plot  Cat
-MysterySample  Dog_Ilulissat        GoldenJackal  1.4046106631    0.0330136655419  42.5463407364  22596  737      TRUE  Dog_Arctic
-MysterySample  Dog_GMums            GoldenJackal  1.38614544794   0.0345739030469  40.0922466308  19895  737      TRUE  Dog_Arctic
-MysterySample  Dog_Qaanaaq          GoldenJackal  1.3856892132    0.0321824808209  43.0572528236  25322  737      TRUE  Dog_Arctic
-MysterySample  Dog_Tasiilaq         GoldenJackal  1.3848694495    0.0318894749422  43.4271637275  25496  737      TRUE  Dog_Arctic
-MysterySample  Dog_Sisimiut         GoldenJackal  1.37944362826   0.0317954549438  43.384931296   25496  737      TRUE  Dog_Arctic
-MysterySample  Dog_Greenland        GoldenJackal  1.36982339899   0.0317266393897  43.175811411   24236  737      TRUE  Dog_Arctic
-MysterySample  Dog_AlaskanM         GoldenJackal  1.32827464696   0.0314123577321  42.2850986956  24599  738      TRUE  Dog_Arctic
-MysterySample  Dog_AlaskanHusky     GoldenJackal  1.31042838224   0.0305788381556  42.8540932645  24802  736      TRUE  Dog_Arctic
-MysterySample  Dog_SibHusky         GoldenJackal  1.3083155428    0.0302944119539  43.1866954469  27477  736      TRUE  Dog_Arctic
+Apop          Bpop                 Opop          f3                 SE                  Z                 nSNPs  nBlocks  Plot  Cat
+AncientCanid  Wolf_UlakhanSular    GoldenJackal  0.944488924772749  0.0247167774646894  38.2124622079903  21359  736      TRUE  Ancient_grey_wolf
+AncientCanid  Wolf_Qamanirjuaq     GoldenJackal  0.927456429728185  0.0265941595205177  34.8744403451683  14541  735      TRUE  Grey_wolf_America
+AncientCanid  Wolf_Yana            GoldenJackal  0.921782689173379  0.0270638520099309  34.0595525291499  14640  734      TRUE  Ancient_grey_wolf
+AncientCanid  Dog_Ilulissat        GoldenJackal  0.920950415406203  0.0249976221441635  36.8415207692555  18881  735      TRUE  Dog_Arctic
+AncientCanid  Dog_Dingo            GoldenJackal  0.919067124675722  0.0255450337521467  35.9783092711118  17711  737      TRUE  Dog
+AncientCanid  Dog_Greenland        GoldenJackal  0.917650337982188  0.0242637558283925  37.8197977457549  20407  736      TRUE  Dog_Arctic
+AncientCanid  Dog_GMums            GoldenJackal  0.916624663299076  0.0258237359751087  35.4954319616109  16703  735      TRUE  Dog_Arctic
+AncientCanid  Wolf_Alaska          GoldenJackal  0.913515753028892  0.024513903696581   37.265209341436   18436  736      TRUE  Grey_wolf_America
+AncientCanid  Dog_Tasiilaq         GoldenJackal  0.912414286584688  0.0238487588682844  38.2583551464422  21268  736      TRUE  Dog_Arctic
 ```
 
 ```FrAnTK``` writes the results in a table that contains the following columns:
