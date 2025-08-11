@@ -605,7 +605,7 @@ The first one (*S6.summary*) is a summary of the number of reads mapped at diffe
 ```
 ```
 # Command:
-#     /opt/shared_software/shared_envmodules/conda/paleomix-1.3.10/bin/paleomix bam run --jre-option=-Xmx2g --jar-root /projects/symbean/people/clx746/Scripts/picard/ template.yaml
+#     /opt/shared_software/shared_envmodules/conda/paleomix-1.3.10/bin/paleomix bam run --jre-option=-Xmx2g --jar-root /projects/course_1/people/clx746/Data/picard/ template.yaml
 #
 # Directory:
 #     /maps/projects/course_1/people/clx746/mapping/Paleomix
