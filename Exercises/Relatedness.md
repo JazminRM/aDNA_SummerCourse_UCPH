@@ -73,13 +73,33 @@ module load python/2.7.17
 
 # run read:
 python /projects/course_1/people/clx746/Data/read/READ.py /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k_subset
+
+kinship-read --i /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k_subset
 ```
 
 #### KIN
 
+Now we will run KIN on the same individuals. KIN needs sequencing reads, so we will use the following BAM files as input:
 
 ```{bash, eval=FALSE}
 module load kin/3.1.4
+
+# create a list of SNPs that we will be used based on the previous PLINK files:
+cut -f 1,4,5,6 /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k_subset.bim  | awk -v OFS="\t" '{print $1, $2 - 1, $2, $3, $4}' > koszyce_1240k_snps.bed
+
+echo 'RISE1160.0.1
+RISE1161.0.1
+RISE1164.0.1
+RISE1168.0.1
+RISE1169.0.1' > Inds.txt
+
+KINgaroo -bam /projects/course_1/people/clx746/DataRelatedness/1_bams -bed koszyce_1240k_snps.bed -T Inds.txt -cnt 0 > king.log
+
+# change here to your username:
+username="your_username"
+
+# then run KIN:
+KIN -I /projects/course_1/people/${username}/Relatedness/ -O /projects/course_1/people/${username}/Relatedness/ > kin.log
 
 KINgaroo
 
