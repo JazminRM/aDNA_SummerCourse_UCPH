@@ -277,7 +277,7 @@ We already have this file, so we don't need to create it.
 Now we can use `bam2plink.py` to randomly sample a read per site from the BAM file of our ancient sample:
 
 ```{bash, eval = FALSE}
-# first let's clear all the modules to avoid conflicts.
+# first let's clear all the modules to avoid conflicts and bring all the modules and libraries we need.
 # when you run the following it will ask you to type 'yes', so do that and hit ENTER:
 module clear
 
@@ -290,7 +290,17 @@ module load samtools
 module load python
 export PATH=/projects/course_1/people/bkl835/FrAnTK/bin:$PATH
 
-# and then run bam2plink.py
+# before running, we install a couple of R libraries
+# first we go into R
+R
+#and run the following to install these libraries
+install.packages("doParallel")
+install.packages("ggplot2")
+q("no")
+```
+
+... and then run bam2plink.py
+```{bash, eval = FALSE}
 bam2plink.py bamfile=${BAM} plinkpref=${SNPbasename} trim=0 MinMQ=30 MinBQ=20 indname=${SAMPLENAME} popname=${SAMPLENAME}
 ```
 
