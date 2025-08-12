@@ -73,7 +73,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
               [Hands-on exercise: testing for admixture, testing for treeness](Exercises/F-statistics.md) <br>
              	*Lunch break* <br>
 13:00 - 14:30  Estimating genetic diversity <br>
-              [Hands-on exercise: estimating diversity using ancient genomes] (Exercises/Diversity.md) <br>
+              [Hands-on exercise: estimating diversity using ancient genomes](Exercises/Diversity.md) <br>
               *Coffee break* <br>
 14:45 - 16:00  Genetic diversity and selection <br>
               [Hands-on exercise: looking for selection in ancient genomes] <br>
