@@ -93,7 +93,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
               [Hands-on exercise: Estimating relatedness with ngsrelate](Exercises/Relatedness.md) <br>
               *Coffee break* <br>
 14:45 - 16:00  Estimating Runs of Homozygosity <br>
-              [Hands-on exercise: Estimating Runs of Homozygosity] <br>
+              [Hands-on exercise: Estimating Runs of Homozygosity](Exercises/RoH.md) <br>
               *Coffee break*
 16:10 - 17:00 Research talk: Applications of ancient DNA in Conservation Genomics <br>
               Hernán E. Morales Villegas, University of Copenhagen <br>
