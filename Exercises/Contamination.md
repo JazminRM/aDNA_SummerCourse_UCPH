@@ -109,7 +109,7 @@ module load paleomix/1.3.9
 cat /projects/course_1/people/clx746/Data/mapS6MT.yaml |sed 's/clx746/your_username/' > mapS6MT.yaml 
 
 # run paleomix 
-paleomix bam run --jre-option=-Xmx2g --jar-root /projects/symbean/people/clx746/Scripts/picard/ mapS6MT.yaml
+paleomix bam run --jre-option=-Xmx2g --jar-root /projects/course_1/people/clx746/Data/picard mapS6MT.yaml
 ```
 It will take a few minutes to run, so just wait...
 
