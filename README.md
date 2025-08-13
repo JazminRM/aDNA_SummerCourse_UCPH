@@ -76,7 +76,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
               [Hands-on exercise: estimating diversity using ancient genomes](Exercises/Diversity.md) <br>
               *Coffee break* <br>
 14:45 - 16:00  Genetic diversity and selection <br>
-              [Hands-on exercise: looking for selection in ancient genomes] <br>
+              [Hands-on exercise: looking for selection in ancient genomes](Exercises/Selection.md) <br>
               *Coffee break* <br>
 16:10 - 17:00  Research talk: What ancient DNA can tell us about human health and disease <br>
               Will Barrie, University of Cambridge <br>
