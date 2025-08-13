@@ -25,7 +25,7 @@ mkdir -p /projects/course_1/people/${username}/Selection
 cd /projects/course_1/people/${username}/Selection
 ```
 
-### Estimating Tajima's D in the ancient US Southwest maize
+### Estimating PBS in the ancient US Southwest maize
 
 For this exercise we will use ancient maize genomes from the Tularosa cave in the US Southwest (US SW) from the following populations:
 - Ten 2,000 year-old genomes from the US SW
