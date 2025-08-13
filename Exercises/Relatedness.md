@@ -73,9 +73,15 @@ module load python/2.7.17
 
 # run read:
 python /projects/course_1/people/clx746/Data/read/READ.py /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k_subset
-
-kinship-read --i /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k_subset
 ```
+
+Download the results, for example:
+```{bash, eval = FALSE}
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Relatedness/READ_results_plot.pdf .
+```
+
+It will look like this:
+<img src="../Figures/READ_results_plot.png" width=80%>
 
 #### KIN
 
@@ -93,7 +99,31 @@ RISE1164.0.1
 RISE1168.0.1
 RISE1169.0.1' > Inds.txt
 
+# first run KINgaroo
 KINgaroo -bam /projects/course_1/people/clx746/DataRelatedness/1_bams -bed koszyce_1240k_snps.bed -T Inds.txt -cnt 0 > king.log
+
+# then run KIN
+KIN -I /projects/course_1/people/clx746/Relatedness/ -O /projects/course_1/people/clx746/Relatedness/analysis/ > kin.log
+
 ```
 
- 
+Check the results and compare them with the ones you got from READ: 
+```
+cat analysis/KIN_results.csv 
+```
+```
+ Pair   Relatedness     Second Guess    Log Likelihood Ratio    Within Degree Second Guess      Within Degree Log Likelihood Ratio      k0      k1      k2      IBD Length      IBD Number
+0       RISE1160.0.1_._RISE1161.0.1     Unrelated       Third Degree    16.153                  1.0     0.0     0.0     0       1
+1       RISE1160.0.1_._RISE1164.0.1     Unrelated       Third Degree    9.042                   1.0     0.0     0.0     0       1
+2       RISE1160.0.1_._RISE1168.0.1     Parent-Child    Second Degree   9.436   Siblings        28.52173803749793       0.0     1.0     0.0     290     1
+3       RISE1160.0.1_._RISE1169.0.1     Third Degree    Second Degree   1.1                     0.711   0.289   0.0     50      6
+4       RISE1161.0.1_._RISE1164.0.1     Unrelated       Third Degree    14.272                  1.0     0.0     0.0     0       1
+5       RISE1161.0.1_._RISE1168.0.1     Unrelated       Third Degree    18.431                  1.0     0.0     0.0     0       1
+6       RISE1161.0.1_._RISE1169.0.1     Unrelated       Third Degree    15.225                  1.0     0.0     0.0     0       1
+7       RISE1164.0.1_._RISE1168.0.1     Unrelated       Third Degree    3.275                   0.919   0.081   0.0     3       1
+8       RISE1164.0.1_._RISE1169.0.1     Unrelated       Third Degree    0.009                   0.842   0.158   0.0     25      2
+9       RISE1168.0.1_._RISE1169.0.1     Second Degree   Siblings        8.645                   0.376   0.624   0.0     186     12
+```
+
+
+
