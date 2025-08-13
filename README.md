@@ -90,7 +90,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
               [Hands-on exercise: Programming models using slendr, simulating genomic data, computing workhorse statistics of aDNA and developing intuition into them] <br>
               *Lunch break* <br>
 13:00 - 14:30  Estimating relatedness in ancient datasets <br>
-              [Hands-on exercise: Estimating relatedness with ngsrelate](Exercises/Relatedness.md) <br>
+              [Hands-on exercise: Estimating relatedness with READ and KIN](Exercises/Relatedness.md) <br>
               *Coffee break* <br>
 14:45 - 16:00  Estimating Runs of Homozygosity <br>
               [Hands-on exercise: Estimating Runs of Homozygosity](Exercises/RoH.md) <br>
