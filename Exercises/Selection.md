@@ -90,10 +90,10 @@ Estimate PBS and FST for a list of ~600 genes that have been associated with dom
 
 ```
 # improvement genes
-cat /projects/course_1/people/clx746/DataSelection/Improvement_candidates_v3_sorted.txt |while read l; do gene=$(echo $l |cut -f 4 -d " "); chr=$(echo $l |cut -f 1 -d " "); s=$(echo $l |cut -f 2 -d " "); e=$(echo $l |cut -f 3 -d " "); /projects/symbean/people/clx746/Scripts/angsd/misc/realSFS fst stats parviglumis_sw2k_sw750.fst.idx -whichFst 1 -r ${chr}:${s}-${e} > pbs_${gene}.txt; done
+cat /projects/course_1/people/clx746/DataSelection/Improvement_candidates_v3_sorted.txt |while read l; do gene=$(echo $l |cut -f 4 -d " "); chr=$(echo $l |cut -f 1 -d " "); s=$(echo $l |cut -f 2 -d " "); e=$(echo $l |cut -f 3 -d " "); realSFS fst stats parviglumis_sw2k_sw750.fst.idx -whichFst 1 -r ${chr}:${s}-${e} > pbs_${gene}.txt; done
 
 # domestication genes:
-cat /projects/course_1/people/clx746/DataSelection/DomesticationGenes_extended_v3_sorted.txt |while read l; do gene=$(echo $l |cut -f 5 -d " "); chr=$(echo $l |cut -f 1 -d " "); s=$(echo $l |cut -f 2 -d " "); e=$(echo $l |cut -f 3 -d " "); /projects/symbean/people/clx746/Scripts/angsd/misc/realSFS fst stats parviglumis_sw2k_sw750.fst.idx -whichFst 1 -r ${chr}:${s}-${e} > pbs_${gene}.txt; done
+cat /projects/course_1/people/clx746/DataSelection/DomesticationGenes_extended_v3_sorted.txt |while read l; do gene=$(echo $l |cut -f 5 -d " "); chr=$(echo $l |cut -f 1 -d " "); s=$(echo $l |cut -f 2 -d " "); e=$(echo $l |cut -f 3 -d " "); realSFS fst stats parviglumis_sw2k_sw750.fst.idx -whichFst 1 -r ${chr}:${s}-${e} > pbs_${gene}.txt; done
 ```
 
 #### 6. Make a table with the summary of the results
