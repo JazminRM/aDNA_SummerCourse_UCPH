@@ -146,7 +146,7 @@ q("no")
 **Questions**: 
 - Which PBS did you plot?
 - What do the results tell you?
-- Did you find any interesting gene?
+- Did you find any interesting gene(s)?
 
 
 
