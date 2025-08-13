@@ -143,10 +143,10 @@ dev.off()
 
 q("no")
 ```
-
-Which PBS did you plot?
-What do the results tell you?
-Did you find any interesting gene?
+**Questions**: 
+- Which PBS did you plot?
+- What do the results tell you?
+- Did you find any interesting gene?
 
 
 
