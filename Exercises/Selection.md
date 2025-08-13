@@ -58,7 +58,11 @@ cp /projects/course_1/people/clx746/DataSelection/parviglumis_ds1.* .
 angsd -bam /projects/course_1/people/clx746/DataSelection/SW2K.txt -ref /projects/course_1/people/clx746/DataSelection/B73v3_25.fa -anc /projects/course_1/people/clx746/DataSelection/TDD39103.fa -out sw2k_ds1 -doSaf 1 -C 50 -baq 1 -GL 2 -P 10 -minMapQ 30 -minQ 20 -minInd 5 -setMinDepth 3 -doCounts 1
 
 # sw750
-angsd -bam /projects/course_1/people/clx746/DataSelection/SW750.txt -ref /projects/course_1/people/clx746/DataSelection/B73v3_25.fa -anc /projects/course_1/people/clx746/DataSelection/TDD39103.fa -out sw750_ds1 -doSaf 1 -C 50 -baq 1 -GL 2 -P 5 -minMapQ 30 -minQ 20 -minInd 5 -setMinDepth 3 -doCounts 1 
+angsd -bam /projects/course_1/people/clx746/DataSelection/SW750.txt -ref /projects/course_1/people/clx746/DataSelection/B73v3_25.fa -anc /projects/course_1/people/clx746/DataSelection/TDD39103.fa -out sw750_ds1 -doSaf 1 -C 50 -baq 1 -GL 2 -P 5 -minMapQ 30 -minQ 20 -minInd 5 -setMinDepth 3 -doCounts 1
+
+# If this takes too long you can copy the files like this:
+cp /projects/course_1/people/clx746/DataSelection/sw750_ds1.* .
+cp /projects/course_1/people/clx746/DataSelection/sw2k_ds1.* .
 ```
 
 Check which parameters we are using and make sure they make sense to you.
