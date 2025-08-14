@@ -105,6 +105,8 @@ geom_bar(position="stack", stat="identity", color="black", size=.15)+
 ylab("Mean cumulative length\nof RoH (b)")+
 theme(axis.text.x = element_text(angle = 90, hjust = 1, colour='black'), axis.text.y = element_text(colour='black'))
 dev.off()
+
+q("no")
 ```
 
 
