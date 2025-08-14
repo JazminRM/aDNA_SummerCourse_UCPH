@@ -417,7 +417,7 @@ Rscript ${DATA_PATH}/scripts/glimpse_accuracy.R ${SAMPLE}
 
 If you don't have time to run the 0.1x sample, you can find the plot showing the imputation accuracy here: 
 
-![](TRF.05.05.chr22.0.1x_imputation_accuracy.png)
+![](../Figures/TRF.05.05.chr22.0.1x_imputation_accuracy.png)
 
 Questions:  
 What differences do you notice between the 1x and 0.1x imputed samples? Why? 
@@ -458,10 +458,10 @@ Let's impute a different ancient dog sample, from North America dated to ~4,000 
 All the imputation steps have already been run, and we're ready to plot the accuracy:
 
 Plot for 1x coverage:
-![](PortauChoix_chr22_1x_imputation_accuracy.png)
+![](../Figures/PortauChoix_chr22_1x_imputation_accuracy.png)
 
 Plot for 0.1x coverage:
-![](PortauChoix_chr22_0.1x_imputation_accuracy.png)
+![](../Figures/PortauChoix_chr22_0.1x_imputation_accuracy.png)
 
 
 Question: 
