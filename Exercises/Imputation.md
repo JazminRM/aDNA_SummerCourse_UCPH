@@ -424,7 +424,7 @@ What differences do you notice between the 1x and 0.1x imputed samples? Why?
 
 Let's look at the distribution of INFO scores for 1x and 0.1x:
 
-![](INFO_distribution.png)
+![](../Figures/INFO_distribution.png)
 
 Question:
 What difference do you notice in the INFO scores between the two coverages? How does this relate to the accuracy results?
