@@ -109,7 +109,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
               [Hands-on exercise: inferring local ancestry in ancient human genomes]  <br>
               *Coffee break* <br>
 14:45 - 16:00  Admixture dating <br>
-              [Hands-on exercise: dating admixture events using admixture LD and ancestry tracts] <br>
+              [Hands-on exercise: dating admixture events using admixture LD and ancestry tracts](Exercises/DatesExercise.md) <br>
               *Coffee break* <br>
 16:10 - 17:00  Research talk: Genetic insights into the social organization of Neanderthals <br>
               Laurits Skov, University of Copenhagen <br>
