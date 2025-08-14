@@ -2,9 +2,9 @@
 
 ### Outline:
 
-* Estimating relatedness in the Koszyce invididuals
-* Estimating relatedness is in ancient wolves
-* Estimating relatedness in ancient grapes
+* Estimating relatedness using READ
+* Estimating relatedness using KIN
+
 
 
 ### Interactive node
