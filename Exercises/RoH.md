@@ -21,8 +21,11 @@ srun --pty -n 1 -c 1 bash -i
 Create a directory for the exerise:
 
 ```{bash, eval = FALSE}
+# change here for your username
+username="your_username"
+
 # create directory
-directoryroh="/home/_username_/RoHs/"
+directoryroh="/projects/course_1/people/${username}/RoHs/"
 mkdir -p $directoryroh
 # go into the directory
 cd $directoryroh
