@@ -103,7 +103,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
 9:00 - 10:30  Imputation and chromosome phasing of ancient genomes <br>
               *Coffee break* <br>
 10:45 - 12:00  Imputing ancient dog genomes <br>
-              [Hands-on exercise: Imputing low-coverage ancient dog genomes using GLIMPSE] <br>
+              [Hands-on exercise: Imputing low-coverage ancient dog genomes using GLIMPSE](Exercises/Imputation.md) <br>
               *Lunch break* <br>
 13:00 - 14:30  Local ancestry inference  <br>
               [Hands-on exercise: inferring local ancestry in ancient human genomes]  <br>
