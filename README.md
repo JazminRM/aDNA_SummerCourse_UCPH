@@ -1,6 +1,6 @@
 # Decoding the past: An introduction to ancient genomics
 
-PhD Course, 11-15 August 2025
+PhD Course, 31 August - 04 September 2026
 
 ### Location
 Globe Institute, University of Copenhagen <br>
@@ -16,20 +16,18 @@ Hannes Schroeder, Associate Professor, Globe Institute <br>
 José Victor Moreno-Mayar, Assistant Professor, Globe Institute <br>
 Katia Bougiouri, Postdoctoral researcher, Globe Institute <br>
 Martin Petr, Assistant Professor, Globe Institute <br>
+Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br>
 
 ### Guest lecturers
-Will Barrie, Postdoctoral researcher, University of Cambridge <br>
-Thomaz Pinotti, Postdoctoral researcher, Globe Institute, University of Copenhagen <br>
-Hernán E. Morales Villegas, Associate Professor, Globe Institute, University of Copenhagen <br>
-Anna-Sapfo Malaspinas, Associate Professor, University of Lausanne <br>
-Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br>
+Kathrin Nagele, Max Planck Institute <br>
+Martin Sikora, Associate Professor, Globe Institute, University of Copenhagen <br>
+Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <br>
 
 ## PROGRAM
 
-### Day 1 - Introduction (11 August)
+### Day 1 - Introduction (31 August)
 9:00 - 9:20     Welcome and introduction  <br>
-9:20 - 10:30    A brief introduction to the field of ancient DNA: a historical and technological perspective  <br>
-                Overview of a common ancient DNA laboratory workflow: DNA extraction, library preparation methods, enrichment and sequencing strategies  <br>
+9:20 - 10:30    From bones to genomes: an overview of common ancient DNA lab methods and sequencing strategies  <br>
                 *Coffee break*  <br>
 10:45-11:00     Introduction to mjolnir (the computer server for the course)  <br>
                 [Login to mjolnir](Exercises/Login2Mjolnir.md)  <br>
@@ -48,7 +46,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
                 Thomaz Pinotti and J. Víctor Moreno Mayar, University of Copenhagen  <br>
 17:00 - 	    Refreshments  <br>
 
-### Day 2 - Exploratory analyses (12 August)
+### Day 2 - Exploratory analyses in ancient genomics (1 September)
 9:00 - 10:30   Consensus calling, pseudohaploid calling, genotype calling, genotype likelihoods  <br>
                [Hands-on exercise: Preparing a dataset of dogs and wolves for analysis](Exercises/ExploratoryAnalyses.md)  <br>
                *Coffee break*  <br>
@@ -61,45 +59,45 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
 14:45 - 15:45  Spatio-temporal methods for inferring ancestry <br>
               [Hands-on exercise: Locator](Exercises/Locator.md) <br>
               *Coffee break* <br>
-16:00 - 17:00  Research talk: A genomic history of Rapa Nui and some methodological insights into ancient genomics <br>
-              Anna-Sapfo Malaspinas, University of Lausanne (online) <br>
+16:00 - 17:00 Research talk: TBD <br>
+              Martin Sikora, University of Copenhagen <br>
 17:00 -       Refreshments <br>
 
-### Day 3 - $f$-statistics, hypothesis testing, and detecting signatures of selection (13 August)
+### Day 3 - $f$-statistics, hypothesis testing, and reletadness in ancient genomics (2 September)
 9:00 - 10:30   ƒ-statistics and hypothesis testing  <br>
               [Hands-on exercise: testing for admixture, testing for treeness](Exercises/F-statistics.md) <br>
               *Coffee break* <br>
 10:45 - 12:00  Considerations when using f-statistics  <br>
               [Hands-on exercise: testing for admixture, testing for treeness](Exercises/F-statistics.md) <br>
              	*Lunch break* <br>
-13:00 - 14:30  Estimating genetic diversity <br>
-              [Hands-on exercise: estimating diversity using ancient genomes](Exercises/Diversity.md) <br>
+13:00 - 14:30  Estimating relatedness in ancient datasets <br>
+              [Hands-on exercise: Estimating relatedness with READ and KIN](Exercises/Relatedness.md) <br>
               *Coffee break* <br>
-14:45 - 16:00  Genetic diversity and selection <br>
-              [Hands-on exercise: looking for selection in ancient genomes](Exercises/Selection.md) <br>
+14:45 - 15:35 Research talk: Genetic insights into the social organization of Neanderthals
+			  Laurits Skov, University of Copenhagen
               *Coffee break* <br>
-16:10 - 17:00  Research talk: What ancient DNA can tell us about human health and disease <br>
-              Will Barrie, University of Cambridge <br>
-17:00 - 	    Refreshments <br>
+15:50 - 16:30 Research talk: TBD
+              Kathrin Nägele, Max Planck Institute
+16:30 - 	  Refreshments <br>
 
-### Day 4 - Simulating data and estimating relatedness using low-depth and high-depth data (14 August) <br>
+### Day 4 - Simulating data and selection signatures in ancient genomics (3 September) <br>
 9:00 - 10:30  Introduction to slendr: Why are population simulations important for all aDNA projects? <br>
               [Hands-on exercise: Gentle crash course into the slendr R package: explaining the syntax and simulation results] <br>
               *Coffee break* <br>
 10:45 - 12:00  Building models and simulating population genetic statistics with slendr <br>
               [Hands-on exercise: Programming models using slendr, simulating genomic data, computing workhorse statistics of aDNA and developing intuition into them] <br>
               *Lunch break* <br>
-13:00 - 14:30  Estimating relatedness in ancient datasets <br>
-              [Hands-on exercise: Estimating relatedness with READ and KIN](Exercises/Relatedness.md) <br>
+13:00 - 14:30  Estimating genetic diversity in ancient genomes <br>
+              [Hands-on exercise: estimating diversity using ancient genomes](Exercises/Diversity.md) <br>
               *Coffee break* <br>
-14:45 - 16:00  Estimating Runs of Homozygosity <br>
-              [Hands-on exercise: Estimating Runs of Homozygosity](Exercises/RoH.md) <br>
-              *Coffee break*
-16:10 - 17:00 Research talk: Applications of ancient DNA in Conservation Genomics <br>
-              Hernán E. Morales Villegas, University of Copenhagen <br>
-17:00 -       Refreshments <br>
+14:45 - 16:00  Looking for selection in ancient genomes <br>
+              [Hands-on exercise: looking for selection in ancient genomes](Exercises/Selection.md) <br>
+              *Coffee break* <br>
+16:10 - 17:00  Looking for selection in ancient genomes 2 (Jazmín Ramos Madrigal)
+              [Hands-on exercise: looking for selection in ancient genomes](Exercises/Selection.md) <br>
+17:00 - 	   Refreshments <br>
 
-### Day 5 - Genotype imputation and haplotype inference methods (15 August)
+### Day 5 - Genotype imputation and haplotype inference methods (4 September)
 9:00 - 10:30  Imputation and chromosome phasing of ancient genomes <br>
               *Coffee break* <br>
 10:45 - 12:00  Imputing ancient dog genomes <br>
@@ -111,7 +109,7 @@ Laurits Skov, Assistant Professor, Globe Institute, University of Copenhagen <br
 14:45 - 16:00  Admixture dating <br>
               [Hands-on exercise: dating admixture events using admixture LD and ancestry tracts](Exercises/DatesExercise.md) <br>
               *Coffee break* <br>
-16:10 - 17:00  Research talk: Genetic insights into the social organization of Neanderthals <br>
-              Laurits Skov, University of Copenhagen <br>
+16:10 - 17:00  Research talk: Continuity in Cetamura: Insights into grapevine cultivation and the history of wine <br>
+              Oya Inanli, University of Copenhagen <br>
 17:00 -        Refreshments and goodbye <br>
 
