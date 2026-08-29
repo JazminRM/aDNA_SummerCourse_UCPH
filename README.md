@@ -62,8 +62,8 @@ Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <
 14:45 - 15:45  Spatio-temporal methods for inferring ancestry <br>
               [Hands-on exercise: Locator](Exercises/Locator.md) <br>
               *Coffee break* <br>
-16:00 - 17:00 Research talk: TBD <br>
-              Martin Sikora, University of Copenhagen <br>
+16:00 - 17:00 Research talk: The population genomic legacy of the second plague pandemic <br>
+              Shyam Gopalakrishnan, University of Copenhagen <br>
 17:00 -       Refreshments <br>
 
 ### Day 3 - Hypothesis testing and relatedness in ancient genomics (2 September)
@@ -79,8 +79,8 @@ Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <
 14:45 - 15:35 Research talk: Genetic insights into the social organization of Neanderthals
 			  Laurits Skov, University of Copenhagen
               *Coffee break* <br>
-15:50 - 16:30 Research talk: TBD
-              Kathrin Nägele, Max Planck Institute
+15:50 - 16:30 Research talk: The genomic history of the Caribbean <br>
+              Kathrin Nägele, Max Planck Institute <br>
 16:30 - 	  Refreshments <br>
 
 ### Day 4 - Simulation-based approaches and identifying selection in ancient genomes (3 September) <br>
@@ -96,8 +96,8 @@ Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <
 14:45 - 16:00  Looking for selection in ancient genomes <br>
               [Hands-on exercise: looking for selection in ancient genomes](Exercises/Selection.md) <br>
               *Coffee break* <br>
-16:10 - 17:00  Looking for selection in ancient genomes 2 (Jazmín Ramos Madrigal)
-              [Hands-on exercise: looking for selection in ancient genomes](Exercises/Selection.md) <br>
+16:10 - 17:00  Research talk: Towards Genomic Paleoepidemiology: Using ancient pathogen genomics to ucover disease evolution and epidemiology in the human past <br>
+              Martin Sikora, University of Copenhagen <br>
 17:00 - 	   Refreshments <br>
 
 ### Day 5 - Genotype imputation and haplotype inference methods (4 September)
