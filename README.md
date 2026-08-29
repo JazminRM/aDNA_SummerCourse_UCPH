@@ -33,11 +33,11 @@ Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <
                 [Login to mjolnir](Exercises/Login2Mjolnir.md)  <br>
 11:00 - 12:00   Fundamentals of ancient genomics: reference-based mapping  <br>
                 [Hands-on exercise: Mapping to the human reference genome](Exercises/Mapping.md)  <br>
-                [Hands-on exercise: Designing your sequencing strategy](Exercises/Complexity.md)  <br>
             	*Lunch break*  <br>
 13:00 - 14:30   Biases (reference bias, capture bias) and strategies to overcome them <br>
                 Fundamentals of ancient genomics: Estimating ancient DNA damage  <br>
                 [Hands-on exercise: Estimating damage patterns](Exercises/Mapping.md)  <br>
+                [Hands-on exercise: Designing your sequencing strategy](Exercises/Complexity.md)  <br>
                 *Coffee break*  <br>
 14:45 - 15:30   Fundamentals of ancient genomics: Estimating contamination  <br>
                 [Hands-on exercise: Estimating modern human contamination](Exercises/Contamination.md)   <br>
