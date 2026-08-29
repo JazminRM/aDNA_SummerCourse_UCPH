@@ -34,7 +34,7 @@ Download a file called "testFile.txt" to your current directory in your local co
 cat /projects/course_1/people/clx746/Data/testFile.txt 
 ```
 
-Open a new terminal window and go into the directory where you want to download the file (in the example, I am downloading it in my Desktop): 
+Open a new terminal window and go into the directory where you want to download the file (in the example, I am downloading it to my Desktop): 
 ```{bash, eval = FALSE}
 # go to the local directory: 
 cd /Users/Jazmin/Desktop
@@ -77,7 +77,7 @@ Using WinSCP visual interface again, try uploading the "testFile.txt" to your lo
 /projects/course_1/people/ku_username/
 ```
 
-Try login in and out a few times to make sure everything works 
+Try login in and out a few times to make sure everything works.
 
 
 
