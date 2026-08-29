@@ -40,7 +40,7 @@ Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <
 				Estimating contamination
                 [Hands-on exercise: Estimating modern human contamination](Exercises/Contamination.md)   <br>
 				Designing your sequencing strategy
-                [Hands-on exercise: Estimating modern human contamination](Exercises/Complexity.md)   <br>				
+                [Hands-on exercise: Estimating library complexity](Exercises/Complexity.md)   <br>				
                 *Coffee break*  <br>
 14:45 - 15:30	Fundamentals of ancient genomics 4: Combining datasets, capture bias and strategies to overcome it <br>
                 *Coffee break*  <br>
