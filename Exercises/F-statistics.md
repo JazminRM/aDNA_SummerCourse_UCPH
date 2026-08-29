@@ -26,7 +26,7 @@ We will use an interactive node in mjolnir to run the exercises throughout the c
 ssh ku_username@mjolnirgate.unicph.domain
 
 # first request one CPU using salloc like this:
-salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --qos=teaching --reservation=aDNA_PHD_course --account=teaching
+salloc --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000  --reservation=3685-26-00-00 --account=teaching
 
 # once the job has been allocated, you can login to the node with srun like this:
 srun --pty -n 1 -c 1 bash -i
@@ -54,13 +54,13 @@ Define some paths and sample names:
 
 ```{bash, eval=FALSE}
 # Here we are using the SNP dataset that contain the full name of the scaffolds, since we will be manipulating the files with plink
-PLINKDS="/projects/course_1/people/$username/ExploratoryAnalyses/wolves_mergedTv"
+PLINKDS="/projects/course_1/people/${username}/ExploratoryAnalyses/wolves_mergedTv"
 OUTGROUP="/projects/course_1/people/clx746/Data/Outgroups_sites"
 ```
 
 First, take a look at the FAM file of the outgroups:
 ```{bash, eval=FALSE}
-head $OUTGROUP.fam
+head ${OUTGROUP}.fam
 ```
 ```
 Coyote CoyoteAlabama 0 0 0 1
