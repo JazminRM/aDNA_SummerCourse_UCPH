@@ -25,22 +25,24 @@ Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <
 
 ## PROGRAM
 
-### Day 1 - Introduction (31 August)
+### Day 1 - From bones to genomes: Fundamentals in ancient genomics (31 August)
 9:00 - 9:20     Welcome and introduction  <br>
 9:20 - 10:30    From bones to genomes: an overview of common ancient DNA lab methods and sequencing strategies  <br>
                 *Coffee break*  <br>
 10:45-11:00     Introduction to mjolnir (the computer server for the course)  <br>
                 [Login to mjolnir](Exercises/Login2Mjolnir.md)  <br>
-11:00 - 12:00   Fundamentals of ancient genomics: reference-based mapping  <br>
+11:00 - 12:00   Fundamentals of ancient genomics 1: reference-based mapping  <br>
                 [Hands-on exercise: Mapping to the human reference genome](Exercises/Mapping.md)  <br>
             	*Lunch break*  <br>
-13:00 - 14:30   Biases (reference bias, capture bias) and strategies to overcome them <br>
-                Fundamentals of ancient genomics: Estimating ancient DNA damage  <br>
-                [Hands-on exercise: Estimating damage patterns](Exercises/Mapping.md)  <br>
-                [Hands-on exercise: Designing your sequencing strategy](Exercises/Complexity.md)  <br>
-                *Coffee break*  <br>
-14:45 - 15:30   Fundamentals of ancient genomics: Estimating contamination  <br>
+13:00 - 14:30   Fundamentals of ancient genomics 2:  <br>
+				Estimating DNA damage
+				[Hands-on exercise: Estimating damage patterns](Exercises/Mapping.md)  <br>
+				Estimating contamination
                 [Hands-on exercise: Estimating modern human contamination](Exercises/Contamination.md)   <br>
+				Designing your sequencing strategy
+                [Hands-on exercise: Estimating modern human contamination](Exercises/Complexity.md)   <br>				
+                *Coffee break*  <br>
+14:45 - 15:30	Fundamentals of ancient genomics 4: Combining datasets, capture bias and strategies to overcome it <br>
                 *Coffee break*  <br>
 15:45 - 16:30   Ethics in aDNA research round table  <br>
 16:30 - 17:00   Research talk: A research collaboration with the Picuris Pueblo Tribe to preserve their ancestral heritage  <br>
@@ -64,7 +66,7 @@ Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <
               Martin Sikora, University of Copenhagen <br>
 17:00 -       Refreshments <br>
 
-### Day 3 - $f$-statistics, hypothesis testing, and reletadness in ancient genomics (2 September)
+### Day 3 - Hypothesis testing and relatedness in ancient genomics (2 September)
 9:00 - 10:30   ƒ-statistics and hypothesis testing  <br>
               [Hands-on exercise: testing for admixture, testing for treeness](Exercises/F-statistics.md) <br>
               *Coffee break* <br>
@@ -81,7 +83,7 @@ Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <
               Kathrin Nägele, Max Planck Institute
 16:30 - 	  Refreshments <br>
 
-### Day 4 - Simulating data and selection signatures in ancient genomics (3 September) <br>
+### Day 4 - Simulation-based approaches and identifying selection in ancient genomes (3 September) <br>
 9:00 - 10:30  Introduction to slendr: Why are population simulations important for all aDNA projects? <br>
               [Hands-on exercise: Gentle crash course into the slendr R package: explaining the syntax and simulation results] <br>
               *Coffee break* <br>
