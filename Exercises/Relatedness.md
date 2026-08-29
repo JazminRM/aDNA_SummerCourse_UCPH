@@ -16,7 +16,7 @@ Get an interactive node:
 ssh ku_username@mjolnirgate.unicph.domain
 
 # first request one CPU using salloc like this:
-salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --qos=teaching --reservation=aDNA_PHD_course --account=teaching
+salloc --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000  --reservation=3685-26-00-00 --account=teaching
 
 # once the job has been allocated, you can login to the node with srun like this:
 srun --pty -n 1 -c 1 bash -i
@@ -72,12 +72,12 @@ module unload python
 module load python/2.7.17
 
 # run read:
-python /projects/course_1/people/clx746/Data/read/READ.py /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k_subset
+python /projects/course_1/people/clx746/Data/read/READ.py /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k
 ```
 
 Download the results, for example:
 ```{bash, eval = FALSE}
-scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Relatedness/READ_results_plot.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/relatedness/READ_results_plot.pdf .
 ```
 
 It will look like this:
