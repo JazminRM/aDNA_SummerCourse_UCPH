@@ -28,7 +28,7 @@ We will start by getting an interactive node:
 ssh ku_username@mjolnirgate.unicph.domain
 
 # first request one CPU using salloc like this:
-salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --qos=teaching --reservation=aDNA_PHD_course --account=teaching
+salloc --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000  --reservation=3685-26-00-00 --account=teaching
 
 # once the job has been allocated, you can login to the node with srun like this:
 srun --pty -n 1 -c 1 bash -i
@@ -40,13 +40,13 @@ Once you login to you interactive node, we will create a directory for today's e
  
 ```{bash, eval = FALSE}
 # create directory
-directoryExpA="/home/_username_/ExploratoryAnalyses/"
+directoryExpA="/projects/course_1/people/ku_username_/ExploratoryAnalyses/"
 mkdir -p $directoryExpA
 # go into the directory
 cd $directoryExpA
 ```
 
-Define some paths and file names. We have three unknow samples, pick only one (copy&paste only the section of the sample you selected): 
+Define some paths and file names. We have three unknown samples, pick only one (copy & paste only the section of the sample you selected): 
 
 ```{bash, eval = FALSE}
 # Sample 1
@@ -77,7 +77,7 @@ PLINK files come in sets of 2 or 3 files and contain the genotype data, informat
 
 The `BIM` file has the information about the SNP's genomic coordinates and allelic variants (one line per SNP):
 ```{bash, eval = FALSE}
-head $SNPbasename".bim" 
+head ${SNPbasename}.bim
 ```
 ```
 scaffold_0	scaffold_0_9493	0	9493	A	C
@@ -94,7 +94,7 @@ scaffold_0	scaffold_0_113242	0	113242	A	T
 
 The `FAM` file has information about the samples (one line per sample):
 ```{bash, eval = FALSE}
-head $SNPbasename".fam"
+head ${SNPbasename}.fam
 ```
 ```
 Wolf_Alaska Wolf_Alaska 0 0 0 1
@@ -111,13 +111,13 @@ Wolf_Chinese Wolf_Chinese 0 0 0 1
 
 The `BED` file is a compressed file that contains the genotype data.  
 ```{bash, eval = FALSE}
-ls $SNPbasename".bed"  
+ls ${SNPbasename}.bed  
 ```
 
 For the pseudohaploid approach we will be working with these plink files:
 
 ```{bash, eval = FALSE}
-ls $SNPbasename.*  
+ls ${SNPbasename}.*  
 ```
 ```
 /projects/course_1/people/clx746/Data/wolves_rand.bed
@@ -132,10 +132,10 @@ ls $SNPbasename.*
 
 ```{bash, eval = FALSE}
 # You can check the number of samples by counting the lines of the FAM file:
-wc -l $SNPbasename.fam
+wc -l ${SNPbasename}.fam
 
 # and the number of SNPs by counting the lines in the BIM file:
-wc -l $SNPbasename.bim
+wc -l ${SNPbasename}.bim
 ```
 These files have pseudohaploid SNP data for 20 dogs and 29 wolves that will be useful for estimating the ancestry of our unknow ancient canids. For each of these samples we have 98,241 SNPs (only transversion polymorphisms).
 
@@ -257,7 +257,7 @@ The first step will be to incorporate the unknown canid to the reference dataset
 
 In order to use `bam2plink.py`, we need to have an additional `regions` file that looks like this: 
 ```{bash, eval = FALSE}
-head $SNPbasename"_regions"
+head ${SNPbasename}_regions
 ```
 ```
 # chr name	    pos-1   pos   allele1 allele2
@@ -288,7 +288,7 @@ module load R/4.4.2
 module load plink/1.9.0
 module load samtools
 module load python
-export PATH=/projects/course_1/people/bkl835/FrAnTK/bin:$PATH
+export PATH=/projects/course_1/people/clx746/FrAnTK/bin:$PATH
 
 # before running, we install a couple of R libraries
 # first we go into R
@@ -736,6 +736,72 @@ In the example above, K=9 is the one that best fits the data.
 
 -----------------------------------
 
+#### Multidimensional Scaling 
+
+Perform a multidemensional scaling (MDS) plot based on IBS distances. 
+
+First, estimate pairwise IBS distances using plink for all genomes in your PLINK files: 
+```{bash, eval = FALSE}
+# make sure you are in the correct directory:
+cd /projects/course_1/people/${username}/ExploratoryAnalyses
+plink --bfile wolves_mergedTv --distance-matrix --out wolves_mergedTv_dist  --allow-extra-chr 
+```
+
+Then, estimate an MDS using cmdscale function in R: 
+```{R, eval = FALSE}
+R
+
+mat<-read.table("wolves_mergedTv_dist.mdist", as.is=T)
+ids<-read.table("wolves_mergedTv_dist.mdist.id", as.is=T)[,1]
+
+info<-read.table("/projects/course_1/people/clx746/Data/wolves_rand_tv_info.txt", as.is=T, sep="\t")
+
+# estimate an MDS:
+m<-cmdscale(as.matrix(mat), k=(nrow(mat)-1), eig=TRUE, add=T)
+
+#get the variance explained by each dimension
+nlambdas<-100*m$eig/sum(m$eig)
+##
+category<-NULL
+for(i in 1:length(ids)){
+ if(sum(info[,1]==ids[i])>0){
+  category<-c(category, info[info[,1]==ids[i],2])
+ }else{
+  category<-c(category, "X sample") 
+ }
+}
+
+d<-data.frame(category=category, Dim1=unname(m$points[,1]), Dim2=unname(m$points[,2]), sampleid=ids)
+
+library(ggplot2)
+
+# Create a vector of colors (we have 8 categories + our mystery sample), we will manually assign a color to each group:
+colvalues <-c("#F3E96B", "coral4", "orange", "lightsalmon1", "#F05837","#6465A5", "darkmagenta", "darkred", "black")
+names(colvalues)<-c("Grey wolf America", "Grey wolf Asia Highland", "Grey wolf Middle East", "Grey wolf Europe", "Grey wolf Asia", "Dog", "Dog Arctic", "Ancient grey wolf", "X sample")
+
+p<-ggplot(d, aes(x=Dim1, y=Dim2))+
+geom_vline(xintercept=0, colour="gray", linetype = "longdash", size=0.5)+
+geom_hline(yintercept=0, colour="gray", linetype = "longdash", size=0.5)+
+geom_point(aes(colour=category), shape=16, size=2.5, alpha=1, show.legend = T)+
+scale_colour_manual(values=colvalues)+
+ylab(paste0("Dim1 (", round(nlambdas[1], 2), "%)"))+
+xlab(paste0("Dim2 (", round(nlambdas[2], 2), "%)"))+
+theme(panel.background = element_rect(fill='white', colour='black'), axis.text.x = element_text(angle = 45, hjust = 1, colour='black'), axis.text.y = element_text(colour='black'), strip.background = element_rect(size=.2, colour="black", fill ="#FFA5004D"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), legend.title=element_text(size=10), legend.key=element_rect(fill="white", colour="white"), legend.position = "right", axis.title=element_text(size=14), legend.text=element_text(size=10))
+
+pdf("MDS_Dim1vsDim2.pdf", width=7, height=5)
+print(p)
+dev.off()
+q("no")
+
+```
+Download and take a look at the results. 
+
+<img src="../Figures/MDS_Dim1vsDim2_nom.png" width=75%>
+
+<span style="color: purple;"> **Question:** </span> Where does your ancient sample falls? Is this in agreement with the ADMIXTURE results? What could we infer about its ancestry so far?
+
+-----------------------------------
+
 #### Principal Component Analysis with smartPCA
 
 For the next exercise we will make a PCA using `smartPCA` and the same BED/BIM/FAM files we used for `ADMIXTURE`
@@ -1022,7 +1088,6 @@ q("no")
 Download and take a look at the results (use **WinSCP** (for Windows users) or **scp** (for Mac or Linux users). 
 
 <img src="../Figures/PCA1vsPCA2_smartpca.png" width=75%>
-
 
 <span style="color: purple;"> **Question:** </span> Where does your ancient sample falls? Is this in agreement with the ADMIXTURE results? What could we infer about its ancestry so far?
 
