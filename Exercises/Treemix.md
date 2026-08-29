@@ -15,7 +15,7 @@ Start by getting an interactive node:
 ssh ku_username@mjolnirgate.unicph.domain
 
 # request one CPU using salloc like this:
-salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --qos=teaching --reservation=aDNA_PHD_course --account=teaching
+salloc --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000  --reservation=3685-26-00-00 --account=teaching
 
 # once the job has been allocated, you can login to the node with srun like this:
 srun --pty -n 1 -c 1 bash -i
@@ -40,13 +40,13 @@ In this section we will build a tree with the reference data and our ancient sam
 (Feel free to include/exclude more samples if you want!)
 
 ```{bash, eval=FALSE}
-cut -f 1 /projects/course_1/people/clx746/AllSamples/wolves_rand_ftk_pop |grep -e GoldenJackal -e Dog_GMums -e Dog_Qaanaaq -e Dog_Hebei -e Dog_TM -e Wolf_Israel -e Wolf_UlakhanSular -e Wolf_Qamanirjuaq -e Wolf_NorthBaffin -e Wolf_Portuguese -e AncientCanid -e Dog_SibHusky -e Dog_Greenland -e Dog_AlaskanM -e Dog_AlaskanHusky >  pop2kep
+cut -f 1 /projects/course_1/people/clx746/AllSamples/wolves_rand_bypop_ftk_pop |grep -e GoldenJackal -e Dog_GMums -e Dog_Qaanaaq -e Dog_Hebei -e Dog_TM -e Wolf_Israel -e Wolf_UlakhanSular -e Wolf_Qamanirjuaq -e Wolf_NorthBaffin -e Wolf_Portuguese -e Dog_SibHusky -e Dog_Greenland -e Dog_AlaskanM -e Dog_AlaskanHusky -e Sample1 >  pop2kep
 ```
 
 Our *pop2kep* file now contains a list of the populations we want to include in the tree. We will use ```FrAnTK```'s ```Freqs2Treemix``` tool to create the input for ```TreeMix```
 
 ```{bash, eval=FALSE}
-frantk Freqs2Treemix freqpref=/projects/course_1/people/clx746/AllSamples/wolves_rand_ftk popsofint=pop2kep tmpref=wolves_rand_ftk_treemix
+frantk Freqs2Treemix freqpref=/projects/course_1/people/clx746/AllSamples/wolves_rand_bypop_ftk popsofint=pop2kep tmpref=wolves_rand_ftk_treemix
 ```
 
 Take a look at the parameters we are using with ```Freqs2Treemix```:
@@ -79,7 +79,7 @@ The *wolves_rand_ftk_treemix_ALL_tm.gz* file contains the allele counts and it i
 zcat wolves_rand_ftk_treemix_ALL_tm.gz |head
 ```
 ```
-Dog_AlaskanHusky Dog_AlaskanM Dog_GMums Dog_Greenland Dog_Hebei Dog_Qaanaaq Dog_SibHusky Dog_TM GoldenJackal AncientCanid Wolf_Israel Wolf_NorthBaffin Wolf_Portuguese Wolf_Qamanirjuaq Wolf_UlakhanSular
+Dog_AlaskanHusky Dog_AlaskanM Dog_GMums Dog_Greenland Dog_Hebei Dog_Qaanaaq Dog_SibHusky Dog_TM GoldenJackal Sample1 Wolf_Israel Wolf_NorthBaffin Wolf_Portuguese Wolf_Qamanirjuaq Wolf_UlakhanSular
 0,1 0,1 0,1 0,1 0,1 0,1 0,2 0,1 2,0 1,0 0,2 0,1 0,1 0,1 0,1
 0,1 0,1 0,1 0,1 0,1 0,1 1,1 0,1 0,2 0,1 0,2 1,0 0,1 0,1 0,1
 0,1 0,1 0,1 0,1 0,1 0,1 0,2 0,1 2,0 0,1 0,2 1,0 1,0 0,1 0,1
@@ -99,7 +99,7 @@ zcat wolves_rand_ftk_treemix_ALL_tm.gz |wc -l
 ```
 32761
 ```
-so, that would be 32761-1 = 32760 SNPs that we will be using for the tree. 
+so, that would be 32732-1 = 32731 SNPs that we will be using for the tree. 
 
 The other file *wolves_rand_ftk_treemix_ALL_tmpos* contains information about the SNPs (chromosome, coordinate, snpname, ref and alternative alleles). 
 
@@ -233,7 +233,7 @@ Download the plot we just created to your local computer using **WinSCP** (for W
 Example of the **scp** command:
 
 ```{bash, eval = FALSE}
-scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/Mapping/TreeMix/wolves_treemix.pdf .
+scp clx746@mjolnirgate.unicph.domain:/projects/course_1/people/clx746/TreeMix/treemixRes/wolves_treemix.pdf .
 ```
 (remember to use your own username)
 
