@@ -29,7 +29,7 @@ cd /projects/course_1/people/ku_username/mapping/
 ```
 ### Estimating complexity with Preseq
 
-Preseq can estimate a complexity curve to estimate how many unique sequences you can obtain if you sequence your library deeper. 
+Preseq<sup>1</sup> can estimate a complexity curve to estimate how many unique sequences you can obtain if you sequence your library deeper. 
 
 We will use Preseq to estimate a complexity curve for each of our libraries in our ancient genomes: 
 
@@ -75,6 +75,11 @@ legend("topright", c("Current"), pch="+", col=c("red"), bty="n")
 dev.off()
 ```
 
-Question: Given complexity curves, the average read length observed from the mapDamage results and the human genome size (~3200000000 bp), how many more reads do we need to sequence to get to 1X of depth of coverage for each library?
+**Question**: Given complexity curves, the average read length observed from the mapDamage results and the human genome size (~3200000000 bp), how many more reads do we need to sequence to get to 1X of depth of coverage for each library?
+
+#### References
+1.Daley T, Smith AD. **Predicting the molecular complexity of sequencing libraries.** Nat Methods. 2013 Apr;10(4):325-7. doi: 10.1038/nmeth.2375. Epub 2013 Feb 24. PMID: 23435259; PMCID: PMC3612374. Available at: https://github.com/smithlabcode/preseq
+
+
 
 
