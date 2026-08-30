@@ -121,6 +121,7 @@ Now we have almost everything we need to run contamMix. We will now add our mtDN
 ```{bash, eval=FALSE}
 # load the modules you need:
 module load gcc
+module unload R
 module load R/3.6.1 
 module load mafft/7.515
 
