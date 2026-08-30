@@ -16,7 +16,7 @@ First, get an interactive node.
 ssh ku_username@mjolnirgate.unicph.domain
 
 # request one CPU using salloc like this:
-salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --qos=teaching --reservation=aDNA_PHD_course --account=teaching
+salloc --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000  --reservation=3685-26-00-00 --account=teaching
 
 # login to the node with srun like this:
 srun --pty -n 1 -c 1 bash -i
@@ -35,7 +35,7 @@ cd /projects/course_1/people/${username}/Diversity/
 
 We are going to use `ANGSD` and `realSFS` to estimate heterozygosity for the wolves and dogs we have been studying. 
 
-Create a list of samples for which we want to estimate heterocigociy (this time we will all use the three ancient genomes): 
+Create a list of samples for which we want to estimate heterozygosity (this time we will all use the three ancient genomes): 
 
 ```{bash, eval = FALSE}
 cat /projects/course_1/people/clx746/Bams/BamList1.txt > BamList.txt
@@ -43,7 +43,7 @@ ls /projects/course_1/people/clx746/Bams/sample2.bam >> BamList.txt
 ls /projects/course_1/people/clx746/Bams/sample3.bam >> BamList.txt
 ```
 
-The first step is to use ```NGSadmix``` to estimate a SAF file: 
+The first step is to use ``angsd``` to estimate a SAF file: 
 
 ```{bash, eval = FALSE}
 # load angsd
@@ -95,7 +95,7 @@ realSFS ${samplename}.saf.idx > ${samplename}.ml
 done
 ```
 
-Now let's look at the results for one of the samples:  
+Look at the results for one of the samples:  
 ```{bash, eval = FALSE}
 cat Dog_Dingo.ml
 ```
