@@ -103,7 +103,7 @@ RISE1169.0.1' > Inds.txt
 KINgaroo -bam /projects/course_1/people/clx746/DataRelatedness/1_bams -bed koszyce_1240k_snps.bed -T Inds.txt -cnt 0 > king.log
 
 # then run KIN
-KIN -I /projects/course_1/people/clx746/Relatedness/ -O /projects/course_1/people/clx746/Relatedness/analysis/ > kin.log
+KIN -I /projects/course_1/people/clx746/relatedness/ -O /projects/course_1/people/clx746/relatedness/analysis/ > kin.log
 
 ```
 
