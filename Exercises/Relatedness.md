@@ -109,20 +109,20 @@ KIN -I /projects/course_1/people/clx746/relatedness/ -O /projects/course_1/peopl
 
 Check the results and compare them with the ones you got from READ: 
 ```
-cat analysis/KIN_results.csv 
+ column -t  analysis/KIN_results.csv
 ```
 ```
- Pair   Relatedness     Second Guess    Log Likelihood Ratio    Within Degree Second Guess      Within Degree Log Likelihood Ratio      k0      k1      k2      IBD Length      IBD Number
-0       RISE1160.0.1_._RISE1161.0.1     Unrelated       Third Degree    16.153                  1.0     0.0     0.0     0       1
-1       RISE1160.0.1_._RISE1164.0.1     Unrelated       Third Degree    9.042                   1.0     0.0     0.0     0       1
-2       RISE1160.0.1_._RISE1168.0.1     Parent-Child    Second Degree   9.436   Siblings        28.52173803749793       0.0     1.0     0.0     290     1
-3       RISE1160.0.1_._RISE1169.0.1     Third Degree    Second Degree   1.1                     0.711   0.289   0.0     50      6
-4       RISE1161.0.1_._RISE1164.0.1     Unrelated       Third Degree    14.272                  1.0     0.0     0.0     0       1
-5       RISE1161.0.1_._RISE1168.0.1     Unrelated       Third Degree    18.431                  1.0     0.0     0.0     0       1
-6       RISE1161.0.1_._RISE1169.0.1     Unrelated       Third Degree    15.225                  1.0     0.0     0.0     0       1
-7       RISE1164.0.1_._RISE1168.0.1     Unrelated       Third Degree    3.275                   0.919   0.081   0.0     3       1
-8       RISE1164.0.1_._RISE1169.0.1     Unrelated       Third Degree    0.009                   0.842   0.158   0.0     25      2
-9       RISE1168.0.1_._RISE1169.0.1     Second Degree   Siblings        8.645                   0.376   0.624   0.0     186     12
+Pair  Relatedness                  Second        Guess   Log        Likelihood  Ratio     Within             Degree  Second  Guess  Within  Degree  Log  Likelihood  Ratio  k0  k1  k2  IBD  Length  IBD  Number
+0     RISE1160.0.1_._RISE1161.0.1  Unrelated     Third   Degree     16.206      1.0       0.0                0.0     0       1                                                                            
+1     RISE1160.0.1_._RISE1164.0.1  Unrelated     Third   Degree     9.565       0.965     0.035              0.0     3       1                                                                            
+2     RISE1160.0.1_._RISE1168.0.1  Parent-Child  Second  Degree     9.644       Siblings  44.02663217806344  0.0     1.0     0.0    291     1                                                             
+3     RISE1160.0.1_._RISE1169.0.1  Third         Degree  Unrelated  0.293       0.76      0.24               0.0     52      10                                                                           
+4     RISE1161.0.1_._RISE1164.0.1  Unrelated     Third   Degree     18.627      1.0       0.0                0.0     0       1                                                                            
+5     RISE1161.0.1_._RISE1168.0.1  Unrelated     Third   Degree     20.421      1.0       0.0                0.0     0       1                                                                            
+6     RISE1161.0.1_._RISE1169.0.1  Unrelated     Third   Degree     19.778      1.0       0.0                0.0     0       1                                                                            
+7     RISE1164.0.1_._RISE1168.0.1  Unrelated     Third   Degree     2.687       0.86      0.14               0.0     35      9                                                                            
+8     RISE1164.0.1_._RISE1169.0.1  Third         Degree  Unrelated  0.282       0.776     0.224              0.0     65      13                                                                           
+9     RISE1168.0.1_._RISE1169.0.1  Second        Degree  Siblings   4.03        0.341     0.659              0.0     210     9                                                                            
 ```
 
 
