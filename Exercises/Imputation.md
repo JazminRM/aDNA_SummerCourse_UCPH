@@ -243,7 +243,7 @@ while IFS="" read -r LINE || [ -n "$LINE" ]; do
 done < ${CHUNK}
 ```
 
-### Step 4: Impute! For each of the chunks estimated at Step 3a, impute using the binary reference panel from Step 3b and the genotype likelihoods from Step 2
+### Step 4: Impute! For each of the chunks estimated at Step 3a, impute using the binary reference panel from Step 3b and the genotype likelihoods from Step 2.
 
 ```
 GL=output/GLs_target_bams/${SAMPLE}.vcf.gz
@@ -295,10 +295,11 @@ Let's take a look at the final phased and imputed file:
 bcftools view ${LIGATED} | less -S
 ```
 
-Take a moment to understand the different fields. What does the FORMAT/GP field and the three numbers represent?
+Take a moment to understand the different fields. 
 
-Question:  
-How many imputed sites are there? How does it compare the number of sites in the reference panel?
+Questions:  
+1) What does the FORMAT/GP field and the three numbers represent?
+2) How many imputed sites are there? How does it compare the number of sites in the reference panel?
 
 #### Hint (use this command to answer the above questions): 
 ```
@@ -354,7 +355,7 @@ less -S output/GLIMPSE_concordance/${SAMPLE}.rsquare.grp.txt.gz
 
 This file has 5 columns, but we're interested in the 1st (MAF bin number) and fourth (aggregative r^2). We'll use these two columns to plot the imputation accuracy in a bit.
 
-```
+
 Now, let's come back to the FORMAT/GP field we saw above. This field essentially indicates how confident the site was imputed. 
 The GP fields correspond to the genotype posteriors of the three possible genotypes (for a diploid sample), ranging from 0 to 1: REF/REF, REF/ALT and ALT/ALT. All three fields sum up to 1. 
 The closer to 1, the more certain we are about that imputed site. 
@@ -364,6 +365,7 @@ Therefore, it's a good approach to filter out low-confidence imputed site based 
 
 Let's check the concordance of the imputed sites after applying three different GP cutoffs: 0.8, 0.9, 0.95. The higher the cutoff, the more strict we are, and the more sites are filtered out.
 
+```
 ### Adding GP post-imputation filter, using the --min-tar-gp option:
 for i in 0.8 0.9 0.95
 do
@@ -406,20 +408,19 @@ Rscript ${DATA_PATH}/scripts/glimpse_accuracy.R ${SAMPLE}
 
 If you don't have time to run the 0.1x sample, you can find the plot showing the imputation accuracy here: 
 
-![](../Figures/imputation_accuracy_TRF.05.05.chr22.0.1x.png)
+![](imputation_accuracy_TRF.05.05.chr22.0.1x.png)
 
 Questions:  
 What differences do you notice between the 1x and 0.1x imputed samples? Why? 
 
 Let's look at the distribution of GP scores for 1x and 0.1x:
 
-![](../Figures/GP_histogram.png)
+![](GP_histogram.png)
 
 Question:
 What difference do you notice in the GPs between the two coverages? How does this relate to the accuracy results?
 
 Another thing to keep in mind, is how many sites you're retaining after post-imputation filtering.
-
 
 Let's see how many are left after filtering for different GP filters for the two tested coverages:
 ```
@@ -456,10 +457,10 @@ Let's impute a different ancient dog sample, from North America dated to ~4,000 
 All the imputation steps have already been run, and we're ready to plot the accuracy:
 
 Plot for 1x coverage:
-![](../Figures/imputation_accuracy_PortauChoix_chr22_1x.png)
+![](imputation_accuracy_PortauChoix_chr22_1x.png)
 
 Plot for 0.1x coverage:
-![](../Figures/imputation_accuracy_PortauChoix_chr22_0.1x.png)
+![](imputation_accuracy_PortauChoix_chr22_0.1x.png)
 
 
 Question: 
