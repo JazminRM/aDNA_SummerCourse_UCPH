@@ -17,7 +17,7 @@ First, get an interactive node.
 ssh ku_username@mjolnirgate.unicph.domain
 
 # request one CPU using salloc like this:
-salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --qos=teaching --reservation=aDNA_PHD_course --account=teaching
+salloc --nodes=1 -D `pwd` --mem-per-cpu 10250 --ntasks-per-node=1 -t 1000  --reservation=3685-26-00-00 --account=teaching
 
 # login to the node with srun like this:
 srun --pty -n 1 -c 1 bash -i
