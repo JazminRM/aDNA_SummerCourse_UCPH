@@ -9,8 +9,11 @@ We will run GLIMPSE from sequencing reads data (BAM files) to obtain imputed and
 
 For this tutorial, we will focus only on chromosome 22.
 
-### Activate interactive session
+### Log in to the server and activate an interactive session
 ```
+# log in to the server (remember to change ku_username for your username)
+ssh ku_username@mjolnirgate.unicph.domain
+
 # request one CPU using salloc like this:
 salloc --nodes=1 -D `pwd` --mem-per-cpu 10250 --ntasks-per-node=1 -t 1000  --reservation=3685-26-00-00 --account=teaching
 
