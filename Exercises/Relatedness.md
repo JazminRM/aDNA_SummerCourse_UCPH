@@ -72,7 +72,7 @@ module unload python
 module load python/2.7.17
 
 # run read:
-python /projects/course_1/people/clx746/Data/read/READ.py /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k
+python /projects/course_1/people/clx746/Data/READ.py /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k
 ```
 
 Download the results, for example:
