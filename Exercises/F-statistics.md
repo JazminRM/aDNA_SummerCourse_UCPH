@@ -185,7 +185,7 @@ module load R/4.4.2
 module load plink/1.9.0
 module load samtools
 module load python
-export PATH=/projects/course_1/people/bkl835/FrAnTK/bin:$PATH
+export PATH=/projects/course_1/people/clx746/FrAnTK/bin:$PATH
 
 # Here we are getting the number of populations from our CLUST file:
 npops=`cut -f 1 clust_file | sort |uniq |wc -l`
