@@ -1,9 +1,5 @@
 ## Estimating Runs of Homozygocity with ancient genomes
 
-We are going to estimate runs of homozygosity in a panel of 49 individuals (ancient and present-day) from different populations around the world. Africa: Yoruba; Oceania: Papuan; Europe: French, Icelandic; Asia: Punjabi, Han; Americas (ancient): Anzick1, Spirit Cave, Lovelock Cave, Taino; Americas (present-day): Mixe, Surui, Karitiana. 
-
-For all individuals in the panel, we inferred their diploid genotypes using imputation (more on this tomorrow) and considered a subset of ~1.2M SNPs across the genome. 
-
 ### Interactive node 
 We start by starting an interactive job:
 
@@ -12,7 +8,7 @@ We start by starting an interactive job:
 ssh ku_username@mjolnirgate.unicph.domain
 
 # request one CPU using salloc like this:
-salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --qos=teaching --reservation=aDNA_PHD_course --account=teaching
+salloc --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000  --reservation=3685-26-00-00 --account=teaching
 
 # once the job has been allocated, you can login to the node with srun like this:
 srun --pty -n 1 -c 1 bash -i
@@ -45,7 +41,8 @@ module load plink/1.9.0
 Use plink to estimate runs of homozygosity in each individual
 
 ```{bash, eval = FALSE}
-plink --bfile /projects/course_1/people/bkl835/RoH/Data/Ame_imp_1240ksites --homozyg --homozyg-kb 500 --homozyg-gap 100 --homozyg-density 50 --homozyg-snp 50 --homozyg-window-het 1 --homozyg-window-snp 50 --homozyg-window-threshold 0.05 --out Ame_imp_1240ksites
+plink --bfile /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k  --homozyg --homozyg-kb 500 --homozyg-gap 100 --homozyg-density 50 --homozyg-snp 50 --homozyg-window-het 1 --homozyg-window-snp 50 --homozyg-window-threshold 0.05 --out koszyce_1240k
+
 ```
 
 You can check the online manual to see what each parameter means: https://www.cog-genomics.org/plink/1.9/ibd
@@ -56,7 +53,7 @@ Now we plot the results in R
 R
 
 #read plink output
-a<-read.table("Ame_imp_1240ksites.hom", as.is=T, h=T)
+a<-read.table("koszyce_1240k.hom", as.is=T, h=T)
 
 #compute run lengths
 a$l<-a[,8]-a[,7]
@@ -87,19 +84,9 @@ stratroh$p<-sapply(strsplit(stratroh[,1], "_"), "[[", 1)
 
 stratroh$rohl<-factor(stratroh$rohl, levels=rev(c("8-12Mb", "12-20Mb", ">20Mb")))
 
-orderedids<-NULL
-
-for(i in c("Yoruba", "Papuan", "French", "Icelandic", "Punjabi", "Han", "Anzick1", "SpCave", "Lovelock", "Lovelock3", "Taino", "Mixe", "SuruiHGDP", "Surui", "KaritianaHGDP")){
-	orderedids<-c(orderedids, unique(stratroh$i[stratroh$p==i]))
-}
-
-stratroh$i<-factor(stratroh$i, levels=orderedids)
-
-#Plot
-
 library(ggplot2)
 
-pdf("RoH.pdf", height=5, width=10)
+pdf("RoH.pdf", height=7, width=10)
 ggplot(stratroh, aes(fill=rohl, y=l, x=i))+
 geom_bar(position="stack", stat="identity", color="black", size=.15)+
 ylab("Mean cumulative length\nof RoH (b)")+
