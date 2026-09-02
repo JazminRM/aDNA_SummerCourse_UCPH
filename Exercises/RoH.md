@@ -41,7 +41,7 @@ module load plink/1.9.0
 Use plink to estimate runs of homozygosity in each individual
 
 ```{bash, eval = FALSE}
-plink --bfile /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k  --homozyg --homozyg-kb 500 --homozyg-gap 100 --homozyg-density 50 --homozyg-snp 50 --homozyg-window-het 1 --homozyg-window-snp 50 --homozyg-window-threshold 0.05 --out koszyce_1240k
+plink --bfile /projects/course_1/people/clx746/DataRelatedness/2_plink/koszyce_1240k  --homozyg --out koszyce_1240k
 
 ```
 
