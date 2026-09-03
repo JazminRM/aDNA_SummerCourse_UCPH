@@ -48,7 +48,7 @@ cd $directoryDates
 Then, we load dates
 
 ```{bash, eval = FALSE}
-module dates
+module load dates/v753
 ```
 
 Data have already been converted into an eigenstrat file. 
