@@ -11,7 +11,7 @@ Start by getting an interactive node:
 ssh ku_username@mjolnirgate.unicph.domain
 
 # request one CPU using salloc like this:
-salloc --partition=cpuqueue --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000 --qos=teaching --reservation=aDNA_PHD_course --account=teaching
+salloc --nodes=1 -D `pwd` --mem-per-cpu 5250 --ntasks-per-node=1 -t 1000  --reservation=3685-26-00-00 --account=teaching
 
 # once the job has been allocated, you can login to the node with srun like this:
 srun --pty -n 1 -c 1 bash -i
@@ -104,7 +104,7 @@ R
 # find all files
 f<-dir(pattern="pbs_")
 
-get the PBS for each gene:
+# get the PBS for each gene:
 gene<-NULL
 pbs1<-NULL
 pbs2<-NULL
@@ -112,9 +112,9 @@ pbs3<-NULL
 for(i in f){
 	a<-read.table(i, as.is=T)
 	gene<-c(gene, gsub(".txt", "", gsub("pbs_", "", i)))
-	pbs1<-c(pbs1, a[a[,1]=="pbs.pop1",2])
-	pbs2<-c(pbs2, a[a[,1]=="pbs.pop2",2])
-	pbs3<-c(pbs3, a[a[,1]=="pbs.pop3",2])
+	pbs1<-c(pbs1, a[1,2])
+	pbs2<-c(pbs2, a[2,2])
+	pbs3<-c(pbs3, a[3,2])
 }
 
 # write the results in a table
