@@ -81,6 +81,12 @@ Count number of IBD segments shared between each pair of individuals:
 tail -n +2 imputed.cM.1.ibd |awk '{print $1"\t"$3"\t"$5"\t"$11}'  |sort -k1,1 -k2,2 |/projects/mjolnir1/people/clx746/Scripts/datamash-1.3/datamash -g1,2  count 4 >  counts.ibd.summary
 ```
 
+Unfortunately given the size of our dataset, it will probably take longer to run than the time we have for the session today, so copy the files to your directory like this:
+```{bash, eval = FALSE}
+cp /projects/course_1/people/clx746/IbdSeq/counts.ibd.summary .
+cp /projects/course_1/people/clx746/IbdSeq/ibd.summary .
+```
+
 Check the total length of IBD fragments for the three individuals of interest: 
 ```{bash, eval = FALSE}
 # 3DT26 vs 3DT16
