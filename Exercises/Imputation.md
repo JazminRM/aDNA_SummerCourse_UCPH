@@ -5,7 +5,7 @@ Genotype imputation exercise for the 2026 aDNA course "Decoding the past: An int
 
 This tutorial will show you how to run genotype imputation using GLIMPSE2 ([Rubinacci et al.,2021](https://doi.org/10.1038/s41588-020-00756-0), [Rubinacci et al.,2023](https://www.nature.com/articles/s41588-023-01438-3)), an imputation and phasing method tailored for low coverage sequencing data. We will test imputation accuracy in an ancient dog from Siberia, dated to 2,000 years before present (ybp). This sample is relatively high coverage for ancient standards (11.8x), so in order to test the imputation accuracy, we will downsample it to lower coverages (0.1x and 1x) and see how the imputed genotypes compare to the "true" high coverage ones.
 
-We will run GLIMPSE from sequencing reads data (BAM files) to obtain imputed and phased genotypes.
+We will run GLIMPSE2 from sequencing reads data (BAM files) to obtain imputed and phased genotypes.
 
 For this tutorial, we will focus only on chromosome 22.
 
@@ -411,14 +411,14 @@ Rscript ${DATA_PATH}/scripts/glimpse_accuracy.R ${SAMPLE}
 
 If you don't have time to run the 0.1x sample, you can find the plot showing the imputation accuracy here: 
 
-![](imputation_accuracy_TRF.05.05.chr22.0.1x.png)
+![](../Figures/imputation_accuracy_TRF.05.05.chr22.0.1x.png)
 
 Questions:  
 What differences do you notice between the 1x and 0.1x imputed samples? Why? 
 
 Let's look at the distribution of GP scores for 1x and 0.1x:
 
-![](GP_histogram.png)
+![](../Figures/GP_histogram.png)
 
 Question:
 What difference do you notice in the GPs between the two coverages? How does this relate to the accuracy results?
@@ -460,10 +460,10 @@ Let's impute a different ancient dog sample, from North America dated to ~4,000 
 All the imputation steps have already been run, and we're ready to plot the accuracy:
 
 Plot for 1x coverage:
-![](imputation_accuracy_PortauChoix_chr22_1x.png)
+![](../Figures/imputation_accuracy_PortauChoix_chr22_1x.png)
 
 Plot for 0.1x coverage:
-![](imputation_accuracy_PortauChoix_chr22_0.1x.png)
+![](../Figures/imputation_accuracy_PortauChoix_chr22_0.1x.png)
 
 
 Question: 
