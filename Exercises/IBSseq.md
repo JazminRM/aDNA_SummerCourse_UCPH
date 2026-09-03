@@ -100,7 +100,7 @@ Do the same for the IBD counts (counts.ibd.summary).
 
 3. The following plot shows the number of IBD tracts (x-axis) vs the total length of genome shared in IBD tracts (y-axis) between each of our three individuals and many individuals from different population. Take a look at the plot and discuss what can you infer from it. 
 
-<img src="../IBD.png" width=80%>
+<img src="../Figures/IBD.png" width=80%>
 
 ### References
 
