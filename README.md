@@ -106,11 +106,11 @@ Oya Inanli, Postdoctoral researcher, Globe Institute, University of Copenhagen <
 10:45 - 12:00  Imputing ancient dog genomes <br>
               [Hands-on exercise: Imputing low-coverage ancient dog genomes using GLIMPSE](Exercises/Imputation.md) <br>
               *Lunch break* <br>
-13:00 - 14:30  Local ancestry inference  <br>
-              [Hands-on exercise: inferring local ancestry in ancient human genomes]  <br>
-              *Coffee break* <br>
-14:45 - 16:00  Admixture dating <br>
+13:00 - 14:30  Admixture dating <br>
               [Hands-on exercise: dating admixture events using admixture LD and ancestry tracts](Exercises/DatesExercise.md) <br>
+              *Coffee break* <br>
+14:45 - 16:00  Estimating IBD tracts using IBDseq  <br>
+              [Hands-on exercise: IBDseq](Exercises/IBSseq.md)   <br>
               *Coffee break* <br>
 16:10 - 17:00  Research talk: Continuity in Cetamura: Insights into grapevine cultivation and the history of wine <br>
               Oya Inanli, University of Copenhagen <br>
