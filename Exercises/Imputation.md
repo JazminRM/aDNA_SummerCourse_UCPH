@@ -450,8 +450,22 @@ Question:
 1) How does the number of retained sites vary between different coverages and GP filters?
 2) Would you impute a really low coverage sample (say 0.01x) and apply a GP filter?
 
+## Exercise 5: Imputation error rates
 
-## Exercise 5: Impact of ancestral representation in the reference panel
+Let's also take a quick look at the file finishing in "error.spl.txt.gz". We'll focus on the "#Genotype concordance by sample (SNPs)" entries, since we only imputed biallelic SNPs. Focus on the RR, RA and AA mismatch rates (6th, 5th and 4th column from the end). These refer to the error rates of imputing reference homozygous, reference/alternative and alternative homozygous sites respectively. There is also another estimate, the NRD mismatch rate, which stands for non-reference discordance (3rd column from the end). NRD is an error rate which excludes the number of correctly imputed homozygous reference allele sites, which are the majority, thus giving more weight to imputation errors at alternative allele sites.
+```
+# For 1x coverage and no GP filter:
+less output/GLIMPSE_concordance/TRF.05.05.chr22.1x.error.spl.txt.gz
+
+# For 1x coverage and 0.95 GP filter:
+less output/GLIMPSE_concordance/TRF.05.05.chr22.1x_GPfilt_0.95.error.spl.txt.gz
+```
+
+Questions:
+1) For a given sample, which of the four mismatch rates are highest and lowest? Why?
+2) How do these four metrics change (including the NRD), when applying GP filters? 
+
+## Exercise 6: Impact of ancestral representation in the reference panel
 
 Since imputation relies on the haplotypes present in the reference panel, we would expect that the representation of ancestries among the samples in the panel will impact the imputation accuracy. Ideally, we will have the ancestry of our target sample also present among the reference panel haplotypes. 
 
@@ -466,6 +480,6 @@ Plot for 0.1x coverage:
 ![](../Figures/imputation_accuracy_PortauChoix_chr22_0.1x.png)
 
 
-Question: 
+Questions: 
 1) How does the accuracy of the ancient North American dog compare to that of the ancient Siberian dog? Why do you think that is?
 2) Would you impute low coverage ancient North American pre-contact dogs? 
