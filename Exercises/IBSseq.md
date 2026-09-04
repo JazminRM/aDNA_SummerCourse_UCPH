@@ -46,10 +46,17 @@ Take a look at IBDseq's output:
 head imputed.1.ibd
 ```
 ```{bash, eval = FALSE}
-sample1 hap1    sample2 hap2    chromosome      posStart        posEnd  lod     posCmStart      posCmEnd        lCm
-0LS10_0LS10     0       3DT16_3DT16     0       22      33405865        33995412        3.14    37.7198865049017        38.7957806846977        1.07589417979602
-0LS10_0LS10     0       6DT3_6DT3       0       22      27411419        30481322        3.45    31.0007574039724        34.1997964953193        3.19903909134684
-0LS10_0LS10     0       12880A_12880A   0       22      20231084        22038535        4.32    11.7927460898297        16.0910385082464        4.29829241841671
+#sample1       hap1    sample2       hap2    chromosome posStart        posEnd          lod
+0LS10_0LS10     0       0LS11_0LS11     0       1       3969029         4543310         3.18
+0LS10_0LS10     0       0LS11_0LS11     0       1       5639983         7090517         3.65
+0LS10_0LS10     0       0LS11_0LS11     0       1       7491425         9352551         5.86
+0LS10_0LS10     0       0LS11_0LS11     0       1       10827866        11824237        4.15
+0LS10_0LS10     0       0LS11_0LS11     0       1       210730390       212166458       3.28
+0LS10_0LS10     0       0LS11_0LS11     0       1       230370958       232308770       3.76
+0LS10_0LS10     0       3DT16_3DT16     0       1       54303604        56409219        5.93
+0LS10_0LS10     0       3DT16_3DT16     0       1       58015221        58440937        3.78
+0LS10_0LS10     0       3DT16_3DT16     0       1       193582484       194936262       3.28
+
 ```
 Can you guess what the results represent? 
 
